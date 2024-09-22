@@ -1,0 +1,13 @@
+---
+Bot :
+ token : ""
+ prefix : ";"
+
+Version :
+ ver: "Nightly 907"
+ date: "2024.09.22."
+
+Keys :
+ client_id : ""
+ client_secret : ""
+...

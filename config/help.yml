@@ -1,0 +1,414 @@
+---
+main :
+ title : "Helpdesk"
+ id : "00"
+ Essentials : "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`"
+ UserProfile : "`profile`, `emblem`, `myrank`, `ranking`, `equip`, `purchase`, `skin`, `preview`"
+ Economy : "`stats`, `balance`, `transfer`"
+ Miscellaneous : "`dice`, `kodic`, `argbdic`, `rage`, `translate`"
+ Coalition : "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`"
+ Minigame : "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`"
+ Voice : "`join`, `leave`"
+ WagyumonServer : "`타운맵`, `도감`, `기술머신`"
+ AdminFeatures : "`login`, `logout`"
+ AdminDebugging : "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `kakao`, `sync`"
+
+test :
+ title : "Test Command"
+ id : "01"
+ ctx : "test <str: text>"
+ discript : "Test commands. The bot prints out the sentence as it is."
+ args : "`text` str type, you can enter all characters, including str type and spacing, and the bot outputs this part as it is (default: none)."
+
+myid :
+ title : "My User id"
+ id : "02"
+ ctx : "myid"
+ discript : "Check your discord account UID value and creation date."
+ args : "No arguments in this command."
+
+credits :
+ title : "Credits"
+ id : "03"
+ ctx : "credits"
+ discript : "Thank you to those who even helped create the bot!"
+ args : "No arguments in this command."
+
+code :
+ title : "Special Code Input"
+ id : "04"
+ ctx : "code <str: text>"
+ discript : "Command to enter a code value to receive a gift."
+ args : "`test` str type, enter a code value (defualt: none)."
+
+nickname :
+ title : "Change Nickname"
+ id : "05"
+ ctx : "nickname <str: name>"
+ discript : "Change your nickname!\nNames are important to all dear ones..."
+ args : "`name` str type, the name to change. Up to 16 characters are allowed!"
+
+discrim :
+ title : "My Driscriminator #0000"
+ id : "06"
+ ctx : "discrim"
+ discript : "Show your discriminator number."
+ args : "No arguments in this command."
+
+argentumbot :
+ title : "Bot Info"
+ id : "07"
+ ctx : "argentumbot"
+ discript : "Show bot's infomation."
+ args : "No arguments in this command."
+
+ping :
+ title : "Latency Test"
+ id : "08"
+ ctx : "ping"
+ discript : "Check client latency."
+ args : "No arguments in this command."
+
+daily :
+ title : "Daily Rewards"
+ id : "09"
+ ctx : "daily"
+ discript : "You will receive a daily reward once per day, and the cooldown will be reset to UTC+0."
+ args : "No arguments in this command."
+
+profile :
+ title : "User Profile"
+ id : "11"
+ ctx : "profile <user: Discord.user.id>"
+ discript : "Displays the user profile. You can check the level, experience, nickname, profile picture, and skin you are applying."
+ args : "`user` discord.user.id type, Select the user to view the profile with the user mention function of Discord. If left blank, the command user himself is specified (defualt: none)."
+
+emblem :
+ title : "Emblem"
+ id : "12"
+ ctx : "emblem <int: level>"
+ discript : "Use to view icons and required experience values for each level."
+ args : "`level` int type, enter a level value (default value: your level)."
+
+myrank :
+ title : "My Ranking"
+ id : "13"
+ ctx : "myrank"
+ discript : "Check your level and global ranking."
+ args : "No arguments in this command."
+
+ranking :
+ title : "XP Ranking"
+ id : "14"
+ ctx : "ranking <opt: range> <int: page>"
+ discript : "You can see the ranking of users. Ranking is output based on total acquired experience."
+ args : "`range` option, (default: global).\n`page` int type, enter a value for the page to view (default: 1)."
+
+equip :
+ title : "Equip"
+ id : "17"
+ ctx : "equip <int: skin_id>"
+ discript : "Enter the skin ID to equip the skin."
+ args : "`skin_id` int type, unique value given for each skin."
+
+purchase :
+ title : "Purchase"
+ id : "18"
+ ctx : "purchase <int: skin_id>"
+ discript : "Enter the skin ID to purchase the skin. In addition to purchasing with money, you can also unlock skins for level achievements or the number of daily rewards you receive."
+ args : "`skin_id` int type, unique value given for each skin."
+
+storage :
+ title : "Skin Storage"
+ id : "19"
+ ctx : "skin <str: category = all> <int: page>"
+ discript : "You can see the ranking of users. Ranking is output based on total acquired experience (default: skin all 1)."
+ args : "`category` option, enter keywords to display only related skins (default: all).\n`page` int type, enter a value for the page to view (default: 1)."
+
+skin :
+ title : "Skin Storage"
+ id : "19"
+ ctx : "skin <str: category = all> <int: page>"
+ discript : "You can see the ranking of users. Ranking is output based on total acquired experience (default: skin all 1)."
+ args : "`category` option, enter keywords to display only related skins (default: all).\n`page` int type, enter a value for the page to view (default: 1)."
+
+preview :
+ title : "Skin Preview"
+ id : "20"
+ ctx : "preview <int: value>"
+ discript : "Preview the appearance after changing the skin."
+ args : "`value` int type, enter skin id value."
+
+stats :
+ title : "User Statistics"
+ id : "21"
+ ctx : "stats"
+ discript : "Show your records at a glance!"
+ args : "No arguments in this command."
+
+balance :
+ title : "Balance"
+ id : "22"
+ ctx : "balance>"
+ discript : "Shows your balance."
+ args : "No arguments in this command."
+
+transfer :
+ title : "Transfer"
+ id : "23"
+ ctx : "transfer"
+ discript : "The more you share, the happier you become...\nSend money to the other person!"
+ args : "No arguments in this command."
+
+dice :
+ title : "Dice"
+ id : "31"
+ ctx : "dice <int: value> <opt: non_zero> <opt: skin>"
+ discript : "Pick a random number."
+ args : "`value` int type, enter text size (default: 99).\n`non_zero` option, 0 input includes 0, 1 input does not include 0 (default: 1).\n`skin` option, choose between 1, 2, and 3 (default: random)."
+
+쿠모티콘 :
+ title : "쿠모티콘 (전체공룡 서버 특전)"
+ id : "32"
+ ctx : "쿠모티콘 <opt: option>"
+ discript : "쿠모티콘 기능이 부활했습니다! `;쿠모티콘`을 통해 목록을 살펴 보아요!"
+ args : "[ctx: rage | 격노] <int: text_size> <object: str> <text: str>"
+
+kodic :
+ title : "국립국어원 우리말 사전"
+ id : "33"
+ ctx : "사전 <str: 단어>"
+ discript : "국립국어원 제공 공공데이터를 이용한 국어 사전입니다.\n끝말잇기에 사용되는 함수입니다."
+ args : "`단어` 문자열 형식, 띄어쓰기 생략 단어를 입력하면 해당 단어의 뜻이 출력됩니다."
+
+argbdic :
+ title : "은비사전"
+ id : "34"
+ ctx : "은비사전 <str: 단어>"
+ discript : "학습된 단어 데이터를 검색합니다."
+ args : "`단어` 문자열 형식, 띄어쓰기 생략 단어를 입력하면 해당 단어의 뜻이 출력됩니다."
+
+lk :
+ title : "Level Killer Manager (Only in Level Killer)"
+ id : "35"
+ ctx : "lk"
+ discript : "--"
+ args : "--"
+
+rage :
+ title : "Ivory's Rage (┛◉Д◉)┛彡┻━┻"
+ id : "36"
+ ctx : "rage <int: text_size> <object: str> <text: str>"
+ discript : "Ivory with dragon tattoos expresses your anger instead."
+ args : "`text_size` int type, enter text size (default: 24).\n`object` str type, enter the object of anger (default: none).\n`text` int str, enter a message of anger (default: none)."
+
+똥몬창지수 :
+ title : "자네 혹시 똥몬창인가? (태양수렵단 마이너 갤러리 특전)"
+ id : "37"
+ ctx : "똥몬창지수 <user: Discord.user.id>"
+ discript : "자네 몸에서 지독한 냄새가 나는데... 혹시 똥몬창인가?"
+ args : "`user` discord.user.id type, Select the user to test. If left blank, the command user himself is specified (defualt: none)."
+
+tedne :
+ title : "TEDNE Manager (Only in Does the end exist?)"
+ id : "38"
+ ctx : "tedne <option> <value:int>"
+ discript : "Provides capabilities related to TEDNE! Learn more with `tedne help`!"
+ args : "`option` Choose one from `help/achievements/user/hint`.\n`value` int type."
+
+translate :
+ title : "Translator"
+ id : "39"
+ ctx : "translate <lan: before> <lan: after> <str: text>"
+ discript : "Papago API-based translation function is provided! A total of 17 languages are supported.\nAlso... Eunbi is good at foreign languages (๑╹ワ╹)"
+ args : "`before` language code, select the language code of the sentence before translation (defualt: none).\n`after` language code, select the language code for translation results (defualt: none).\n`text` str type, enter the text to be translated (defualt: none)."
+
+rps :
+ title : "Rock Scissor Paper"
+ id : "40"
+ ctx : "rps"
+ discript : "Let's play rock-paper-scissors!"
+ args : "No arguments in this command."
+
+야추다이스 :
+ title : "야추다이스"
+ id : "41"
+ ctx : "야추다이스"
+ discript : "야추 다이스(Yahtzee Dice) 게임을 합니다!"
+ args : "(￣▽￣)ノ 없습니다!"
+
+끝말잇기 :
+ title : "끝말잇기 <옵션>"
+ id : "42"
+ ctx : "끝말잇기"
+ discript : "끝말잇기를 합니다! 인원 모집시 이 봇을 업급하면 봇이 직접 게임을 합니다!"
+ args : "<옵션> 에는 `일반/쿵쿵따/은비/마라톤` 중 하나를 선택합니다!"
+
+slot :
+ title : ":gem: Slot-Machine :gem:"
+ id : "43"
+ ctx : "slot <bet: int=100> "
+ discript : "Play slots-machine game!"
+ args : "`bet` int type, enter bet amount."
+
+arithmatic :
+ title : "Hasty Calculation"
+ id : "44"
+ ctx : "arithmatic"
+ discript : "Play 'Hasty Calculation' game!"
+ args : "No arguments in this command."
+
+number :
+ title : "Number Attack!!"
+ id : "46"
+ ctx : "number"
+ discript : "Play 'Number Attack' game!"
+ args : "Type `;number help` to see how to play."
+
+leaderboard :
+ title : "Leaderboard"
+ id : "50"
+ ctx : "leaderboard <str: gamename> <str: column> <int: page>"
+ discript : "Shows the ranking of games registered in the bot!"
+ args : "No arguments in this command."
+
+join :
+ title : "Join the voice channel"
+ id : "61"
+ ctx : "join"
+ discript : "Bot enters the voice channel you enter."
+ args : "No arguments in this command."
+
+leave :
+ title : "Leave the voice channel"
+ id : "62"
+ ctx : "leave"
+ discript : "Bot leaves the voice channel you enter."
+ args : "No arguments in this command."
+
+타운맵 :
+ title : "픽셀몬 타운맵"
+ id : "81"
+ ctx : "타운맵"
+ discript : "타운맵 그림 파일을 불러옵니다."
+ args : "-"
+
+tmreload :
+ title : "기술머신 데이터 리로드"
+ id : "82"
+ ctx : "tmreload"
+ discript : "기술머신 데이터를 다시 불러옵니다."
+ args : "-"
+
+pixelreload :
+ title : "도감 데이터 리로드"
+ id : "83"
+ ctx : "pixelreload"
+ discript : "도감 데이터를 다시 불러옵니다."
+ args : "-"
+ 
+도감 :
+ title : "픽셀몬 포켓몬 도감"
+ id : "84"
+ ctx : "도감 도움말"
+ discript : "`;도감 도움말` 을 통해 명령어를 자세히 알아 볼 수 있습니다."
+ args : "-"
+
+기술머신 :
+ title : "픽셀몬 기술머신 도감"
+ id : "85"
+ ctx : "기술머신 도움말"
+ discript : ";기술머신 도움말` 을 통해 명령어를 자세히 알아 볼 수 있습니다."
+ args : "-"
+
+일괄등록 :
+ title : "일괄등록"
+ id : "87"
+ ctx : "--"
+ discript : "--"
+ args : "(￣▽￣)ノ"
+
+tmanage :
+ title : "Admin Login"
+ id : "88"
+ ctx : "--"
+ discript : "--"
+ args : "(￣▽￣)ノ"
+
+login :
+ title : "Admin Login"
+ id : "89"
+ ctx : "login <id> <password>"
+ discript : "Login for admin."
+ args : "(￣▽￣)ノ"
+
+login :
+ title : "Admin Logout"
+ id : "90"
+ ctx : "logout"
+ discript : "Logout for admin."
+ args : "(￣▽￣)ノ"
+
+xp :
+ title : "XP Edit - Experience Edit"
+ id : "91"
+ ctx : "[ctx: xp | 경험치] <user: Discord.user.id> <int: value>"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nGive XP to the recipient."
+ args : "`user` discord.user.id type, Specify which users will receive the experience. Give everyone experience when you type 'all' (default: none).\n`value` int type, enter a xp value (default value: 0)."
+
+userlist :
+ title : "User List"
+ id : "92"
+ ctx : "[ctx: userlist | 유저목록]"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nOutputs all values stored in the user and database."
+ args : "No arguments in this command."
+
+rankinglist :
+ title : "Ranking List"
+ id : "93"
+ ctx : ""
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nOutput all users in order of acquisition of experience values."
+ args : "No arguments in this command."
+
+lbedit :
+ title : "리더보드 편집기"
+ id : "94"
+ ctx : "login <id> <tablename>"
+ discript : "리더보드를 편집합니다."
+ args : "(￣▽￣)ノ"
+
+unlock :
+ title : "Storage Editor"
+ id : "95"
+ ctx : "unlock <discord.user:user> <int:skin_id> <binary:option>"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nEdit skin repository data."
+ args : "(￣▽￣)ノ"
+
+ultimate :
+ title : "Ultimate POWER!!!!!!"
+ id : "96"
+ ctx : "unlock <discord.user:user> <option> <value>"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nTransform data with magical powers..."
+ args : "(￣▽￣)ノ"
+
+money :
+ title : "Money Editor"
+ id : "97"
+ ctx : "[ctx: money | 돈] <user: Discord.user.id> <int: value>"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nGive money to the recipient."
+ args : "`user` discord.user.id type, Specify which users will receive the money. Give everyone money when you type 'all' (default: none).\n`value` int type, enter a money value (default value: 0)."
+
+kakao :
+ title : "ALTERED Ultimate POWER!!!!!!"
+ id : "98"
+ ctx : "kakao <user: user> <option> <value>"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nTransform data with magical powers..."
+ args : "(￣▽￣)ノ"
+
+kakao :
+ title : "Sync"
+ id : "99"
+ ctx : "sync"
+ discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nSynced commands to the current server!"
+ args : "(￣▽￣)ノ"
+...

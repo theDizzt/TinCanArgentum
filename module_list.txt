@@ -1,0 +1,10 @@
+python ./argentumbot/main.py
+python3.9 -m pip install 
+
+discord.py
+flask
+flask_compress
+tqdm
+pillow
+pyyaml
+gevent

@@ -1,0 +1,1474 @@
+{
+    "achievements": {
+            "35481596": {
+                "id": 1,
+                "title": "A1 - Welcome to TEDNE!",
+                "description": "Beat Level 1.",
+                "hidden": 0,
+                "xp": 85,
+                "money": 100
+            },
+            "39326202": {
+                "id": 2,
+                "title": "A2 - The Novice",
+                "description": "Beat Level 5.",
+                "hidden": 0,
+                "xp": 425,
+                "money": 500
+            },
+            "41598496": {
+                "id": 3,
+                "title": "A3 - The Beginner",
+                "description": "Beat Level 10.",
+                "hidden": 0,
+                "xp": 850,
+                "money": 1000
+            },
+            "81339933": {
+                "id": 4,
+                "title": "A4 - Mathematician",
+                "description": "Beat Level 15.",
+                "hidden": 0,
+                "xp": 1275,
+                "money": 1500
+            },
+            "32653309": {
+                "id": 5,
+                "title": "A5 - Keep Going!",
+                "description": "Beat Level 20.",
+                "hidden": 0,
+                "xp": 1700,
+                "money": 2000
+            },
+            "85825712": {
+                "id": 6,
+                "title": "A6 - Puzzle Solver",
+                "description": "Beat Level 25.",
+                "hidden": 0,
+                "xp": 2125,
+                "money": 2500
+            },
+            "26405934": {
+                "id": 7,
+                "title": "A7 - Trial and Error",
+                "description": "Beat Level 30.",
+                "hidden": 0,
+                "xp": 2550,
+                "money": 3000
+            },
+            "61843011": {
+                "id": 8,
+                "title": "A8 - Best Memory",
+                "description": "Beat Level 40.",
+                "hidden": 0,
+                "xp": 3400,
+                "money": 4000
+            },
+            "34597786": {
+                "id": 9,
+                "title": "A9 - Colorful Escaped",
+                "description": "Beat Level 50.",
+                "hidden": 0,
+                "xp": 4250,
+                "money": 5000
+            },
+            "39329358": {
+                "id": 10,
+                "title": "A10 - The Platform Master",
+                "description": "Beat Level 62.",
+                "hidden": 0,
+                "xp": 5270,
+                "money": 6200
+            },
+            "42989934": {
+                "id": 11,
+                "title": "A11 - Intuition",
+                "description": "Beat Level 70.",
+                "hidden": 0,
+                "xp": 5950,
+                "money": 7000
+            },
+            "18763198": {
+                "id": 12,
+                "title": "A12 - G!@#A$%^T&*(E",
+                "description": "Beat Level 80.",
+                "hidden": 0,
+                "xp": 6800,
+                "money": 8000
+            },
+            "73390574": {
+                "id": 13,
+                "title": "A13 - She is Argentum!",
+                "description": "Beat Level 84.",
+                "hidden": 0,
+                "xp": 7140,
+                "money": 8400
+            },
+            "15601824": {
+                "id": 14,
+                "title": "A14 - Black and White",
+                "description": "Beat Level 91.",
+                "hidden": 0,
+                "xp": 7735,
+                "money": 9100
+            },
+            "45304705": {
+                "id": 15,
+                "title": "A15 - Junior Completionist",
+                "description": "Beat Level 100.",
+                "hidden": 0,
+                "xp": 8500,
+                "money": 10000
+            },
+            "10157237": {
+                "id": 65,
+                "title": "B1 - The 7th Page [MS]",
+                "description": "Find the 7th page of the credits page.",
+                "hidden": 1,
+                "xp": 660,
+                "money": 700
+            },
+            "21968546": {
+                "id": 66,
+                "title": "B2 - Slow Progress [3]",
+                "description": "Use the first level jump.",
+                "hidden": 1,
+                "xp": 255,
+                "money": 300
+            },
+            "55008973": {
+                "id": 67,
+                "title": "B3 - Invput [10]",
+                "description": "Inverse the input in Level 10.",
+                "hidden": 1,
+                "xp": 850,
+                "money": 1000
+            },
+            "87166905": {
+                "id": 68,
+                "title": "B4 - Trapped [24]",
+                "description": "Trapped in Level 24.",
+                "hidden": 1,
+                "xp": 850,
+                "money": 1000
+            },
+            "73774718": {
+                "id": 69,
+                "title": "B5 - Another Solution [25]",
+                "description": "Found another solution of Level 25.",
+                "hidden": 1,
+                "xp": 1275,
+                "money": 1500
+            },
+            "33388385": {
+                "id": 70,
+                "title": "B6 - I'm Sad ;( [30]",
+                "description": "Didn't notice the extra clue in Level 30.",
+                "hidden": 1,
+                "xp": 1955,
+                "money": 2300
+            },
+            "62179839": {
+                "id": 71,
+                "title": "B7 - Skater [37]",
+                "description": "Successfully skated Level 37!",
+                "hidden": 1,
+                "xp": 3145,
+                "money": 3700
+            },
+            "37962563": {
+                "id": 72,
+                "title": "B8 - Dark Day [39]",
+                "description": "Found another dark solution of Level 39.",
+                "hidden": 1,
+                "xp": 3942,
+                "money": 3390
+            },
+            "08377569": {
+                "id": 73,
+                "title": "B9 - Symbol Translation [67]",
+                "description": "Translated the symbols and finally jumped into that level!",
+                "hidden": 1,
+                "xp": 2550,
+                "money": 3000
+            },
+            "66180834": {
+                "id": 74,
+                "title": "B10 - In One Step [70]",
+                "description": "Beat Level 70, but in one step...",
+                "hidden": 1,
+                "xp": 1700,
+                "money": 2000
+            },
+            "07082112": {
+                "id": 75,
+                "title": "B11 - A ce te . [90]",
+                "description": "Accepted in Level 90.",
+                "hidden": 1,
+                "xp": 1700,
+                "money": 2000
+            },
+            "34686916": {
+                "id": 76,
+                "title": "B12 - U NOOB [4]",
+                "description": "Fail on Level 4.",
+                "hidden": 1,
+                "xp": 500,
+                "money": 500
+            },
+            "56845689": {
+                "id": 77,
+                "title": "B13 - Rebel Against [52]",
+                "description": "I TOLD YOU THE PASSWORD ISN'T FIGURE SKATING!!",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 500
+            },
+            "88791711": {
+                "id": 78,
+                "title": "B14 - Totally Last Letter [71]",
+                "description": "Typed Z on the main screen of Level 71.",
+                "hidden": 1,
+                "xp": 555,
+                "money": 999
+            },
+            "81488404": {
+                "id": 129,
+                "title": "C1 - Discord Supporter",
+                "description": "Join our Discord server.",
+                "hidden": 0,
+                "xp": 850,
+                "money": 1000
+            },
+            "65478773": {
+                "id": 130,
+                "title": "C2 - Ballparty Speedrunner",
+                "description": "Beat Level 28 in 15 seconds.",
+                "hidden": 0,
+                "xp": 2392,
+                "money": 2815
+            },
+            "23104567": {
+                "id": 131,
+                "title": "C3 - That coin was found?",
+                "description": "Find the hidden coin on Level 62.",
+                "hidden": 0,
+                "xp": 3027,
+                "money": 3562
+            },
+            "94334650": {
+                "id": 132,
+                "title": "C4 - Hiding Maze",
+                "description": "Find the hiding maze and beat it.",
+                "hidden": 0,
+                "xp": 2550,
+                "money": 3000
+            },
+            "15727374": {
+                "id": 133,
+                "title": "C5 - Not That Good",
+                "description": "Find the secret in Level 58.",
+                "hidden": 0,
+                "xp": 2550,
+                "money": 2550
+            }
+        },
+    
+	"hint": {
+        "level1": {
+            "title": "Beginning",
+            "hint1": {
+                "cost": 100,
+                "hinttitle": "How to beat this level?",
+                "hint": "This level is easy! You just need to press the button."
+            }
+        },
+    
+        "level2": {
+            "title": "Indicate",
+            "hint1": {
+                "cost": 200,
+                "hinttitle": "How to beat this level?",
+                "hint": "After beating level 1, I think you know how to beat this. Press S on your keyboard!"
+            }
+        },
+    
+        "level3": {
+            "title": "Password",
+            "hint1": {
+                "cost": 300,
+                "hinttitle": "How to beat this level?",
+                "hint": "This level is also easy! Just enter normal in the password box and you will see level 4!"
+            }
+        },
+    
+        "level4": {
+            "title": "Maze",
+            "hint1": {
+                "cost": 400,
+                "hinttitle": "How to beat this level?",
+                "hint": "Ultimate Maze 3040! Click the start point, and navigate your cursor to the finish point, but don't touch the wall!"
+            }
+        },
+    
+        "level5": {
+            "title": "Clues",
+            "hint1": {
+                "cost": 500,
+                "hinttitle": "How to beat this level?",
+                "hint": "The clues on the screen just tell you the password is zzzzzzzz..."
+            }
+        },
+    
+        "level6": {
+            "title": "Thing",
+            "hint1": {
+                "cost": 600,
+                "hinttitle": "How to beat this level?",
+                "hint": "Drag the thing to the end point to pass! When you see the next button, press it >:D"
+            }
+        },
+    
+        "level7": {
+            "title": "Counts",
+            "hint1": {
+                "cost": 700,
+                "hinttitle": "How to beat this level?",
+                "hint": "There is no buttons unavailable, because they will be unavailable after you press it! Just press 6 buttons and you will pass it!"
+            }
+        },
+    
+        "level8": {
+            "title": "Area",
+            "hint1": {
+                "cost": 800,
+                "hinttitle": "How to beat this level?",
+                "hint": "Because this level is hard, I just give the password out! It is 9V3."
+            },
+            "hint2": {
+                "cost": 800,
+                "hinttitle": "How is it calculated?",
+                "hint": "The area algorithm is (√3/4)a²! If a = 6, the area is 9√3, so the password is 9V3."
+            }
+        },
+    
+        "level9": {
+            "title": "Bucket Tool",
+            "hint1": {
+                "cost": 900,
+                "hinttitle": "How to beat this level?",
+                "hint": "For this level, just use the MS Paint in your computer! I know your computer has this software. Then, capture the screen and paste it to the MS Paint, use bucket tool on the background, and a secret message will appear!"
+            }
+        },
+    
+        "level10": {
+            "title": "Numbers",
+            "hint1": {
+                "cost": 1000,
+                "hinttitle": "How to beat this level?",
+                "hint": "Try number keys in your keyboard and see what will happen! One number is in different color, and that's the password!"
+            }
+        },
+    
+        "level11": {
+            "title": "Letters",
+            "hint1": {
+                "cost": 1100,
+                "hinttitle": "Where are the letters?",
+                "hint": "The letters are on the line of sunshine! Find 3 letters and type them one by one >:D"
+            },
+            "hint2": {
+                "cost": 1100,
+                "hinttitle": "I can only see three or four letters of the final password...",
+                "hint": "Don't worry! You have seen three letters, right? You only tried one letter so you got three or four letters."
+            }
+        },
+    
+        "level12": {
+            "title": "Numbers",
+            "hint1": {
+                "cost": 1200,
+                "hinttitle": "Is there any hints to this level? I don't know what to do...",
+                "hint": "Which level you are on? That's a hint!"
+            }
+        },
+    
+        "level13": {
+            "title": "Hue",
+            "hint1": {
+                "cost": 1300,
+                "hinttitle": "What should I do on this level?",
+                "hint": "This level is a button sequence level! Press the buttons from light to dark."
+            }
+        },
+    
+        "level14": {
+            "title": "Keyboard",
+            "hint1": {
+                "cost": 1400,
+                "hinttitle": "What key should I press?",
+                "hint": "Keep calm and keep trying to find the password! You only need to try all letters."
+            }
+        },
+    
+        "level15": {
+            "title": "Quadratic",
+            "hint1": {
+                "cost": 1500,
+                "hinttitle": "How can I type the password?",
+                "hint": "The equation is a maze! Finish the maze, just like level 4, to get the password box!"
+            },
+            "hint2": {
+                "cost": 1500,
+                "hinttitle": "What should I do after finding the password box?",
+                "hint": "What was the route you have gone? Find the x of the equation, but only one x is available since fractions are unavailable."
+            }
+        },
+    
+        "level16": {
+            "title": "Boxes",
+            "hint1": {
+                "cost": 1600,
+                "hinttitle": "What should I do?",
+                "hint": "The password is under the box, but make sure think out of the box >:D"
+            }
+        },
+    
+        "level17": {
+            "title": "Appliance",
+            "hint1": {
+                "cost": 1700,
+                "hinttitle": "Appliance? What is it?",
+                "hint": "This level uses a skill you just have used before. Think back..."
+            }
+        },
+    
+        "level18": {
+            "title": "Text",
+            "hint1": {
+                "cost": 1800,
+                "hinttitle": "How can I make the button available?",
+                "hint": "Haha! Something is dragable! Try to make the button available by dragging something..."
+            }
+        },
+    
+        "level19": {
+            "title": "Codes",
+            "hint1": {
+                "cost": 1900,
+                "hinttitle": "How can I decrypt the language?",
+                "hint": "One or two letters is a number, try to find the numbers and submit it! Think why it is WHITe instead of WHITE."
+            },
+            "hint2": {
+                "cost": 1900,
+                "hinttitle": "Can I get some hints on how to decrypt it?",
+                "hint": "Chemistry."
+            }
+        },
+    
+        "level20": {
+            "title": "Stage",
+            "hint1": {
+                "cost": 2000,
+                "hinttitle": "I can't submit the password...",
+                "hint": "Yes, it is unsubmittable because this is a fake password box..."
+            },
+            "hint2": {
+                "cost": 2000,
+                "hinttitle": "What should I do after finding something special?",
+                "hint": "The new box is real but the new GO is fake."
+            }
+        },
+    
+        "level21": {
+            "title": "Recollection",
+            "hint1": {
+                "cost": 2100,
+                "hinttitle": "How can I know where the password was?",
+                "hint": "On a early level. The password is the same as that level."
+            }
+        },
+    
+        "level22": {
+            "title": "Collections",
+            "hint1": {
+                "cost": 2200,
+                "hinttitle": "I can't find anything. What should I do?",
+                "hint": "Click more! You can find something."
+            },
+            "hint2": {
+                "cost": 2200,
+                "hinttitle": "Is NTG cool?",
+                "hint": "Yes!"
+            },
+            "hint3": {
+                "cost": 2200,
+                "hinttitle": "A letter?",
+                "hint": "Literally, a letter!"
+            }
+        },
+    
+        "level23": {
+            "title": "Blanks",
+            "hint1": {
+                "cost": 2300,
+                "hinttitle": "How to fill in the blanks?",
+                "hint": "What game are you playing?"
+            }
+        },
+    
+        "level24": {
+            "title": "Equation",
+            "hint1": {
+                "cost": 2400,
+                "hinttitle": "I solved the equation but it is wrong, and I got an achievement. What should I do?",
+                "hint": "Look closer to the equation and find something missing. That's the point."
+            }
+        },
+    
+        "level25": {
+            "title": "Riddle",
+            "hint1": {
+                "cost": 2500,
+                "hinttitle": "What is on my head?",
+                "hint": "If you are a programmer, I think you don't have this..."
+            }
+        },
+    
+        "level26": {
+            "title": "Guess",
+            "hint1": {
+                "cost": 2600,
+                "hinttitle": "The password is clearly given. Where is it?",
+                "hint": "It is clearly given. Certainly."
+            }
+        },
+    
+        "level27": {
+            "title": "Arrows",
+            "hint1": {
+                "cost": 2700,
+                "hinttitle": "What happened to the arrows? Where are them?",
+                "hint": "Find them by dragging something!"
+            },
+            "hint2": {
+                "cost": 2700,
+                "hinttitle": "What is the password?",
+                "hint": "Enter what you got! However, something is reversed..."
+            }
+        },
+    
+        "level28": {
+            "title": "Ballparty",
+            "hint1": {
+                "cost": 2800,
+                "hinttitle": "What should I do?",
+                "hint": "Avoid everything and go to the finish point! Good luck!"
+            },
+            "hint2": {
+                "cost": 2800,
+                "hinttitle": "The achievement is too hard, this level is impossible to beat in 25 seconds! How can I go faster without touching balls?",
+                "hint": "As Dapur said, Practice is Answer."
+            }
+        },
+    
+        "level29": {
+            "title": "Liar",
+            "hint1": {
+                "cost": 2900,
+                "hinttitle": "What is the real password?",
+                "hint": "Under something."
+            }
+        },
+    
+        "level30": {
+            "title": "Trial",
+            "hint1": {
+                "cost": 3000,
+                "hinttitle": "I have beaten all 3 mazes! What's next?",
+                "hint": "Just read the article carefully and you will find the real answer!"
+            },
+            "hint2": {
+                "cost": 3000,
+                "hinttitle": "The 3-letter word isn't the final answer...",
+                "hint": "Look more carefully! Every screen matters..."
+            }
+        },
+    
+        "level31": {
+            "title": "Algorithm",
+            "hint1": {
+                "cost": 3100,
+                "hinttitle": "What is this???",
+                "hint": "This is a piece of code. What you need to enter is the run result."
+            },
+            "hint2": {
+                "cost": 3100,
+                "hinttitle": "Can I know which programming language does this piece of code use?",
+                "hint": "Python."
+            }
+        },
+    
+        "level32": {
+            "title": "Literally",
+            "hint1": {
+                "cost": 3200,
+                "hinttitle": "What should I do?",
+                "hint": "Do it literally..."
+            }
+        },
+    
+        "level33": {
+            "title": "Smallest",
+            "hint1": {
+                "cost": 3300,
+                "hinttitle": "Smallest? I think I have found it...",
+                "hint": "Think twice. There is always a smaller one, if you can't beat this level."
+            }
+        },
+    
+        "level34": {
+            "title": "Loop",
+            "hint1": {
+                "cost": 3400,
+                "hinttitle": "It is an infinite loop... Where is the end? The end does not exist...",
+                "hint": "It is a cycle. The password is hidden in the cycle."
+            },
+            "hint2": {
+                "cost": 3400,
+                "hinttitle": "Infinite loop... Where is the password?",
+                "hint": "The hidden text matters."
+            }
+        },
+    
+        "level35": {
+            "title": "Encoded",
+            "hint1": {
+                "cost": 3500,
+                "hinttitle": "What should I do?",
+                "hint": "The text is encrypted. Just decrypt it by following the instruction and you will finally get the answer."
+            }
+        },
+    
+        "level36": {
+            "title": "Camouflage",
+            "hint1": {
+                "cost": 3600,
+                "hinttitle": "Part 1 is too hard.",
+                "hint": "How did I hide the text before? Think about it..."
+            },
+            "hint2": {
+                "cost": 3600,
+                "hinttitle": "Part 2 is too hard.",
+                "hint": "The length of the final password is 11."
+            }
+        },
+    
+        "level37": {
+            "title": "Skating",
+            "hint1": {
+                "cost": 3700,
+                "hinttitle": "What is the handwritten text on the screen?",
+                "hint": "Ice skating is interesting but I cannot go because it is spring now. The text is just red herring, what you need to concentrate about is another part."
+            },
+            "hint2": {
+                "cost": 3700,
+                "hinttitle": "Absolute Zero? What is it?",
+                "hint": "The password is on the absolute zero block. Think about how to find it."
+            },
+            "hint3": {
+                "cost": 3700,
+                "hinttitle": "How should I skate?",
+                "hint": "Speed skating equipment includes ice skates, skates, and skate clothing. Speed skating ice skates are composed of blade, blade tube, front small knife holder, front large knife holder, front tray, rear knife holder, and rear tray."
+            }
+        },
+    
+        "level38": {
+            "title": "Arrow Keys",
+            "hint1": {
+                "cost": 3800,
+                "hinttitle": "How to understand those strange things?",
+                "hint": "They are the point. Something is ciphered."
+            }
+        },
+    
+        "level39": {
+            "title": "Magic Orb",
+            "hint1": {
+                "cost": 3900,
+                "hinttitle": "Dipper than I think?",
+                "hint": "The password is really, really..."
+            }
+        },
+    
+        "level40": {
+            "title": "Revision",
+            "hint1": {
+                "cost": 4000,
+                "hinttitle": "What are the things and squares?",
+                "hint": "Squares are just blocking the password. Things are from previous levels."
+            },
+            "hint2": {
+                "cost": 4000,
+                "hinttitle": "What should I do after finding those things?",
+                "hint": "Type them one by one to reveal the password."
+            }
+        },
+    
+        "level41": {
+            "title": "Patience",
+            "hint1": {
+                "cost": 4100,
+                "hinttitle": "So how long should I wait?",
+                "hint": "More than one minute, less then ten minutes."
+            }
+        },
+    
+        "level42": {
+            "title": "Forty-Two",
+            "hint1": {
+                "cost": 4200,
+                "hinttitle": "How do I submit the password?",
+                "hint": "Just finish that maze and you will be able to submit the password."
+            },
+            "hint2": {
+                "cost": 4200,
+                "hinttitle": "I tried the password and I am very sure, but it is incorrect.",
+                "hint": "Take it literally is the eternal answer."
+            }
+        },
+    
+        "level43": {
+            "title": "Fence",
+            "hint1": {
+                "cost": 4300,
+                "hinttitle": "I don't know what should I do on this level.",
+                "hint": "It is related to two actions you usually do before. Doing those and you will see something vital."
+            },
+            "hint2": {
+                "cost": 4300,
+                "hinttitle": "I got something important but I don't know what to do.",
+                "hint": "It is something named Anagram."
+            },
+            "hint3": {
+                "cost": 4300,
+                "hinttitle": "Which letter needn't I use?",
+                "hint": "H."
+            }
+        },
+    
+        "level44": {
+            "title": "Keys",
+            "hint1": {
+                "cost": 4400,
+                "hinttitle": "So how to get the answer?",
+                "hint": "This is a sequence level. Find the sequence first."
+            }
+        },
+    
+        "level45": {
+            "title": "Rotation",
+            "hint1": {
+                "cost": 4500,
+                "hinttitle": "My poor mouse cursor skill can't let me pass the rotation trial.",
+                "hint": "When you finish it, you can see P=W=6."
+            },
+            "hint2": {
+                "cost": 4500,
+                "hinttitle": "I am dizzy and I finally see the password! but what should I do?",
+                "hint": "This is a mathematicial thing. If you put two letters together..."
+            }
+        },
+    
+        "level46": {
+            "title": "Seeker",
+            "hint1": {
+                "cost": 4600,
+                "hinttitle": "I only got a lot of meaningless rectangles.",
+                "hint": "You are not alone. Try harder..."
+            }
+        },
+    
+        "level47": {
+            "title": "Fork Road",
+            "hint1": {
+                "cost": 4700,
+                "hinttitle": "The impossible road is too hard...",
+                "hint": "It is possible but you need to use some special skills. However, this level is beatable without it."
+            },
+            "hint2": {
+                "cost": 4700,
+                "hinttitle": "How do I enter the password?",
+                "hint": "Just join them."
+            }
+        },
+    
+        "level48": {
+            "title": "Riddle Set",
+            "hint1": {
+                "cost": 4800,
+                "hinttitle": "These riddles are too hard. Can I get the answer of one riddle?",
+                "hint": "Of course! Just give HighStrike (Server Owner) the screenshot to prove you have bought this hint, and I will give you a riddle answer you want!"
+            }
+        },
+    
+        "level49": {
+            "title": "Fork Road",
+            "hint1": {
+                "cost": 4900,
+                "hinttitle": "Where is the password?",
+                "hint": "The password is under the thing under the thing."
+            },
+            "hint2": {
+                "cost": 4900,
+                "hinttitle": "What is the password?",
+                "hint": "The password is the English name of that element."
+            }
+        },
+    
+        "level50": {
+            "title": "Colorful",
+            "hint1": {
+                "cost": 5000,
+                "hinttitle": "What should I do first?",
+                "hint": "Explore those squares and try to do something special."
+            },
+            "hint2": {
+                "cost": 5000,
+                "hinttitle": "I got a blue screen, and what is it?",
+                "hint": "Drag something... there are two teleporters in this screen."
+            },
+            "hint3": {
+                "cost": 5000,
+                "hinttitle": "Where should I enter the password?",
+                "hint": "On the green screen."
+            }
+        },
+    
+        "level51": {
+            "title": "Pi",
+            "hint1": {
+                "cost": 5100,
+                "hinttitle": "What should I do first?",
+                "hint": "Find letters from numbers."
+            },
+            "hint2": {
+                "cost": 5100,
+                "hinttitle": "Can you tell me the length of the password?",
+                "hint": "10 letters long."
+            }
+        },
+    
+        "level52": {
+            "title": "White",
+            "hint1": {
+                "cost": 5200,
+                "hinttitle": "I have found the password, but it is unsubmittable.",
+                "hint": "It is on the lower right corner. Try to find it..."
+            },
+            "hint2": {
+                "cost": 5200,
+                "hinttitle": "I have found the password, but it is incorrect.",
+                "hint": "the password is n't..."
+            }
+        },
+    
+        "level53": {
+            "title": "Route",
+            "hint1": {
+                "cost": 5300,
+                "hinttitle": "I can't find it.",
+                "hint": "It isn't that hard to find it! It is hidden but big..."
+            }
+        },
+    
+        "level54": {
+            "title": "Font",
+            "hint1": {
+                "cost": 5400,
+                "hinttitle": "I can't pass the part 01.",
+                "hint": "There are a lot of website for you to find fonts! Use google or bing well can help you."
+            },
+            "hint2": {
+                "cost": 5400,
+                "hinttitle": "I can't pass the part 02.",
+                "hint": "41-50."
+            },
+            "hint3": {
+                "cost": 5400,
+                "hinttitle": "I can't pass the part 3.",
+                "hint": "It is no long *."
+            },
+            "hint4": {
+                "cost": 5400,
+                "hinttitle": "I can't pass the part 4.",
+                "hint": "The final password is just shown."
+            }
+        },
+    
+        "level55": {
+            "title": "PRESSure!",
+            "hint1": {
+                "cost": 5500,
+                "hinttitle": "PRESSure, what should I do?",
+                "hint": "Find the correct key on the keyboard, and press it! There are 7 keys. After doing everything, just click NEXT."
+            }
+        },
+    
+        "level56": {
+            "title": "Covers",
+            "hint1": {
+                "cost": 5600,
+                "hinttitle": "Can I get a hint of the 3 covers?",
+                "hint": "Mouse, keyboard, and paint."
+            }
+        },
+    
+        "level57": {
+            "title": "Difference",
+            "hint1": {
+                "cost": 5700,
+                "hinttitle": "The text is unseeable.",
+                "hint": "There are something on your keyboard."
+            },
+            "hint2": {
+                "cost": 5700,
+                "hinttitle": "Can I get one letter by buying this hint?",
+                "hint": "Of course! Just give HighStrike (Server Owner) the screenshot to prove you have bought this hint, and I will give you a difference you want!"
+            }
+        },
+    
+        "level58": {
+            "title": "Keep Going!",
+            "hint1": {
+                "cost": 5800,
+                "hinttitle": "I can't find anything but mess...",
+                "hint": "Find the vital thing and keep going, as the title says!"
+            }
+        },
+    
+        "level59": {
+            "title": "Runes",
+            "hint1": {
+                "cost": 5900,
+                "hinttitle": "Seeing stars is just seeing stars... How can I decrypt the stars?",
+                "hint": "It is something you usually use in your daily life."
+            },
+            "hint2": {
+                "cost": 5900,
+                "hinttitle": "How to decrypt the final clue?",
+                "hint": "It is easy. If you lose your eyes, you will know what it is."
+            }
+        },
+    
+        "level60": {
+            "title": "RGB",
+            "hint1": {
+                "cost": 6000,
+                "hinttitle": "What should I do first?",
+                "hint": "Try submitting some signs >:D"
+            },
+            "hint2": {
+                "cost": 6000,
+                "hinttitle": "The solution is >128?",
+                "hint": "See the title of this level and the grid and you will know it!"
+            },
+            "hint3": {
+                "cost": 6000,
+                "hinttitle": "How to extract?",
+                "hint": "Just extract numbers. Follow the clue shown and find a 3-digit final password."
+            }
+        },
+    
+        "level61": {
+            "title": "No more levels",
+            "hint1": {
+                "cost": 6100,
+                "hinttitle": "What should I start?",
+                "hint": "Look at the background carefully, then look at your keyboard carefully..."
+            },
+            "hint2": {
+                "cost": 6100,
+                "hinttitle": "I have gotton a clue, what should I do?",
+                "hint": "Follow it. It is easy to follow this 8-steps sequence."
+            }
+        },
+    
+        "level62": {
+            "title": "Adventure",
+            "hint1": {
+                "cost": 6200,
+                "hinttitle": "This level is too hard, I want to surrender...",
+                "hint": "Don't worry, we have prepared a easy version for you! Type [62 surrender] in the level 3 password box to receive it!"
+            }
+        },
+    
+        "level63": {
+            "title": "Perfect Pitch",
+            "hint1": {
+                "cost": 6300,
+                "hinttitle": "I am the 9999/10000. Is there a way to make this level completable to me?",
+                "hint": "Use tools like piano or online tools. It will help you very much. By the way, find the 9-letter English phrase and complete it!"
+            }
+        },
+    
+        "level64": {
+            "title": "Aftermath",
+            "hint1": {
+                "cost": 6400,
+                "hinttitle": "I have a bad math. How to understand the background?",
+                "hint": "2^n means 2*2*2...*2(n 2's). Find the levels that match the requirements and try to extract the final password."
+            }
+        },
+    
+        "level65": {
+            "title": "Performance",
+            "hint1": {
+                "cost": 6500,
+                "hinttitle": "What should I do in this level?",
+                "hint": "It's a type of ancient encryption. Find the encryption..."
+            },
+            "hint2": {
+                "cost": 6500,
+                "hinttitle": "The show is confusing.",
+                "hint": "The light is morse code."
+            }
+        },
+    
+        "level66": {
+            "title": "Darkness",
+            "hint1": {
+                "cost": 6600,
+                "hinttitle": "So what should I do in this level?",
+                "hint": "Find clues in this level and extract something from it."
+            },
+            "hint2": {
+                "cost": 6600,
+                "hinttitle": "The last step of this level is hard.",
+                "hint": "The last thing of this set is Ω/ω. But think carefully in this sequence."
+            }
+        },
+    
+        "level67": {
+            "title": "Shapes",
+            "hint1": {
+                "cost": 6700,
+                "hinttitle": "What are those things?",
+                "hint": "Perhaps W.D.Gaster knows this."
+            }
+        },
+    
+        "level68": {
+            "title": "Main Subject",
+            "hint1": {
+                "cost": 6800,
+                "hinttitle": "I can't listen to English well. Can you give me some clues?",
+                "hint": "In a cell."
+            }
+        },
+    
+        "level69": {
+            "title": "Multisolution",
+            "hint1": {
+                "cost": 6900,
+                "hinttitle": "I can't recognize the text.",
+                "hint": "It is just English sentences. Look closer..."
+            },
+            "hint2": {
+                "cost": 6900,
+                "hinttitle": "Multisolutions? Is it just a password?",
+                "hint": "For example, if someone let you reply Good in order to get some good things, maybe what you need to reply is [Good in order]."
+            }
+        },
+    
+        "level70": {
+            "title": "Sequence",
+            "hint1": {
+                "cost": 7000,
+                "hinttitle": "What should I do?",
+                "hint": "Follow the sequence. When something is added to the screen, find the password using the new thing till you see the final password."
+            }
+        },
+    
+        "level71": {
+            "title": "Z",
+            "hint1": {
+                "cost": 7100,
+                "hinttitle": "Z?",
+                "hint": "Password is ZZZZZZZZ, I think."
+            }
+        },
+    
+        "level72": {
+            "title": "Error Program",
+            "hint1": {
+                "cost": 7200,
+                "hinttitle": "What is this?",
+                "hint": "Drag and you can see more. This level needs speed!"
+            },
+            "hint2": {
+                "cost": 7200,
+                "hinttitle": "How to submit the password?",
+                "hint": "Submit one by one."
+            }
+        },
+        
+        "level73": {
+            "title": "Obstacles",
+            "hint1": {
+                "cost": 7300,
+                "hinttitle": "What should I do?",
+                "hint": "Avoid the obstacles and finally click the finish point and you can see a letter. The password is 7 letters long."
+            }
+        },
+    
+        "level74": {
+            "title": "Security Case",
+            "hint1": {
+                "cost": 7400,
+                "hinttitle": "What should I do if I want to start the level?",
+                "hint": "Press GO! then you will see something strange."
+            },
+            "hint2": {
+                "cost": 7400,
+                "hinttitle": "I can't see anything.",
+                "hint": "When the line is going, something is blocked."
+            }
+        },
+    
+        "level75": {
+            "title": "Labyrinth",
+            "hint1": {
+                "cost": 7500,
+                "hinttitle": "What should I do?",
+                "hint": "Go through the maze and finally go to the finish point. The finishing password is the same as starting one."
+            }
+        },
+    
+        "level76": {
+            "title": "Salvation",
+            "hint1": {
+                "cost": 7600,
+                "hinttitle": "So strange... this level is scary. I don't know what to do first.",
+                "hint": "The password is in white. It is right in front of you."
+            },
+            "hint2": {
+                "cost": 7600,
+                "hinttitle": "After finding the first password, what should I do?",
+                "hint": "Decrypt the mystery of moving."
+            },
+            "hint3": {
+                "cost": 7600,
+                "hinttitle": "I got another screen. What should I do?",
+                "hint": "The password is in red. It is written in a special font."
+            },
+            "hint4": {
+                "cost": 7600,
+                "hinttitle": "Last part is too hard.",
+                "hint": "Drag somewhere and you will finally see the final password."
+            }
+        },
+    
+        "level77": {
+            "title": "Hide and Seek",
+            "hint1": {
+                "cost": 7700,
+                "hinttitle": "I am escapeless...",
+                "hint": "Look at the background closely and you will know what to do in the level jump screen."
+            },
+            "hint2": {
+                "cost": 7700,
+                "hinttitle": "The mazes are too hard.",
+                "hint": "Just overcome them without thinking! You have to do them unconditionly...?"
+            },
+            "hint3": {
+                "cost": 7700,
+                "hinttitle": "How can I get the password?",
+                "hint": "Look closely and you will finally find the REALLY LONG password..."
+            }
+        },
+    
+        "level78": {
+            "title": "Machine",
+            "hint1": {
+                "cost": 7800,
+                "hinttitle": "What is my target?",
+                "hint": "078. When you finish it, press GO to reveal the real password."
+            }
+        },
+    
+        "level79": {
+            "title": "Monochrome",
+            "hint1": {
+                "cost": 7900,
+                "hinttitle": "The first problem...",
+                "hint": "Look closely, the sample gave you how to move, After moving, stack the grid to the arrow paper."
+            },
+            "hint2": {
+                "cost": 7900,
+                "hinttitle": "The second problem...",
+                "hint": "It is a minesweeper game. Use A1Z26. Extract from light to dark."
+            },
+            "hint3": {
+                "cost": 7900,
+                "hinttitle": "The third problem...",
+                "hint": "What does what you have drew look like?"
+            },
+            "hint4": {
+                "cost": 7900,
+                "hinttitle": "Meta...",
+                "hint": "Look at the source code."
+            }
+        },
+    
+        "level80": {
+            "title": "Gate",
+            "hint1": {
+                "cost": 8000,
+                "hinttitle": "What should I do before starting?",
+                "hint": "Press N on your keyboard."
+            },
+            "hint2": {
+                "cost": 8000,
+                "hinttitle": "Oh no... I have got something peculiar.",
+                "hint": "Don't worry! They are strange screens, you have to collect five."
+            },
+            "hint3": {
+                "cost": 8000,
+                "hinttitle": "The buttons...",
+                "hint": "Almost every button matters in those five screens. Including the discord server..."
+            },
+            "hint4": {
+                "cost": 8000,
+                "hinttitle": "How to extract?",
+                "hint": "Use the thing you've got in the discord server. The enumeration of the final password is (5 4 4) without space."
+            }
+        },
+    
+        "level81": {
+            "title": "Buttons",
+            "hint1": {
+                "cost": 8100,
+                "hinttitle": "How to get the password?",
+                "hint": "Try pressing all buttons and find something special."
+            }
+        },
+    
+        "level82": {
+            "title": "Big Dipper",
+            "hint1": {
+                "cost": 8200,
+                "hinttitle": "I think I have found how to get the password but something is wrong.",
+                "hint": "There is no bug in this level! keep trying and keep thinking..."
+            }
+        },
+    
+        "level83": {
+            "title": ">>>SYNC<<<",
+            "hint1": {
+                "cost": 8300,
+                "hinttitle": "What should I do after finding gray screens?",
+                "hint": "Translate it and guess a letter to get the final password."
+            }
+        },
+    
+        "level84": {
+            "title": "Algae Always Greener",
+            "hint1": {
+                "cost": 8400,
+                "hinttitle": "I think I have found the vital clue but I don't know anything.",
+                "hint": "Don't worry! You needn't be familiar with her. One button on the main screen is important."
+            }
+        },
+    
+        "level85": {
+            "title": "Techno Board",
+            "hint1": {
+                "cost": 8500,
+                "hinttitle": "What should I do?",
+                "hint": "Find 23 squares and finally you will know the answer."
+            },
+            "hint2": {
+                "cost": 8500,
+                "hinttitle": "Can I get some clues about really hidden squares?",
+                "hint": "Of course! Think about why you can enter numbers and create squares."
+            }
+        },
+    
+        "level86": {
+            "title": "Security",
+            "hint1": {
+                "cost": 8600,
+                "hinttitle": "What is this?",
+                "hint": "It is a wordle game. Try to make everything blue, just like green in standard wordle."
+            }
+        },
+    
+        "level87": {
+            "title": "Rainbow Decoding!",
+            "hint1": {
+                "cost": 8700,
+                "hinttitle": "Can I get some tips on decrypting this?",
+                "hint": "Keyboard. Think about it."
+            },
+            "hint2": {
+                "cost": 8700,
+                "hinttitle": "How can I get the final answer?",
+                "hint": "If you think you have got to the final screen, look very closely to get it..."
+            }
+        },
+    
+        "level88": {
+            "title": "Something Summary",
+            "hint1": {
+                "cost": 8800,
+                "hinttitle": "What is the password?",
+                "hint": "Look at the grid closely and the peripheral things. What do you remember?"
+            }
+        },
+    
+        "level89": {
+            "title": "Illusion",
+            "hint1": {
+                "cost": 8900,
+                "hinttitle": "ILLUSION",
+                "hint": "ILLUSION"
+            }
+        },
+    
+        "level90": {
+            "title": "Emptiness",
+            "hint1": {
+                "cost": 9000,
+                "hinttitle": "3 LIVES I CANNOT PASS IT",
+                "hint": "DID YOU NOTICE THAT LEVEL 89 WAS MADE BY KONAMI"
+            },
+            "hint2": {
+                "cost": 9000,
+                "hinttitle": "WHAT SHOULD I DO IT IS JUST HARD I CAN'T HEAR ANYTHING",
+                "hint": "AFTER PASSING THE FORBIDDEN MAZE EVERYTHING IS CHANGED THE PASSWORD ENUMERATION IS (8 5 7)"
+            }
+        },
+    
+        "level91": {
+            "title": "Optics",
+            "hint1": {
+                "cost": 9100,
+                "hinttitle": "How to do that? I can't see anything!",
+                "hint": "Mono's Autostereogram Class! Let your eyes rest for a moment, then use a gaze to aim at those two points with a slightly blurry line of sight. You will notice that two other points are separated from each other, and then adjust your gaze in a timely manner to combine the two points inside into one point. When the four points become two points, you will be able to see the image."
+            }
+        },
+    
+        "level92": {
+            "title": "Television Scan",
+            "hint1": {
+                "cost": 9200,
+                "hinttitle": "What should I do first?",
+                "hint": "Find 7 pieces of the QR code, then scan it."
+            },
+            "hint2": {
+                "cost": 9200,
+                "hinttitle": "I can't get the final password.",
+                "hint": "It is not hard. Think it simple."
+            }
+        },
+    
+        "level93": {
+            "title": "Fare Adjustment",
+            "hint1": {
+                "cost": 9300,
+                "hinttitle": "It is familiar...",
+                "hint": "Think a level you have beaten in the past. But this time, everything need to be solved..."
+            }
+        },
+    
+        "level94": {
+            "title": "Target: 42",
+            "hint1": {
+                "cost": 9400,
+                "hinttitle": "The maze is too hard...",
+                "hint": "It requires speed and calculation and routing! Try to get 42 and go to finish before the time runs out."
+            }
+        },
+    
+        "level95": {
+            "title": "Billiards",
+            "hint1": {
+                "cost": 9500,
+                "hinttitle": "How to get the correct answer?",
+                "hint": "When the game end, the number shown is how many correct. Use it, with trial and error, you will finally do it!"
+            }
+        },
+    
+        "level96": {
+            "title": "Language",
+            "hint1": {
+                "cost": 9600,
+                "hinttitle": "I don't know what is this...",
+                "hint": "It is a man-made language! You can regard it as cipher. Use the clues shown on the screen and find the thing on the screen."
+            }
+        },
+    
+        "level97": {
+            "title": "Non-Exist Level",
+            "hint1": {
+                "cost": 9700,
+                "hinttitle": "Does the level really not exist?",
+                "hint": "Nope. This level exists. The solution is on Level 97 but not on level 97."
+            },
+            "hint2": {
+                "cost": 9700,
+                "hinttitle": "How does this level work?",
+                "hint": "Using something you have used a lot times. 97 exists there."
+            },
+            "hint3": {
+                "cost": 9700,
+                "hinttitle": "How many part does this level have? Does this level requires everything needs to be done in that place?",
+                "hint": "3. For the second question, yes."
+            }
+        },
+    
+        "level98": {
+            "title": "Rectangle",
+            "hint1": {
+                "cost": 9800,
+                "hinttitle": "The yellow screen is too hard.",
+                "hint": "The green screen is a mirror. Think again..."
+            },
+            "hint2": {
+                "cost": 9800,
+                "hinttitle": "The blue screen is too hard.",
+                "hint": "Use calculators. There are a lot on the Internet."
+            },
+            "hint3": {
+                "cost": 9800,
+                "hinttitle": "The purple screen is too hard.",
+                "hint": "It is chemical equations. You can get more info on the Internet. It is easy to learn. Your target is to find the balancing coefficient of the last equation."
+            },
+            "hint4": {
+                "cost": 9800,
+                "hinttitle": "The aqua screen is too hard.",
+                "hint": "I've told you the final password before. Go through this level again..."
+            }
+        },
+    
+        "level99": {
+            "title": "Mechanism",
+            "hint1": {
+                "cost": 9900,
+                "hinttitle": "The mechanical maze is too hard. Can I get it simplified?",
+                "hint": "There is no way to simplify it. Practice more. But cheat is enabled..."
+            }
+        },
+    
+        "level100": {
+            "title": "Re:Adventure!",
+            "hint1": {
+                "cost": 10000,
+                "hinttitle": "This level is too hard, I want to surrender...",
+                "hint": "Don't worry, we have prepared a easy version for you! Type [100 give up] in the level 3 password box to receive it!"
+            }
+        }
+    }
+
+}

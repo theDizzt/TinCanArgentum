@@ -1,0 +1,873 @@
+{
+    "achievements": {
+            "258685089": {
+                "id": 1,
+                "title": "Beginner",
+                "description": "Beat Level 5.",
+                "hidden": 0,
+                "xp": 550,
+                "money": 350
+            },
+            "717746139": {
+                "id": 2,
+                "title": "I know it's not possible",
+                "description": "Bully fake button on Level 7.",
+                "hidden": 1,
+                "xp": 770,
+                "money": 490
+            },
+            "947735211": {
+                "id": 3,
+                "title": "Collector",
+                "description": "Beat Level 9.",
+                "hidden": 0,
+                "xp": 990,
+                "money": 630
+            },
+            "219878892": {
+                "id": 4,
+                "title": "Green Number",
+                "description": "Click 84 first on  Level 13.",
+                "hidden": 1,
+                "xp": 684,
+                "money": 684
+            },
+            "732909002": {
+                "id": 5,
+                "title": "Typewriter",
+                "description": "Beat Level 14.",
+                "hidden": 0,
+                "xp": 1430,
+                "money": 980
+            },
+            "010233330": {
+                "id": 6,
+                "title": "Simply",
+                "description": "????? can’t be the answer at Level 15, right?",
+                "hidden": 1,
+                "xp": 1650,
+                "money": 1050
+            },
+            "768067866": {
+                "id": 7,
+                "title": "Isn’t that a number too?",
+                "description": "At Level 16, enter the correct answer by adding 16 from the title.",
+                "hidden": 1,
+                "xp": 1170,
+                "money": 1170
+            },
+            "198067081": {
+                "id": 8,
+                "title": "Point out",
+                "description": "Beat Level 19.",
+                "hidden": 0,
+                "xp": 2090,
+                "money": 1330
+            },
+            "203214691": {
+                "id": 9,
+                "title": "String + String",
+                "description": "Found the correct answer using string addition in Level 21.",
+                "hidden": 1,
+                "xp": 2121,
+                "money": 1111
+            },
+            "324645105": {
+                "id": 10,
+                "title": "Void Fighter",
+                "description": "Beat Level 23.",
+                "hidden": 0,
+                "xp": 2530,
+                "money": 1610
+            },
+            "836044254": {
+                "id": 11,
+                "title": "Literally",
+                "description": "Enter the correct answer literally in Level 25.",
+                "hidden": 1,
+                "xp": 2000,
+                "money": 1000
+            },
+            "473578479": {
+                "id": 12,
+                "title": "Literally again",
+                "description": "Enter 'π' at Level 26.",
+                "hidden": 1,
+                "xp": 2000,
+                "money": 1000
+            },
+            "273492503": {
+                "id": 13,
+                "title": "Reversal",
+                "description": "Beat Level 27.",
+                "hidden": 0,
+                "xp": 2970,
+                "money": 1890
+            },
+            "126573883": {
+                "id": 14,
+                "title": "同床異夢",
+                "description": "Enter 'slash' instead at Level 29.",
+                "hidden": 1,
+                "xp": 3190,
+                "money": 2030
+            },
+            "688159977": {
+                "id": 15,
+                "title": "White Blossom",
+                "description": "Beat Level 31.",
+                "hidden": 0,
+                "xp": 3410,
+                "money": 2170
+            },
+            "849199455": {
+                "id": 16,
+                "title": "Magic Spell",
+                "description": "Enter 'hidden' on Level 4.",
+                "hidden": 1,
+                "xp": 5000,
+                "money": 5000
+            },
+            "344707798": {
+                "id": 17,
+                "title": "Yellow Splash",
+                "description": "Investigate the GO button at Level 33.",
+                "hidden": 1,
+                "xp": 3630,
+                "money": 2310
+            },
+            "629376552": {
+                "id": 18,
+                "title": "Dragon Blast",
+                "description": "Beat Level 35.",
+                "hidden": 0,
+                "xp": 3850,
+                "money": 2450
+            },
+            "721001161": {
+                "id": 19,
+                "title": "The Good Old Days...",
+                "description": "Find Legacy Level 39.",
+                "hidden": 1,
+                "xp": 3942,
+                "money": 3942
+            },
+            "039350691": {
+                "id": 20,
+                "title": "Bossfight",
+                "description": "Beat Level 39 (1st Boss Level).",
+                "hidden": 0,
+                "xp": 9900,
+                "money": 6000,
+                "skin": 109
+            },
+            "350773994": {
+                "id": 21,
+                "title": "I beat it",
+                "description": "Beat Legacy Level 39.",
+                "hidden": 1,
+                "xp": 4290,
+                "money": 2730
+            },
+            "765540130": {
+                "id": 22,
+                "title": "Fraud",
+                "description": "Clicking on a suspicious button in Level 41.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 500
+            },
+            "554843676": {
+                "id": 23,
+                "title": "Battle Arena",
+                "description": "Beat Level 42.",
+                "hidden": 0,
+                "xp": 4620,
+                "money": 2940
+            },
+            "014301382": {
+                "id": 24,
+                "title": "Easygoing",
+                "description": "Enter '44' in Level 44.",
+                "hidden": 1,
+                "xp": 4444,
+                "money": 4444
+            },
+            "072653834": {
+                "id": 25,
+                "title": "Bananaholic",
+                "description": "Beat Level 46.",
+                "hidden": 0,
+                "xp": 5060,
+                "money": 3220
+            },
+            "961465177": {
+                "id": 26,
+                "title": "Consolidation",
+                "description": "Mistaking ! for i in Level 47.",
+                "hidden": 1,
+                "xp": 4700,
+                "money": 3000
+            },
+            "135418174": {
+                "id": 27,
+                "title": "Not my name",
+                "description": "Enter 'BumchiIndigo' in Level 49.",
+                "hidden": 1,
+                "xp": 1700,
+                "money": 2000
+            },
+            "629769304": {
+                "id": 28,
+                "title": "Quarter Marathon",
+                "description": "Beat Level 50.",
+                "hidden": 0,
+                "xp": 5500,
+                "money": 3500
+            },
+            "456505873": {
+                "id": 29,
+                "title": "Hand of Reconciliation",
+                "description": "Admit your fault and apologize.",
+                "hidden": 0,
+                "xp": 1515,
+                "money": 1515
+            },
+            "557117913": {
+                "id": 30,
+                "title": "Fake Level",
+                "description": "Falling into the trap in Level 55.",
+                "hidden": 1,
+                "xp": 500,
+                "money": 500
+            },
+            "555542519": {
+                "id": 31,
+                "title": "Lucky Number",
+                "description": "Enter 'DapurM' in Level 55 (Dapur's favorite number).",
+                "hidden": 1,
+                "xp": 5500,
+                "money": 5500
+            },
+            "326317383": {
+                "id": 32,
+                "title": "Deep Blue",
+                "description": "Beat Level 55.",
+                "hidden": 0,
+                "xp": 6050,
+                "money": 3850
+            },
+            "045663338": {
+                "id": 33,
+                "title": "Ninja Star",
+                "description": "Find hidden star on Level 58.",
+                "hidden": 1,
+                "xp": 999,
+                "money": 999
+            },
+            "327570278": {
+                "id": 34,
+                "title": "WELL, WELL, WELL.",
+                "description": "Find Bill Cipher on Level 59.",
+                "hidden": 1,
+                "xp": 618,
+                "money": 618
+            },
+            "555042976": {
+                "id": 35,
+                "title": "NELG forever...",
+                "description": "Enter the demon's name on Level 60.",
+                "hidden": 1,
+                "xp": 1212,
+                "money": 1212,
+                "skin": 110
+            },
+            "779455719": {
+                "id": 36,
+                "title": "NTG must pissed off",
+                "description": "Beat Level 61. (2nd Boss Level)",
+                "hidden": 0,
+                "xp": 12000,
+                "money": 7500,
+                "skin": 111
+            },
+            "657294909": {
+                "id": 37,
+                "title": "Lucky Number 2",
+                "description": "Get 39 points on Level 62.",
+                "hidden": 1,
+                "xp": 3939,
+                "money": 3939
+            },
+            "414605538": {
+                "id": 38,
+                "title": "Amazing Journey",
+                "description": "Beat Level 63.",
+                "hidden": 0,
+                "xp": 6930,
+                "money": 4410
+            },
+            "238970884": {
+                "id": 39,
+                "title": "So long s#$%ers",
+                "description": "Find hidden portal on Level 65.",
+                "hidden": 1,
+                "xp": 7000,
+                "money": 4500,
+                "skin": 112
+            },
+            "124874459": {
+                "id": 40,
+                "title": "Aftereffect",
+                "description": "Beat Level 66.",
+                "hidden": 0,
+                "xp": 7260,
+                "money": 4620
+            },
+            "877043878": {
+                "id": 41,
+                "title": "Memories",
+                "description": "Find hidden password on Level 60 and type it on Level 67.",
+                "hidden": 1,
+                "xp": 3500,
+                "money": 1500
+            },
+            "842518269": {
+                "id": 42,
+                "title": "Sushi Killer",
+                "description": "Beat Level 69.",
+                "hidden": 0,
+                "xp": 7590,
+                "money": 4830
+            },
+            "168321758": {
+                "id": 43,
+                "title": "Back to 2019",
+                "description": "Beat Level 71.",
+                "hidden": 0,
+                "xp": 7810,
+                "money": 4970
+            },
+            "587335810": {
+                "id": 44,
+                "title": "Reward for Effort",
+                "description": "Reach 999 on Level 74.",
+                "hidden": 1,
+                "xp": 3999,
+                "money": 1999
+            },
+            "363510864": {
+                "id": 45,
+                "title": "METAL GEAR SOLID",
+                "description": "Beat Level 74.",
+                "hidden": 0,
+                "xp": 8140,
+                "money": 5180
+            },
+            "562890961": {
+                "id": 46,
+                "title": "You little rascal",
+                "description": "Reverse uppercase and lowercase letters on Level 76.",
+                "hidden": 1,
+                "xp": 3999,
+                "money": 1999
+            },
+            "791439150": {
+                "id": 47,
+                "title": "Spotlight!!!",
+                "description": "Beat Level 78. (3rd Boss Level)",
+                "hidden": 0,
+                "xp": 13600,
+                "money": 7500,
+                "skin": 113
+            },
+            "572874073": {
+                "id": 48,
+                "title": "Perfectionist",
+                "description": "Reset 50 times on Level 79.",
+                "hidden": 1,
+                "xp": 2000,
+                "money": 1000
+            },
+            "325785263": {
+                "id": 49,
+                "title": "Controller",
+                "description": "Beat Level 81.",
+                "hidden": 0,
+                "xp": 8910,
+                "money": 5670
+            },
+            "058168539": {
+                "id": 50,
+                "title": "Hold ⓧ to Pay Respects",
+                "description": "Find out the name of flower in the background on Level 84.",
+                "hidden": 1,
+                "xp": 8484,
+                "money": 8484,
+                "skin": 114
+            },
+            "664434884": {
+                "id": 51,
+                "title": "Will be there, Argentum",
+                "description": "Beat Level 84.",
+                "hidden": 0,
+                "xp": 9240,
+                "money": 5880
+            },
+            "581472859": {
+                "id": 52,
+                "title": "Life is subjective",
+                "description": "Trying to move forward from a dead end in Level 85.",
+                "hidden": 1,
+                "xp": 850,
+                "money": 850
+            },
+            "029456225": {
+                "id": 53,
+                "title": "Mirroring",
+                "description": "Level 82 solution method applied. (On Level 85)",
+                "hidden": 1,
+                "xp": 8500,
+                "money": 4000
+            },
+            "850077220": {
+                "id": 54,
+                "title": "High Jump",
+                "description": "Skip Level 85.",
+                "hidden": 0,
+                "xp": 1000,
+                "money": 500
+            },
+            "322081484": {
+                "id": 55,
+                "title": "Rapid Wrong",
+                "description": "Type wrong password on Level 87.",
+                "hidden": 1,
+                "xp": 2500,
+                "money": 1500
+            },
+            "095965322": {
+                "id": 56,
+                "title": "Freeze Brain",
+                "description": "Beat Level 87.",
+                "hidden": 0,
+                "xp": 9500,
+                "money": 6090
+            },
+            "042302844": {
+                "id": 57,
+                "title": "Not Here...",
+                "description": "Entering the password in the wrong place at Level 88.",
+                "hidden": 1,
+                "xp": 2500,
+                "money": 1500
+            },
+            "580071745": {
+                "id": 58,
+                "title": "Available Here!",
+                "description": "Attempting a level jump from Level 89.",
+                "hidden": 0,
+                "xp": 1000,
+                "money": 500
+            },
+            "098169588": {
+                "id": 59,
+                "title": "Polyphemus",
+                "description": "Hold 'i' on the failure screen at Level 90.",
+                "hidden": 1,
+                "xp": 1500,
+                "money": 1000
+            },
+            "261546494": {
+                "id": 60,
+                "title": "3D Cool",
+                "description": "Find the hidden screen at Level 91.",
+                "hidden": 1,
+                "xp": 1500,
+                "money": 1000,
+                "skin": 115
+            },
+            "798085942": {
+                "id": 61,
+                "title": "KuKui in the 3D world",
+                "description": "Beat Level 91.",
+                "hidden": 0,
+                "xp": 9600,
+                "money": 6370
+            },
+            "125518650": {
+                "id": 62,
+                "title": "Delicious >:D",
+                "description": "Type 'chicken' in Level 92.",
+                "hidden": 1,
+                "xp": 1500,
+                "money": 1000
+            },
+            "076177154": {
+                "id": 63,
+                "title": "It's not time yet",
+                "description": "You'll need this screen later.",
+                "hidden": 0,
+                "xp": 1000,
+                "money": 750
+            },
+            "521783213": {
+                "id": 64,
+                "title": "Captain Cool",
+                "description": "You try to self-flagellate.",
+                "hidden": 0,
+                "xp": 1000,
+                "money": 750
+            },
+            "644742385": {
+                "id": 65,
+                "title": "Hangover Cures",
+                "description": "Beat Level 94.",
+                "hidden": 0,
+                "xp": 9700,
+                "money": 6580
+            },
+            "789805080": {
+                "id": 66,
+                "title": "Stay Organized",
+                "description": "Arrange letters in order without duplicates at Level 96.",
+                "hidden": 1,
+                "xp": 1234,
+                "money": 567
+            },
+            "198525901": {
+                "id": 67,
+                "title": "The Big Bang Cosmology",
+                "description": "If you rub it in too much, the universe might explode!",
+                "hidden": 0,
+                "xp": 999,
+                "money": 999,
+                "skin": 116
+            },
+            "683241450": {
+                "id": 68,
+                "title": "Digital Brain",
+                "description": "Beat Level 98.",
+                "hidden": 0,
+                "xp": 9800,
+                "money": 6860
+            },
+            "149000274": {
+                "id": 69,
+                "title": "We only want ONE Thing",
+                "description": "Not two...",
+                "hidden": 0,
+                "xp": 333,
+                "money": 333
+            },
+            "796548533": {
+                "id": 70,
+                "title": "New Path",
+                "description": "Attempting a level jump from Level 89.",
+                "hidden": 0,
+                "xp": 1000,
+                "money": 500
+            },
+            "647971253": {
+                "id": 71,
+                "title": "It's small, but it's there",
+                "description": "Enter a different color at 5% of Level 100.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 500
+            },
+            "516579104": {
+                "id": 72,
+                "title": "The Mind Reader",
+                "description": "Guessing the answer at 69% of Level 100.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "106747930": {
+                "id": 73,
+                "title": "LK Elite",
+                "description": "Beat Level 100.",
+                "hidden": 0,
+                "xp": 16000,
+                "money": 10000,
+                "skin": 117
+            },
+            "551841121": {
+                "id": 74,
+                "title": "Hard Worker",
+                "description": "Beat Level 103.",
+                "hidden": 0,
+                "xp": 8192,
+                "money": 4096
+            },
+            "525280995": {
+                "id": 75,
+                "title": "Say My Name",
+                "description": "Beat Level 104.",
+                "hidden": 0,
+                "xp": 9880,
+                "money": 7000
+            },
+            "585232594": {
+                "id": 76,
+                "title": "Vermilion",
+                "description": "Register your masterpiece!",
+                "hidden": 0,
+                "xp": 0,
+                "money": 0,
+                "skin": 118
+            },
+            "860159446": {
+                "id": 77,
+                "title": "LK, Drop the Beat!",
+                "description": "Beat Level 108.",
+                "hidden": 0,
+                "xp": 9990,
+                "money": 7250
+            },
+            "748668587": {
+                "id": 78,
+                "title": "Medusa",
+                "description": "Do nothing for 5 minutes in Level 109.",
+                "hidden": 1,
+                "xp": 1500,
+                "money": 1000
+            },
+            "071352319": {
+                "id": 79,
+                "title": "コナミコマンド",
+                "description": "Do konami command on Level 110.",
+                "hidden": 1,
+                "xp": 573,
+                "money": 573
+            },
+            "979256536": {
+                "id": 80,
+                "title": "One Love ♥",
+                "description": "Beat Level 111.",
+                "hidden": 0,
+                "xp": 10101,
+                "money": 7400
+            },
+            "756274145": {
+                "id": 81,
+                "title": "Welcoming face",
+                "description": "Type 'salmon' on Level 112.",
+                "hidden": 1,
+                "xp": 690,
+                "money": 690
+            },
+            "783161453": {
+                "id": 82,
+                "title": "Almost peeing my pants",
+                "description": "See jumpscares on Level 113.",
+                "hidden": 1,
+                "xp": 50,
+                "money": 10
+            },
+            "192740007": {
+                "id": 83,
+                "title": "Can I wear these?",
+                "description": "Find secret clothes on Level 114.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "276813942": {
+                "id": 84,
+                "title": "Κρυφό",
+                "description": "Find hidden code on Level 115.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "715478337": {
+                "id": 85,
+                "title": "Cracker",
+                "description": "Beat Level 115.",
+                "hidden": 0,
+                "xp": 10350,
+                "money": 7500
+            },
+            "527679993": {
+                "id": 86,
+                "title": "Renaming",
+                "description": "Solved with new name.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "403038594": {
+                "id": 87,
+                "title": "Computation Results",
+                "description": "Type the answer differently at Level 118.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "754756273": {
+                "id": 88,
+                "title": "Just like the first time",
+                "description": "On the first screen of Level 119, type 'asterisk'.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "432697549": {
+                "id": 89,
+                "title": "SPLIT",
+                "description": "Divide 119 in half.",
+                "hidden": 1,
+                "xp": 500,
+                "money": 375
+            },
+            "168364500": {
+                "id": 90,
+                "title": "DDoS Attack",
+                "description": "Beat Level 119.",
+                "hidden": 0,
+                "xp": 10710,
+                "money": 7700
+            },
+            "209758421": {
+                "id": 91,
+                "title": "Space Void",
+                "description": "Find hidden portal in Level 121.",
+                "hidden": 1,
+                "xp": 3000,
+                "money": 2000,
+                "skin": 119
+            },
+            "701054112": {
+                "id": 92,
+                "title": "Red Guy",
+                "description": "Beat Level 121.",
+                "hidden": 0,
+                "xp": 17000,
+                "money": 10000
+            },
+            "766740133": {
+                "id": 93,
+                "title": "Framework",
+                "description": "Beat Level 124.",
+                "hidden": 0,
+                "xp": 10912,
+                "money": 7850
+            },
+            "099779777": {
+                "id": 94,
+                "title": "Jackpot",
+                "description": "Make 777 at Level 127.",
+                "hidden": 1,
+                "xp": 7777,
+                "money": 7777
+            },
+            "250435820": {
+                "id": 95,
+                "title": "Don't Wander",
+                "description": "Beat Level 129.",
+                "hidden": 0,
+                "xp": 11094,
+                "money": 8000
+            },
+            "392907797": {
+                "id": 96,
+                "title": "Dangerous, But it's legal!",
+                "description": "Pass Level 130 by sprinting at a speed of more than 39px per second.",
+                "hidden": 1,
+                "xp": 3900,
+                "money": 1000
+            },
+            "247468295": {
+                "id": 97,
+                "title": "Doppelganger?",
+                "description": "Falling into a Trap at Level 131.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "875285362": {
+                "id": 98,
+                "title": "Cereal Cough",
+                "description": "Beat Level 132.",
+                "hidden": 0,
+                "xp": 11220,
+                "money": 8000
+            },
+            "159399746": {
+                "id": 99,
+                "title": "Remember Me.",
+                "description": "Found another answer at Level 135.",
+                "hidden": 1,
+                "xp": 1350,
+                "money": 1000
+            },
+            "205789450": {
+                "id": 100,
+                "title": "Porygon-Z",
+                "description": "Beat Level 136.",
+                "hidden": 0,
+                "xp": 11425,
+                "money": 8000
+            },
+            "277733119": {
+                "id": 101,
+                "title": "Not Rocket Science",
+                "description": "Complete calculations at Level 138.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "882265209": {
+                "id": 102,
+                "title": "Objection!",
+                "description": "Refusing to proceed at Level 139.",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "037675329": {
+                "id": 103,
+                "title": "Down The Drain",
+                "description": "Press the button at Upgrade Level 3 (Level 139).",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "061047904": {
+                "id": 104,
+                "title": "It's Miracle!",
+                "description": "Type magic word at Upgrade Level 4 (Level 139).",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "981395258": {
+                "id": 105,
+                "title": "Is Mayonnaise a Number?",
+                "description": "Adding strings at Upgrade Level 11 (Level 139).",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "287237470": {
+                "id": 106,
+                "title": "Horseradish is not a Number either",
+                "description": "Adding strings at Upgrade Level 21 (Level 139).",
+                "hidden": 1,
+                "xp": 1000,
+                "money": 750
+            },
+            "652738839": {
+                "id": 107,
+                "title": "Level Killer Master",
+                "description": "Beat Level 139.",
+                "hidden": 0,
+                "xp": 18500,
+                "money": 10000,
+                "skin": 120
+            }
+        }	
+
+}
