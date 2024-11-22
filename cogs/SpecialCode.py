@@ -30,7 +30,14 @@ codelist = {
     "261546494": 115,
     "198525901": 116,
     "106747930": 117,
-    "585232594": 118
+    "585232594": 118,
+    "dapurm": 141,
+    "쿠크다스": 142,
+    "라이스썬더": 146,
+    "비비빅": 147,
+    "오도짜세기합바이크": 151,
+    "부경타이타닉": 152,
+    "100000words": 155
 }
 
 
@@ -46,7 +53,7 @@ class InputCode(discord.ui.Modal, title='Input Special Code!!'):
                 f"`(⩌Δ ⩌ ;)` <@{interaction.user.id}> This code does not exist. Please double check that there are no typos!"
             )
         else:
-            storage_list = etc.storageLineRead()
+            storage_list = etc.storageLineRead("all")
             if q.readStorage(interaction.user, result) == 1:
                 await interaction.response.send_message(
                     f"`(⩌Δ ⩌ ;)` <@{interaction.user.id}> You have already unlocked this skin!\nInfo: **`{storage_list[result-1][0]}`** {storage_list[result-1][1]}"

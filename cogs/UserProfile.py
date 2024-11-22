@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 from PIL import Image, ImageDraw, ImageFont
+import requests
 import io
 import json
 from config.rootdir import root_dir
@@ -13,31 +14,37 @@ with open(root_dir + '/font/font.json', 'r',encoding='UTF-8') as f:
 
 def fontsize(type, font):
     if type == "name":
-        if font == "lcd" or font == "minecraft" or font == "chalk" or font == "brush" or font == "serif" or font == "starcraft" or font == "luxury":
+        if font == "lcd" or font == "minecraft" or font == "chalk" or font == "brush" or font == "serif" or font == "starcraft" or font == "luxury" or font == "nature" or font == "handwrite":
             return 24
-        elif font == "fluid" or font == "paper" or font == "legend":
+        elif font == "fluid" or font == "paper" or font == "legend" or font == "square":
             return 22
         else:
             return 20
     
     elif type == "xp":
-        if font == "fluid" or font == "lcd" or font == "luxury" or font == "minecraft" or font == "stella" or font == "brush" or font == "stencil" or font == "legend":
+        if font == "fluid" or font == "lcd" or font == "luxury" or font == "minecraft" or font == "stella" or font == "brush" or font == "stencil" or font == "legend" or font == "square":
             return 18
-        elif font == "gothic":
+        elif font == "gothic" or font == "handwrite":
             return 20
         else:
             return 16
 
 def textAltitude(type, font):
     if type == "name":
-        if font == "luxury" or font == "lcd":
+        if font == "luxury" or font == "lcd" or font == "legend" or font == "handwrite" or font == "nature":
             return -3
         else:
             return 0
         
     elif type == "xp":
-        if font == "pixel" or font == "fluid" or font == "minecraft" or font == "stencil" or font == "starcraft" or font == "legend":
+        if font == "pixel" or font == "minecraft" or font == "stencil" or font == "starcraft" or font == "legend":
             return 2
+        elif font == "sans":
+            return 3
+        elif font == "fluid":
+            return 4
+        elif font == "nature":
+            return 5
         else:
             return 0
 
@@ -73,7 +80,7 @@ class PaginationView(discord.ui.View):
                               description=f"Your Ranking: {myrank}/{total}",
                               color=0xE2F6CA)
 
-        embed.set_thumbnail(url=user.avatar.url)
+        embed.set_thumbnail(url=user.display_avatar.url)
 
         for item in data:
 
@@ -241,6 +248,7 @@ class UserProfile(commands.Cog):
         font_emblem = ImageFont.truetype(root_dir + "/font/emblem.ttf", 14)
         font_xp = ImageFont.truetype(f"{root_dir}/font/{font_option['font']}/xp.ttf", fontsize("xp", font_option['font'])-2)
 
+        """
         x1 = 384 - 8 - (draw.textlength(str(name), font=font_name) +
                         draw.textlength(str(discrim), font=font_name))
         y1 = 8
@@ -256,6 +264,26 @@ class UserProfile(commands.Cog):
 
         x4 = (384 - draw.textlength(text_xp, font=font_xp)) / 2
         y4 = 124
+
+        x6 = 384 - 8 - draw.textlength(money, font=font_xp)
+        y6 = 80
+        """
+
+        x1 = 384 - 8 - (draw.textlength(str(name), font=font_name) +
+                        draw.textlength(str(discrim), font=font_name))
+        y1 = 8 + textAltitude("name", font_option['font'])
+
+        x5 = 384 - 8 - draw.textlength(str(discrim), font=font_name)
+        y5 = 8 + textAltitude("name", font_option['font'])
+
+        x2 = 384 - 8 - draw.textlength(str(dname), font=font_dname)
+        y2 = 32
+
+        x3 = 384 - 8 - draw.textlength(str(emblem), font=font_emblem)
+        y3 = 96
+
+        x4 = (384 - draw.textlength(text_xp, font=font_xp)) / 2
+        y4 = 124 + textAltitude("xp", font_option['font'])
 
         x6 = 384 - 8 - draw.textlength(money, font=font_xp)
         y6 = 80
@@ -301,20 +329,20 @@ class UserProfile(commands.Cog):
                       stroke_width=font_option['xp-outline-width'],
                       stroke_fill=tuple(font_option['xp-outline-color']))
 
-        try:
-            #avatar
-            avatar_asset = user.avatar
+        #avatar
+        avatar_asset = user.display_avatar
 
-            # read JPG from server to buffer (file-like object)
-            buffer_avatar = io.BytesIO()
-            await avatar_asset.save(buffer_avatar)
-            buffer_avatar.seek(0)
+        # read JPG from server to buffer (file-like object)
+        buffer_avatar = io.BytesIO()
+        await avatar_asset.save(buffer_avatar)
+        buffer_avatar.seek(0)
 
-            # read JPG from buffer to Image
-            avatar_image = Image.open(buffer_avatar).convert('RGBA')
+        # read JPG from buffer to Image
+        avatar_image = Image.open(buffer_avatar).convert('RGBA')
 
-        except:
-            avatar_image = Image.open(root_dir + '/config/rankcard/noimage.jpg')
+        if (skin_id == 140):
+            avatar_image = Image.open(root_dir + '/config/rankcard/image140.png')
+
 
         # resize it
         avatar_image = avatar_image.resize((96, 96))
@@ -597,7 +625,7 @@ class UserProfile(commands.Cog):
 
         try:
             #avatar
-            avatar_asset = user.avatar
+            avatar_asset = user.display_avatar
 
             # read JPG from server to buffer (file-like object)
             buffer_avatar = io.BytesIO()
@@ -606,6 +634,9 @@ class UserProfile(commands.Cog):
 
             # read JPG from buffer to Image
             avatar_image = Image.open(buffer_avatar).convert('RGBA')
+
+            if (skin_id == 140):
+                avatar_image = Image.open(root_dir + '/config/rankcard/image140.png')
 
         except:
             avatar_image = Image.open(root_dir + '/config/rankcard/noimage.jpg')
@@ -634,7 +665,6 @@ class UserProfile(commands.Cog):
             await ctx.send(msg)
         else:
             raise error
-
 
 async def setup(client):
     await client.add_cog(UserProfile(client))

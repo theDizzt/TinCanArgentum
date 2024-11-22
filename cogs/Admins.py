@@ -263,25 +263,27 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     # Skin Unlock [ID: 95]
     @commands.hybrid_command(name='unlock', description="Unlock user's skin")
-    @discord.app_commands.describe(obj="User mention",
+    @discord.app_commands.describe(user="User mention",
                                    skin="Integer only",
                                    lock="Binary only")
     async def unlock(self,
                      ctx,
-                     obj: str = None,
+                     user: discord.Member = None,
                      skin: int = None,
                      lock: int = 1):
         if ctx.author.id in admin_login:
+            """
             try:
                 user = etc.extractUid(obj)
             except:
                 await ctx.reply("`(⩌Δ ⩌ ;)` Invalid User id...")
-            Rank = etc.storageLineRead()
-            user_name = q.readTagById(user)
+            """
+            Rank = etc.storageLineRead('all')
+            user_name = q.readTag(user)
 
             if lock == 1:
-                if not q.readStorageById(user, skin):
-                    q.storageModifyById(user, skin, 1)
+                if not q.readStorageById(user.id, skin):
+                    q.storageModifyById(user.id, skin, 1)
                     await ctx.reply(
                         f":green_circle: **{user_name}** successfully unlocked `{Rank[skin - 1][0]}`!"
                     )
@@ -290,8 +292,8 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         f":exclamation: **{user_name}** already unlocked `{Rank[skin - 1][0]}`!"
                     )
             elif lock == 0:
-                if q.readStorageById(user, skin):
-                    q.storageModifyById(user, skin, 0)
+                if q.readStorageById(user.id, skin):
+                    q.storageModifyById(user.id, skin, 0)
                     await ctx.reply(
                         f":green_circle: **{user_name}** successfully locked `{Rank[skin - 1][0]}`!"
                     )

@@ -160,7 +160,7 @@ class SkinStorage(commands.Cog):
             try:
                 skin = q.readSkin(ctx.author)
                 if skin_id != skin:
-                    if userdata[skin_id - 1] == 0:
+                    if userdata[skin_id] == 0:
                         await ctx.reply(
                             "`(⩌Δ ⩌ ;)` You don't have that rankcard skin.")
                     else:

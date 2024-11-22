@@ -22,44 +22,44 @@
 022 - Hidden 06: Return of the Emperor - Choose exactly 22 from random numbers from 1 to 222! (August 8, 2023) - none - none - hidden
 023 - TEDNE 01: The End Does Not Eliminated? - Beat the 70th level of TEDNE! (Achievement #A11) - none - none - tedne
 024 - Level UP 76: Blooming Lady - (July 8, 2023) Happy 21st birthday, Logi >:D Reach level 76 to unlock!! - level - 76 - level
-025 - Abstract 01: Color Pencils - Purchase for $5,900 to unlock! - money - 5900 - abstract
-026 - Abstract 02: Waterpaint 1 - Purchase for $5,900 to unlock! - money - 5900 - abstract
-027 - Abstract 03: Waterpaint 2 - Purchase for $5,900 to unlock! - money - 5900 - abstract
-028 - Abstract 04: Waterpaint 3 - Purchase for $5,900 to unlock! - money - 5900 - abstract
-029 - Neon 01: Comet - Purchase for $7,600 to unlock! - money - 7600 - abstract
-030 - Neon 02: Mountain - Purchase for $7,600 to unlock! - money - 7600 - abstract
-031 - Neon 03: Retro - Purchase for $7,600 to unlock! - money - 7600 - abstract
-032 - Neon 04: Console - Purchase for $7,600 to unlock! - money - 7600 - abstract
-033 - Steam 01: Steam Logo - Purchase for $11,100 to unlock! - money - 11100 - steam
-034 - Minecraft 01: Overworld - Purchase for $9,100 to unlock! - money - 9100 - minecraft
-035 - Minecraft 02: Steve - Purchase for $9,100 to unlock! - money - 9100 - minecraft
-036 - Minecraft 03: Ores - Purchase for $11,100 to unlock! - money - 11100 - minecraft
-037 - Pokémon 01: Pokeball - Purchase for $6,700 to unlock! - money - 6700 - pokemon
-038 - Pokémon 02: Pikachu - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-039 - Pokémon 03: Rayquaza - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-040 - Pokémon 04: Eevees - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-041 - Pokémon 05: Chandelure - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-042 - Pokémon 06: Darkrai - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-043 - Pokémon 07: Meloetta - Purchase for $8,400 to unlock! - money - 8400 - pokemon
-044 - Touhou Project 01: Flandre Scarlet - Purchase for $7,600 to unlock! - money - 7600 - touhou
-045 - Touhou Project 02: Reimu & Marisa - Purchase for $7,600 to unlock! - money - 7600 - touhou
-046 - Touhou Project 03: Koishi Komeiji - Purchase for $8,400 to unlock! - money - 8400 - touhou
-047 - Touhou Project 04: Remilia Scarlet - Purchase for $8,400 to unlock! - money - 8400 - touhou
-048 - Touhou Project 05: Youmu Konpaku - Purchase for $8,400 to unlock! - money - 8400 - touhou
-049 - Touhou Project 06: Cirno - Purchase for $7,⑨⑨⑨ to unlock! - money - 7900 - touhou
+025 - Abstract 01: Color Pencils - Purchase for $16,900 to unlock! - money - 16900 - abstract
+026 - Abstract 02: Waterpaint 1 - Purchase for $16,900 to unlock! - money - 16900 - abstract
+027 - Abstract 03: Waterpaint 2 - Purchase for $16,900 to unlock! - money - 16900 - abstract
+028 - Abstract 04: Waterpaint 3 - Purchase for $16,900 to unlock! - money - 16900 - abstract
+029 - Neon 01: Comet - Purchase for $11,900 to unlock! - money - 11900 - abstract
+030 - Neon 02: Mountain - Purchase for $11,900 to unlock! - money - 11900 - abstract
+031 - Neon 03: Retro - Purchase for $11,900 to unlock! - money - 11900 - abstract
+032 - Neon 04: Console - Purchase for $11,900 to unlock! - money - 11900 - abstract
+033 - Steam 01: Steam Logo - Purchase for $19,600 to unlock! - money - 19600 - steam
+034 - Minecraft 01: Overworld - Purchase for $15,500 to unlock! - money - 15500 - minecraft
+035 - Minecraft 02: Steve - Purchase for $15,500 to unlock! - money - 15500 - minecraft
+036 - Minecraft 03: Ores - Purchase for $19,600 to unlock! - money - 19600 - minecraft
+037 - Pokémon 01: Pokeball - Purchase for $9,900 to unlock! - money - 9900 - pokemon
+038 - Pokémon 02: Pikachu - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+039 - Pokémon 03: Rayquaza - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+040 - Pokémon 04: Eevees - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+041 - Pokémon 05: Chandelure - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+042 - Pokémon 06: Darkrai - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+043 - Pokémon 07: Meloetta - Purchase for $13,900 to unlock! - money - 13900 - pokemon
+044 - Touhou Project 01: Flandre Scarlet - Purchase for $11,900 to unlock! - money - 11900 - touhou
+045 - Touhou Project 02: Reimu & Marisa - Purchase for $11,900 to unlock! - money - 11900 - touhou
+046 - Touhou Project 03: Koishi Komeiji - Purchase for $13,900 to unlock! - money - 13900 - touhou
+047 - Touhou Project 04: Remilia Scarlet - Purchase for $13,900 to unlock! - money - 13900 - touhou
+048 - Touhou Project 05: Youmu Konpaku - Purchase for $13,900 to unlock! - money - 13900 - touhou
+049 - Touhou Project 06: Cirno - Purchase for $12,⑨⑨⑨ to unlock! - money - 12999 - touhou
 050 - Yathzee 01: Detective Stelle - Score 261 or higher on Yatchzee Dice! - game - none - game
 051 - Level UP 31: Blueprint - Reach level 31. - level - 31 - level
-052 - D+2300 Special - To celebrate September 5th, 2023!! Purchase for 2,300 to unlock! - money - 2300 - anniversary
-053 - Gaming Prime 1: Player Flame - Purchase for $3,942 to unlock! - money - 3942 - abstract
-054 - Gaming Prime 2: Player Citrus - Purchase for $3,942 to unlock! - money - 3942 - abstract
-055 - Gaming Prime 3: Player Stella - Purchase for $3,942 to unlock! - money - 3942 - abstract
-056 - Gaming Prime 4: Player Physis - Purchase for $3,942 to unlock! - money - 3942 - abstract
-057 - Gaming Prime 5: Player Aqua - Purchase for $3,942 to unlock! - money - 3942 - abstract
-058 - Gaming Prime 6: Player Jewel - Purchase for $3,942 to unlock! - money - 3942 - abstract
+052 - D+2300 Special - To celebrate September 5th, 2023!! Purchase for 9,900 to unlock! - money - 9900 - anniversary
+053 - Gaming Prime 01: Player Flame - Purchase for $9,900 to unlock! - money - 9900 - abstract
+054 - Gaming Prime 02: Player Citrus - Purchase for $9,900 to unlock! - money - 9900 - abstract
+055 - Gaming Prime 03: Player Stella - Purchase for $9,900 to unlock! - money - 9900 - abstract
+056 - Gaming Prime 04: Player Physis - Purchase for $9,900 to unlock! - money - 9900 - abstract
+057 - Gaming Prime 05: Player Aqua - Purchase for $9,900 to unlock! - money - 9900 - abstract
+058 - Gaming Prime 06: Player Jewel - Purchase for $9,900 to unlock! - money - 9900 - abstract
 059 - Hidden 07: Ivory Command - Find out the secret command of the test bot! - none - none - hidden
-060 - Chuseok 01: Full moon - Purchase for $2,023 to unlock! - money - 2023 - anniversary
-061 - Chuseok 02: Persimmon - Purchase for $8,400 to unlock! - money - 8400 - anniversary
-062 - Chuseok 03: Songpyeon - Purchase for $8,400 to unlock! - money - 8400 - anniversary
+060 - Chuseok 01: Full moon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
+061 - Chuseok 02: Persimmon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
+062 - Chuseok 03: Songpyeon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
 063 - Yathzee 02: Trashcan - Get Yathzee, but scored 0 point. - game - none - game
 064 - Yathzee 03: Absolute Zero - Get total 0 score! - game - none - game
 065 - Arithmatic 01: 노래를 부르면서 - Finally got to the 11th question! - game - none - game
@@ -84,28 +84,28 @@
 084 - Wordchain 04: 프린세스메이커 - 은비에게 1446개의 단어를 가르쳐 주세요! - game - none - game
 085 - Hidden 08: Zwong - 커피 한잔의 여유를... - game - none - hidden
 086 - Hidden 09: 어서켜라! - 제발, 그 게임만은 안된다고... - game - none - hidden
-087 - Halloween 01: Trick or treat! - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
-088 - Halloween 02: Rosarius - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
-089 - Halloween 03: To Die or Not to Die - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
-090 - Halloween 04: 마늘은 조금만 넣겠습니다 - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
-091 - Halloween 05: Scarpin's Revelaspell - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
-092 - Halloween 06: 殭屍先生 - Unlocked by spending $8,400 during the Halloween season. - none - 8400 - anniversary
+087 - Halloween 01: Trick or treat! - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
+088 - Halloween 02: Rosarius - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
+089 - Halloween 03: To Die or Not to Die - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
+090 - Halloween 04: 마늘은 조금만 넣겠습니다 - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
+091 - Halloween 05: Scarpin's Revelaspell - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
+092 - Halloween 06: 殭屍先生 - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
 093 - TEDNE 02: Beyond the Border - Beat the 120th level of TEDNE! (Achievement #???) - none - none - tedne
 094 - Anniversary 02: Pixel Dragon - On November 16, 2023, we're celebrating our 10th anniversary with a little gift! (Type special tree's name in code input to unlock!) - none - 0 - anniversary
-095 - Christmas 01: It's Christmas!! - Unlocked by spending $3,300 during the Winter season. - money - 3300 - anniversary
-096 - Christmas 02: Cozy Sisters - Unlocked by spending $9,900 during the Winter season. - money - 9900 - anniversary
-097 - Christmas 03: Chilly Winter - Unlocked by spending $9,900 during the Winter season. - money - 9900 - anniversary
+095 - Christmas 01: It's Christmas!! - Unlocked by spending $16,900 during the Winter season. - money - 16900 - anniversary
+096 - Christmas 02: Cozy Sisters - Unlocked by spending $16,900 during the Winter season. - money - 16900 - anniversary
+097 - Christmas 03: Chilly Winter - Unlocked by spending $16,900 during the Winter season. - money - 16900 - anniversary
 098 - Level UP 84: Windows98 - Reach level 84. - level - 84 - level
 099 - Level UP 87: MS Paint - Reach level 87. - level - 87 - level
 100 - Level UP 90: Kelpo!!! - Reach level 90. - level - 90 - level
-101 - 2024 New Year 01: Blue Dragon - We've got a gift for you for the Year of the Blue Dragon, 2024! Purchase for $2,024 to unlock! - money - 2024 - anniversary
+101 - 2024 New Year 01: Blue Dragon - We've got a gift for you for the Year of the Blue Dragon, 2024! Purchase for $9,900 to unlock! - money - 9900 - anniversary
 102 - 2024 New Year 02: 세뱃돈 습격 - We've got a gift for you for the Year of the Blue Dragon, 2024! - none - none - anniversary
 103 - Number Attack 01: Kukui was here - Reach Number 91 with 6 players. - game - none - game
 104 - Number Attack 02: So close... - Survived with 1 life. - game - none - game
 105 - Number Attack 03: Second law of Thermodynamics - Reached 55 or higher without reversing the order. - game - none - game
 106 - Number Attack 04: No-Clip Users - Stay at 100 lives until the end of the game. - game - none - game
-107 - Touhou Project 07: Sakuya Izayoi - Purchase for $7,600 to unlock! - money - 7600 - touhou
-108 - Touhou Project 08: Alice Margatroid - Purchase for $7,600 to unlock! - money - 7600 - touhou
+107 - Touhou Project 07: Sakuya Izayoi - Purchase for $11,900 to unlock! - money - 11900 - touhou
+108 - Touhou Project 08: Alice Margatroid - Purchase for $11,900 to unlock! - money - 11900 - touhou
 109 - Level Killer 01: Glitch Hop - Beat Level 39 in Level Killer (Achievement #20) - game - none - lk
 110 - Level Killer 02: Steve Here - Unlock Achievement #35 - game - none - lk
 111 - Level Killer 03: Maze Holic - Beat Level 61 in Level Killer (Achievement #36) - game - none - lk
@@ -118,16 +118,16 @@
 118 - Level Killer 10: Vermilion - Unlock Achievement #76 - game - none - lk
 119 - Level Killer 11: Still Alive - Unlock Achievement #91 - game - none - lk
 120 - Level Killer 12: LK M@STER - Beat Level 139 in Level Killer (Achievement #107) - game - none - lk
-121 - Starcraft 01: Carbot Protoss - Purchase for $11,100 to unlock! - money - 11100 - starcraft
-122 - Starcraft 02: Carbot Terran - Purchase for $11,100 to unlock! - money - 11100 - starcraft
-123 - Starcraft 03: Carbot Zerg - Purchase for $11,100 to unlock! - money - 11100 - starcraft
-124 - Pokémon 08: The Last Supper - Purchase for $11,100 to unlock! - money - 11100 - pokemon
-125 - League Of Legends 01: Clash - Purchase for $9,900 to unlock! - money - 9900 - lol
-126 - League Of Legends 02: Thresh - Purchase for $11,100 to unlock! - money - 11100 - lol
-127 - League Of Legends 03: Chip - Purchase for $11,100 to unlock! - money - 11100 - lol
-128 - League Of Legends 04: Kai'sa - Purchase for $11,100 to unlock! - money - 11100 - lol
-129 - League Of Legends 05: Elderwood Ahri - Purchase for $11,100 to unlock! - money - 11100 - lol
-130 - Minecraft 04: Polygon - Purchase for $9,100 to unlock! - money - 9100 - minecraft
+121 - Starcraft 01: Carbot Protoss - Purchase for $19,600 to unlock! - money - 19600 - starcraft
+122 - Starcraft 02: Carbot Terran - Purchase for $19,600 to unlock! - money - 19600 - starcraft
+123 - Starcraft 03: Carbot Zerg - Purchase for $19,600 to unlock! - money - 19600 - starcraft
+124 - Pokémon 08: The Last Supper - Purchase for $19,600 to unlock! - money - 19600 - pokemon
+125 - League Of Legends 01: Clash - Purchase for $16,900 to unlock! - money - 16900 - lol
+126 - League Of Legends 02: Thresh - Purchase for $19,600 to unlock! - money - 19600 - lol
+127 - League Of Legends 03: Chip - Purchase for $19,600 to unlock! - money - 19600 - lol
+128 - League Of Legends 04: Kai'sa - Purchase for $19,600 to unlock! - money - 19600 - lol
+129 - League Of Legends 05: Elderwood Ahri - Purchase for $19,600 to unlock! - money - 19600 - lol
+130 - Minecraft 04: Polygon - Purchase for $15,500 to unlock! - money - 15500 - minecraft
 131 - Minecraft 05: Redstone - Purchase for $13,900 to unlock! - money - 13900 - minecraft
 132 - Level UP 81: Pharms - Reach level 81. - level - 81 - level
 133 - Level UP 77: Clover - Reach level 77. - level - 77 - level
@@ -137,4 +137,19 @@
 137 - Daily 04: Half Year - Obtain daily rewards 183 times. - daily - 183 - daily
 138 - Daily 05: A Year - Obtain daily rewards 365 times. - daily - 365 - daily
 139 - Daily 06: Maximum - Obtain daily rewards 511 times. - daily - 511 - daily
-140 - 403 Forbidden - 2024.04.01. - none - 0 - none
+140 - Anniversary 03: 403 Forbidden - 2024.04.01. - none - none - anniversary
+141 - Hidden 10: Dark Purple - 2024년 5월 26일, LK 제작자 다퍼님 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+142 - Hidden 11: Kuikui - 2024년 6월 21일, 한비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+143 - Summer 01: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
+144 - Summer 02: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
+145 - Summer 03: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
+146 - Hidden 12: Pride - 2024년 7월 12일, 제작자 Dizzt의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+147 - Hidden 13: 튜브여왕 - 2024년 8월 1일, 은비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+148 - Wordchain 05: 퍼펙트게임 - 목숨을 잃지 않은 상태로 1등을 합니다. - game - none - game
+149 - Wordchain 06: 쌀먹고갑니다 - 목숨을 모두 잃었지만 1등을 합니다. - game - none - game
+150 - Wordchain 07: 천포인트한판간다 - 1000 포인트 이상을 달성합니다. - game - none - game
+151 - Anniversary 04: 오도짜세기합바이크 - 2024년 10월 29일, 통나무조에서 선보인 '오도짜세기합바이크' 의 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
+152 - Anniversary 05: 전체공룡 11주년 - 2024년 11월 16일, 전체공룡 11주년 기념 스킨입니다! 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
+153 - Gaming Prime 07: Player Cardioid - Purchase for $9,900 to unlock! - money - 9900 - abstract
+154 - Gaming Prime 08: Player Void - Purchase for $9,900 to unlock! - money - 9900 - abstract
+155 - Anniversary 06: 100000WORDS - 2024년 11월 17일, 은비사전 단어 100,000개 등록 기념 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary

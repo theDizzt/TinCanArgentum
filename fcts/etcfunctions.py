@@ -408,11 +408,12 @@ def process_bar(ratio, length = 10):
 
 
 # 2.2. Storage List Read
-def storageLineRead(option:str):
+def storageLineRead(option:str = None):
     file = open(root_dir + "/config/storage.txt", "r", encoding='UTF8')
     temp = []
     for data in file.readlines():
         line = data.split(" - ")
+        print(line)
 
         if option == 'all':
             temp.append(line[:5])

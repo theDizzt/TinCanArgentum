@@ -96,11 +96,27 @@ def newAccount(user: discord.Member = None):
 
     INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate) VALUES (?,?,?,?,?,?,?,?,?);'
 
-    discrim = r.randint(0, 10000)
+    nickname = user.name
+    discrim = r.randint(1, 10000)
     now = datetime.datetime.now()
     now_date = now.strftime('%Y-%m-%d')
+    
+    retry = 0
 
-    data = ((user.id, discrim, user.name, 0, 5000, 1, now_date, 0, '-'))
+    while True:
+        if tagIsOkay(nickname, discrim):
+            break
+
+        else:
+            retry += 1
+            discrim = r.randint(1, 10000)
+
+            if retry == 10:
+                retry = 0
+                nickname += "!"
+
+
+    data = ((user.id, discrim, nickname, 0, 5000, 1, now_date, 0, '-'))
     print(data)
     c.execute(INSERT_SQL, data)
     conn.commit()
@@ -115,11 +131,27 @@ def newAccountById(user: int = None, name: str = None):
 
     INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate) VALUES (?,?,?,?,?,?,?,?,?);'
 
-    discrim = r.randint(0, 10000)
+    nickname = name
+    discrim = r.randint(1, 10000)
     now = datetime.datetime.now()
     now_date = now.strftime('%Y-%m-%d')
 
-    data = ((user, discrim, name, 0, 5000, 1, now_date, 0, '-'))
+    retry = 0
+
+    while True:
+        print(nickname, '#', discrim)
+        if tagIsOkay(nickname, discrim):
+            break
+
+        else:
+            retry += 1
+            discrim = r.randint(1, 10000)
+
+            if retry == 10:
+                retry = 0
+                nickname += "!"
+
+    data = ((user, discrim, nickname, 0, 5000, 1, now_date, 0, '-'))
     print(data)
     c.execute(INSERT_SQL, data)
     conn.commit()
@@ -228,36 +260,40 @@ def moneyAddAll(amount: int = None):
 
 # 3.2.3.1. Nickname Edit
 def nickModify(user: discord.Member = None, name: str = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user.id))
-    conn.commit()
-    c.close()
+    if tagIsOkay(name, int(readDiscrim(user))):
+        conn = sqlite3.connect(root_dir + '/data/user.db')
+        c = conn.cursor()
+        c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user.id))
+        conn.commit()
+        c.close()
 
 
 def nickModifyById(user: int = None, name: str = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user))
-    conn.commit()
-    c.close()
+    if tagIsOkay(name, int(readDiscrimById(user))):
+        conn = sqlite3.connect(root_dir + '/data/user.db')
+        c = conn.cursor()
+        c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user))
+        conn.commit()
+        c.close()
 
 
 # 3.2.3.2. Discrim Edit
 def discrimModify(user: discord.Member = None, value: int = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user.id))
-    conn.commit()
-    c.close()
+    if tagIsOkay(readNick(user), value):
+        conn = sqlite3.connect(root_dir + '/data/user.db')
+        c = conn.cursor()
+        c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user.id))
+        conn.commit()
+        c.close()
 
 
 def discrimModifyById(user: int = None, value: int = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user))
-    conn.commit()
-    c.close()
+    if tagIsOkay(readNickById(user), value):
+        conn = sqlite3.connect(root_dir + '/data/user.db')
+        c = conn.cursor()
+        c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user))
+        conn.commit()
+        c.close()
 
 
 # 3.2.4. Skin Value Edit
@@ -677,3 +713,43 @@ def storageList(user: discord.Member = None):
     c.execute(sql, (user.id, ))
     result = c.fetchone()
     return result
+
+
+# 3.6. Etc
+
+# 3.6.1. Full Tag to UID
+def tagToUid(tag: str = None):
+    name = ""
+    discrim = 0
+
+    try:
+        temp = tag.split('#')
+        name = temp[0]
+        discrim = int(temp[1])
+    except:
+        return None
+    
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+    sql = "SELECT id FROM main WHERE nick = ? AND discrim = ?;"
+    c.execute(sql, (name, discrim, ))
+    result = c.fetchone()[0]
+    return result
+
+# 3.6.2. Duplicate Check
+def tagIsOkay(name: str = "", discrim: int = 0):
+    print(name,'#',discrim)
+
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+    sql = "SELECT id FROM main WHERE nick = ? AND discrim = ?"
+    c.execute(sql, (name, discrim, ))
+    result = c.fetchall()
+
+    print(result)
+
+    if len(result) == 0 and name != "" and discrim != 0:
+        return True
+
+    else:
+        return False

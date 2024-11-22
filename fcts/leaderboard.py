@@ -649,6 +649,11 @@ def wcReadById(user: int = None, opt: str = ""):
         c.execute(sql, (user, ))
         result = c.fetchone()[0]
 
+    elif opt == "stats":
+        sql = "SELECT indi_score, indi_count, indi_play, indi_win FROM wordchain WHERE id = ?;"
+        c.execute(sql, (user, ))
+        result = c.fetchone()
+
     return result
 
 

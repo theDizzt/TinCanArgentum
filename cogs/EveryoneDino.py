@@ -139,7 +139,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             승교=394075013541789700,
             선우=263640824170938369,
             승현=262551155815481345,
-            태균=263273764312186881,
+            민찬=512098892674760705,
             봇=(279909142955687936, 280900407021010944, 310386513236066306,
                310379466578722816, 1115471474250240050, 889173206454386689,
                310404488496283653),
@@ -173,7 +173,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         "`⸜(*◉ ᴗ ◉)⸝` **{}**에게 **{}**의 경험치를 주었습니다!\n`변경 후` {}".
                         format(q.readTagById(u), value, text))
 
-        if option == "돈":
+        elif option == "돈":
             try:
                 q.moneyAddById(kakao[user], value)
                 mn = q.readMoneyById((kakao[user]))
@@ -188,7 +188,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         f"`⸜(*◉ ᴗ ◉)⸝` **{q.readTagById(u)}**에게 **${value:,d}**의 돈을 주었습니다!\n현재 소지금액은 **${mn:,d}** 입니다!"
                     )
 
-        if option == "출석":
+        elif option == "출석":
             data = [
                 262520957233528832,
                 262517377575550977,
@@ -202,7 +202,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 394075013541789700,
                 263640824170938369,
                 262551155815481345,
-                263273764312186881,
+                512098892674760705,
                 279909142955687936,
                 280900407021010944,
                 310386513236066306,
@@ -254,6 +254,39 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
             await ctx.reply(result)
 
+        elif option == "개인출석":
+            u = kakao[user]
+            t_xp = 0
+            t_money = 0
+
+            if value > 0:
+                for i in range(value):
+
+                    daily = q.readDailyById(u) + 1
+                    xp = 0
+                    money = 0
+
+                    if daily < 511:
+                        xp = 250 * (1 + (daily // 7)) + int(daily ** 1.6) - 1
+                        money = 100 * (1 + (daily // 7)) + int(daily ** 1.5) - 1
+                    else:
+                        xp = 40000
+                        money = 40000
+
+                    t_xp += xp
+                    t_money += money
+                        
+                    q.xpAddById(u, xp)
+                    q.moneyAddById(u, money)
+                    q.dailyAddById(u)
+
+                q.dailyDateModifyById(u, today)
+
+            result = f"`{q.readTagById(u)}` | Day {q.readDailyById(u)} | +{t_xp}xp +${t_money}"
+
+            await ctx.reply(result)
+
+
         @kakao.error
         async def kakao_error(self, error, ctx):
             if isinstance(error, commands.CheckFailure):
@@ -276,7 +309,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             승교=394075013541789700,
             선우=263640824170938369,
             승현=262551155815481345,
-            태균=263273764312186881,
+            민찬=512098892674760705
             )
         
         path = root_dir + "/data/kakao"
@@ -308,7 +341,6 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             except:
                 pass
 
-        print(1)
         result = ""
         for user in temp.keys():
             q.xpAddById(kakao[user], temp[user][0])
