@@ -18,6 +18,9 @@ codelist = {
     "safetysecurity": 16,
     "deadlycrystal": 17,
     "waiter": 18,
+    "yellowcomet": 19,
+    "bibibibibic": 21,
+    "bloominglady": 24,
     "plain": 59,
     "darkoak": 94,
     "20240210": 102,
@@ -31,13 +34,15 @@ codelist = {
     "198525901": 116,
     "106747930": 117,
     "585232594": 118,
+    "403 forbidden": 140,
     "dapurm": 141,
     "쿠크다스": 142,
     "라이스썬더": 146,
     "비비빅": 147,
     "오도짜세기합바이크": 151,
     "부경타이타닉": 152,
-    "100000words": 155
+    "100000words": 155,
+    "chelicerata": 156
 }
 
 

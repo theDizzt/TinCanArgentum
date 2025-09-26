@@ -153,7 +153,8 @@ async def on_message(message):
     q.xpAdd(message.author, xp_gain)
     q.moneyAdd(message.author, money_gain)
 
-    if etc.level_up(temp_lv, temp_xp + xp_gain) and False:
+    """
+    if etc.level_up(temp_lv, temp_xp + xp_gain):
 
         background_image = Image.open(root_dir + "/config/rankcard/rankup.png").convert(
             'RGBA')
@@ -205,6 +206,7 @@ async def on_message(message):
                 "<@{}> 는 `레벨 {}`에 도달했습니다!\nYou reached `Level {}`!".format(
                     message.author.id, temp_lv + 1, temp_lv + 1),
                 file=discord.File(buffer_output, 'myimage.png'))
+    """
 
     # 3.4.2. Message Contents Logs
     print(f"{message.author} | {now_time} | +{xp_gain}XP | +${money_gain}")
@@ -267,7 +269,7 @@ async def on_message(message):
         await message.channel.send(
             "`;skin change 20`을 입력하여 특전을 확인하당근 `( ˃ ⩌˂)`")
 
-    if message.content == "씨애":
+    if message.content in ["씨애", "COH", "씨OH", "썌", "씨에", "(()|-|", "^^|()|-|", "씨Æ"]:
         choice = 86
 
         if q.readStorage(message.author, choice) == 0:
@@ -277,7 +279,14 @@ async def on_message(message):
             "씨애? 씨! 오우! 에이취!", "아니 그 좋은것을 왜 혼자 한단 말이야!? 얼른 초대 받아라!",
             "내가 있는한 너도 씨애, 나도 씨애, 내 여동생도 씨애, 짱아도 씨애, 모두가 씨애로 하나 되는것이야!!!",
             "위 갓뎀 빠 빠바 빠 빠 빱 빠 바빱 퐈이어!!", "어? 안돼겠다, 오늘은 1000포인트로 한판 한다.",
-            "운명... 씨애... 그리고 발러...", "웰 컴 투 컴퍼니 오브 히어로즈~"
+            "운명... 씨애... 그리고 발러...", "웰 컴 투 컴퍼니 오브 히어로즈~",
+            "내 씨애를 보라, 너희 스타하는 자들이여, 그리고... 절망하라...",
+            "천포인트를 미워하되 씨애를 원망하지 말거라...",
+            "나는 존재한다. 고로 씨애한다.",
+            "한 거점의 고난이 오더라도 멀티 컬러가 된다면 못할 일 없다. 그 도리를 십썌일반(十屎愛一飯)이라 하리라.",
+            "씨애를 하니 너무 좋아서 죽을것 같다고? 몸은 거짓말 하지 않아~",
+            "And His Name is JOHN COH!!!!!!!!!!!!!!!!!!!!!!!!",
+            "천포인트도 한걸음 부터"
         ]
         """
         uid = str(message.author.id)
@@ -290,8 +299,10 @@ async def on_message(message):
         )
         await message.channel.send("<@262528817942364160>: " +
                                    r.choice(randtext))
+        """
         await message.channel.send(
             "`;skin change 86`을 입력하여 특전을 확인해보세요~ `( ˃ ⩌˂)`")
+        """
 
 
 # 4. Commands

@@ -16,12 +16,12 @@
 016 - ANS 07: Gadget - Unlock this skin by entering the title of Level 21 in Gadget Pack in lowercase letters, no spaces. - none - none - ans
 017 - ANS 08: Frost Crystal - Unlock this skin by entering the title of Level 14 in Frost Pack in lowercase letters, no spaces. - none - none - ans
 018 - ANS 09: Jazzy Mono - Unlock this skin by entering the title of Level 10 in Jazzy Pack in lowercase letters, no spaces. - none - none - ans
-019 - Hidden 03: Dizzt's Special - (July 24, 2023) Happy 22nd birthday, Dizzt >:D (Available for purchase for $39,000 by end of promotion) - money - 39000 - hidden
+019 - Hidden 03: Dizzt's Special - (July 24, 2023) Happy 22nd birthday, Dizzt >:D - none - 0 - anniversary
 020 - Hidden 04: Am I Sure? - Carrot Special >:D - none - none - hidden
-021 - Hidden 05: Argente One - (August 1, 2023) Happy 21st birthday, Argente >:D (Available for purchase for $39,000 by end of promotion) - money - 39000 - hidden
+021 - Hidden 05: Argente One - (August 1, 2023) Happy 21st birthday, Argente >:D - none - 0 - anniversary
 022 - Hidden 06: Return of the Emperor - Choose exactly 22 from random numbers from 1 to 222! (August 8, 2023) - none - none - hidden
 023 - TEDNE 01: The End Does Not Eliminated? - Beat the 70th level of TEDNE! (Achievement #A11) - none - none - tedne
-024 - Level UP 76: Blooming Lady - (July 8, 2023) Happy 21st birthday, Logi >:D Reach level 76 to unlock!! - level - 76 - level
+024 - Hidden ??: Blooming Lady - (July 8, 2023) Happy 21st birthday, Logi >:D - none - 0 - anniversary
 025 - Abstract 01: Color Pencils - Purchase for $16,900 to unlock! - money - 16900 - abstract
 026 - Abstract 02: Waterpaint 1 - Purchase for $16,900 to unlock! - money - 16900 - abstract
 027 - Abstract 03: Waterpaint 2 - Purchase for $16,900 to unlock! - money - 16900 - abstract
@@ -153,3 +153,5 @@
 153 - Gaming Prime 07: Player Cardioid - Purchase for $9,900 to unlock! - money - 9900 - abstract
 154 - Gaming Prime 08: Player Void - Purchase for $9,900 to unlock! - money - 9900 - abstract
 155 - Anniversary 06: 100000WORDS - 2024년 11월 17일, 은비사전 단어 100,000개 등록 기념 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
+156 - Hidden 14: Lilás Cold - (December 3, 2024) Happy 24th birthday, Montee >:D - none - none - hidden
+157 - 2025 New Year 01: Snake - (January 1, 2025) We've got a gift for you for the Year of the Sanke, 2025! Purchase for $9,900 to unlock! - money - 9900 - anniversary

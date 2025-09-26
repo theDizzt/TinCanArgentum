@@ -1548,6 +1548,26 @@
         "xp-color": [255, 255, 255, 255],
         "xp-outline-width": 2,
         "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin156": {
+        "font": "handwrite",
+        "name-color": [168, 136, 181, 255],
+        "discrim-color": [239, 182, 200, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 2,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin157": {
+        "font": "sans",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [92, 179, 56, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
         }
     }
 }

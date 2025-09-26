@@ -22,9 +22,9 @@ def fontsize(type, font):
             return 20
     
     elif type == "xp":
-        if font == "fluid" or font == "lcd" or font == "luxury" or font == "minecraft" or font == "stella" or font == "brush" or font == "stencil" or font == "legend" or font == "square":
+        if font == "fluid" or font == "lcd" or font == "luxury" or font == "minecraft" or font == "brush" or font == "stencil" or font == "legend" or font == "square":
             return 18
-        elif font == "gothic" or font == "handwrite":
+        elif font == "gothic" or font == "handwrite" or font == "stella":
             return 20
         else:
             return 16

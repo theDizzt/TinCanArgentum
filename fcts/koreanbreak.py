@@ -37,10 +37,22 @@ def count_break_korean(string):
     for k in string:
         if ord("가") <= ord(k) <= ord("힣"):
             index = ord(k) - ord("가")
+            c_cho = int((index / 28) / 21)
+            c_jung = int((index / 28) % 21)
             c_jong = int(index % 28)
             break_words += 2
             if c_jong > 0:
                 break_words += 1
+                if c_jong in [2, 3, 5, 6, 9, 10, 11, 12, 13, 14, 15, 18, 20]:
+                    break_words += 1
+                
+            if c_cho in [1, 4, 8, 10, 13]:
+                break_words += 1
+
+            if c_jung in [1, 3, 5, 7, 9, 11, 14, 16, 19]:
+                break_words += 1
+            elif c_jung in [10, 15]:
+                break_words += 2
         else:
             break_words += 1
     return break_words
