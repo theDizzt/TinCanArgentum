@@ -144,6 +144,8 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             민찬=512098892674760705,
             은비=279909142955687936,
             한비=280900407021010944,
+            쿠키=791364491325210625,
+            짱아=404498587461091328,
             예빈=332793142745104384,
             도희=310386513236066306,
             화랑=310379466578722816,
@@ -230,7 +232,9 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 265388034415919104,
                 341943143098482689,
                 307366878551080975,
-                387218121250832385
+                387218121250832385,
+                791364491325210625,
+                404498587461091328
             ]
 
             result = ""
@@ -253,7 +257,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         money = 100 * (1 + (daily // 7)) + int(daily ** 1.5) - 1
                     else:
                         xp = 40000
-                        money = 40000
+                        money = 20000
                     
                     q.xpAddById(u, xp)
                     q.moneyAddById(u, money)
@@ -281,7 +285,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         money = 100 * (1 + (daily // 7)) + int(daily ** 1.5) - 1
                     else:
                         xp = 40000
-                        money = 40000
+                        money = 20000
 
                     t_xp += xp
                     t_money += money

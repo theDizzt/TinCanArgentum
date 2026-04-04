@@ -20,8 +20,6 @@ import asyncio
 from fcts.keep_alive import keep_alive
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
-import fcts.koreanbreak as kb
-import fcts.worddict as wd
 import fcts.leaderboard as l
 import fcts.lklab as lk
 import fcts.tedne as ted
@@ -33,6 +31,12 @@ import os
 # 0.3. Dynamic Images + Buffer
 from PIL import Image, ImageDraw, ImageFont
 import io
+
+# 0.3a. 한글 분석
+from konlpy.tag import Okt
+import fcts.koreansearch as ks
+import fcts.koreanbreak as kb
+import fcts.worddict as wd
 
 # 0.4. ect.
 import random as r
@@ -55,10 +59,10 @@ token = keys['Bot']['token']
 prefix = keys['Bot']['prefix']
 Version = keys['Version']['ver']
 Update_Date = keys['Version']['date']
-game_mes = f"Made by Dizzt | {Version} | {Update_Date} | Type '{prefix}help' for help"
+game_mes = f"{Version} | {Update_Date} | Type '{prefix}help' for help"
 
 # 1.4. Event Variables
-xp_multi = 1.84
+xp_multi = 1.3
 
 ####### 2.Funtions #######
 
@@ -80,6 +84,13 @@ client = commands.Bot(command_prefix=prefix,
                       sync_commands=True,
                       status=discord.Status.online,
                       activity=discord.Game(game_mes))
+
+# 한글 자동 분석 모듈
+okt = Okt()
+server_id = [
+    262525769023094785, 716980478992711720, 1114816224522678294,
+    453906917719408642, 348750582200270848, 842746723067756554, 1252877905747513457 , 364240472060985357, 1482323335739342860, 1480230239043850401
+]
 
 # 3.1. Discord Cogs Loading
 
@@ -218,6 +229,22 @@ async def on_message(message):
     #이것도
     if message.author == client.user:
         return
+    
+    #단어 자동 학습 | and message.guild.id in server_id
+    if message.author.id != 691455977270149171:
+        nouns = okt.nouns(message.content)
+        if not nouns:
+            pass
+            # print("추출된 명사가 없습니다.")
+        else:
+            # print("명사 추출 결과: " + ", ".join(nouns))
+            # print(f"총 {len(nouns)}개의 명사를 찾았습니다.")
+            for word in nouns:
+                if not wd.existsWord(word):
+                    result = ks.searchWord(word)
+                    # print(message.author, " ", result)
+                    if result is not None:
+                        wd.newWord(message.author, str(result[0]), str(result[1]), str(result[2]))
 
     #주원이 괴롭히기
     if message.content.startswith("주원"):
@@ -277,7 +304,7 @@ async def on_message(message):
         randtext = [
             "어? 할래? 어서켜라!!! 으하하하핳", "씨애애애애애!!!!! 발러어어어어!!!! 으하하하하 어서켜라!",
             "씨애? 씨! 오우! 에이취!", "아니 그 좋은것을 왜 혼자 한단 말이야!? 얼른 초대 받아라!",
-            "내가 있는한 너도 씨애, 나도 씨애, 내 여동생도 씨애, 짱아도 씨애, 모두가 씨애로 하나 되는것이야!!!",
+            "내가 있는한 너도 씨애, 나도 씨애, 내 여동생도 씨애, 짱아도 씨애, 라떼도 씨애 모두가 씨애로 하나 되는것이야!!!",
             "위 갓뎀 빠 빠바 빠 빠 빱 빠 바빱 퐈이어!!", "어? 안돼겠다, 오늘은 1000포인트로 한판 한다.",
             "운명... 씨애... 그리고 발러...", "웰 컴 투 컴퍼니 오브 히어로즈~",
             "내 씨애를 보라, 너희 스타하는 자들이여, 그리고... 절망하라...",
@@ -286,7 +313,8 @@ async def on_message(message):
             "한 거점의 고난이 오더라도 멀티 컬러가 된다면 못할 일 없다. 그 도리를 십썌일반(十屎愛一飯)이라 하리라.",
             "씨애를 하니 너무 좋아서 죽을것 같다고? 몸은 거짓말 하지 않아~",
             "And His Name is JOHN COH!!!!!!!!!!!!!!!!!!!!!!!!",
-            "천포인트도 한걸음 부터"
+            "천포인트도 한걸음 부터",
+            "내 갈려나간 전차들에 대한 복수다 불바다로 만들어 주마"
         ]
         """
         uid = str(message.author.id)

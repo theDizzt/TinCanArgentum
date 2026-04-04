@@ -364,7 +364,7 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 money = 100 * (1 + (daily // 7)) + int(daily ** 1.5) - 1
             else:
                 xp = 40000
-                money = 40000
+                money = 20000
             
             q.xpAdd(user, xp)
             q.moneyAdd(user, money)

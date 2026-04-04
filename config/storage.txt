@@ -1,4 +1,4 @@
-001 - Level UP 01: Default - Default Skin - none - none - level
+001 - Level UP 01: Default - Default Skin (2025.11.11. ~ present) - none - none - level
 002 - Level UP 11: Beginner - Reach level 11. - level - 11 - level
 003 - Level UP 36: Novice - Reach level 36. - level - 36 - level
 004 - Level UP 61: Expert - Reach level 61. - level - 61 - level
@@ -21,7 +21,7 @@
 021 - Hidden 05: Argente One - (August 1, 2023) Happy 21st birthday, Argente >:D - none - 0 - anniversary
 022 - Hidden 06: Return of the Emperor - Choose exactly 22 from random numbers from 1 to 222! (August 8, 2023) - none - none - hidden
 023 - TEDNE 01: The End Does Not Eliminated? - Beat the 70th level of TEDNE! (Achievement #A11) - none - none - tedne
-024 - Hidden ??: Blooming Lady - (July 8, 2023) Happy 21st birthday, Logi >:D - none - 0 - anniversary
+024 - Hidden 07: Blooming Lady - (July 8, 2023) Happy 21st birthday, Logi >:D - none - 0 - anniversary
 025 - Abstract 01: Color Pencils - Purchase for $16,900 to unlock! - money - 16900 - abstract
 026 - Abstract 02: Waterpaint 1 - Purchase for $16,900 to unlock! - money - 16900 - abstract
 027 - Abstract 03: Waterpaint 2 - Purchase for $16,900 to unlock! - money - 16900 - abstract
@@ -56,7 +56,7 @@
 056 - Gaming Prime 04: Player Physis - Purchase for $9,900 to unlock! - money - 9900 - abstract
 057 - Gaming Prime 05: Player Aqua - Purchase for $9,900 to unlock! - money - 9900 - abstract
 058 - Gaming Prime 06: Player Jewel - Purchase for $9,900 to unlock! - money - 9900 - abstract
-059 - Hidden 07: Ivory Command - Find out the secret command of the test bot! - none - none - hidden
+059 - Hidden 08: Ivory Command - Find out the secret command of the test bot! - none - none - hidden
 060 - Chuseok 01: Full moon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
 061 - Chuseok 02: Persimmon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
 062 - Chuseok 03: Songpyeon - Purchase for $13,900 to unlock! - money - 13900 - anniversary
@@ -82,8 +82,8 @@
 082 - Wordchain 02: 스피드레이서 - 50개의 단어를 115초 안에 이어주세요! - game - none - game
 083 - Wordchain 03: 사슬로 묶인 시계탑 - 협동심을 발휘해 보아요! 무탈하게 421개의 단어를 이어주세요. (421 Chain 성공시 전원 해금) - game - none - game
 084 - Wordchain 04: 프린세스메이커 - 은비에게 1446개의 단어를 가르쳐 주세요! - game - none - game
-085 - Hidden 08: Zwong - 커피 한잔의 여유를... - game - none - hidden
-086 - Hidden 09: 어서켜라! - 제발, 그 게임만은 안된다고... - game - none - hidden
+085 - Hidden 09: Zwong - 커피 한잔의 여유를... - game - none - hidden
+086 - Hidden 10: 어서켜라! - 제발, 그 게임만은 안된다고... - game - none - hidden
 087 - Halloween 01: Trick or treat! - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
 088 - Halloween 02: Rosarius - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
 089 - Halloween 03: To Die or Not to Die - Unlocked by spending $13,900 during the Halloween season. - none - 13900 - anniversary
@@ -138,20 +138,42 @@
 138 - Daily 05: A Year - Obtain daily rewards 365 times. - daily - 365 - daily
 139 - Daily 06: Maximum - Obtain daily rewards 511 times. - daily - 511 - daily
 140 - Anniversary 03: 403 Forbidden - 2024.04.01. - none - none - anniversary
-141 - Hidden 10: Dark Purple - 2024년 5월 26일, LK 제작자 다퍼님 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
-142 - Hidden 11: Kuikui - 2024년 6월 21일, 한비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+141 - Hidden 11: Dark Purple - 2024년 5월 26일, LK 제작자 다퍼님 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+142 - Hidden 12: Kuikui - 2024년 6월 21일, 한비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
 143 - Summer 01: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
 144 - Summer 02: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
 145 - Summer 03: - Unlocked by spending $16,900 during the Summer season. - money - 16900 - anniversary
-146 - Hidden 12: Pride - 2024년 7월 12일, 제작자 Dizzt의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
-147 - Hidden 13: 튜브여왕 - 2024년 8월 1일, 은비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+146 - Hidden 13: Pride - 2024년 7월 12일, 제작자 Dizzt의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
+147 - Hidden 14: 튜브여왕 - 2024년 8월 1일, 은비의 생일 기념 스킨입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - hidden
 148 - Wordchain 05: 퍼펙트게임 - 목숨을 잃지 않은 상태로 1등을 합니다. - game - none - game
 149 - Wordchain 06: 쌀먹고갑니다 - 목숨을 모두 잃었지만 1등을 합니다. - game - none - game
 150 - Wordchain 07: 천포인트한판간다 - 1000 포인트 이상을 달성합니다. - game - none - game
 151 - Anniversary 04: 오도짜세기합바이크 - 2024년 10월 29일, 통나무조에서 선보인 '오도짜세기합바이크' 의 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
-152 - Anniversary 05: 전체공룡 11주년 - 2024년 11월 16일, 전체공룡 11주년 기념 스킨입니다! 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
+152 - Anniversary 05: 전체공룡 15주년 - 2024년 11월 16일, 전체공룡 15주년 기념 스킨입니다! 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
 153 - Gaming Prime 07: Player Cardioid - Purchase for $9,900 to unlock! - money - 9900 - abstract
 154 - Gaming Prime 08: Player Void - Purchase for $9,900 to unlock! - money - 9900 - abstract
 155 - Anniversary 06: 100000WORDS - 2024년 11월 17일, 은비사전 단어 100,000개 등록 기념 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
-156 - Hidden 14: Lilás Cold - (December 3, 2024) Happy 24th birthday, Montee >:D - none - none - hidden
+156 - Hidden 15: Lilás Cold - (December 3, 2024) Happy 24th birthday, Montee >:D - none - none - hidden
 157 - 2025 New Year 01: Snake - (January 1, 2025) We've got a gift for you for the Year of the Sanke, 2025! Purchase for $9,900 to unlock! - money - 9900 - anniversary
+158 - Hidden 16: Yolouha~ Oh yeah!! - (October 18, 2025) 문죄송합니다람쥐썬더! $22,222,222로 구매 가능! - money - 22222222 - hidden
+159 - Anniversary 06: 전체공룡 16주년 - (November 16, 2025) 전체공룡 12주년 기념 파클슬래이브즈 Bluewave 스킨입니다. (Purchase for $11,160 to unlock!) - money - 11160 - anniversary
+160 - Hidden 17: Hazard One - (November 16, 2025) - none - none - hidden
+161 - Hidden 18: ?? - (November 16, 2025) - none - none - hidden
+162 - Hidden 19: ?? - (November 16, 2025) - none - none - hidden
+163 - Level UP Legacy 01: Default Legacy - Legacy Default Skin (2023.07.29. ~ 2025.11.10.) - level - 1 - level
+164 - Level UP 6: ?? - Reach level 6. - level - 6 - level
+165 - Level UP 14: Lemon Heart ♥ - Reach level 14. - level - 14 - level
+166 - Level UP 19: Bismuth - Reach level 19. - level - 19 - level
+167 - Level UP 25: ?? - Reach level 25. - level - 25 - level
+168 - Level UP 39: COINY - Reach level 39. - level - 39 - level
+169 - Level UP 42: Matcha - Reach level 42. - level - 42 - level
+170 - Level UP 46: Lunar - Reach level 46. - level - 46 - level
+171 - Level UP 50: Invert - Reach level 50. - level - 50 - level
+172 - Level UP 55: Thermometer - Reach level 55. - level - 55 - level
+173 - Level UP 65: ?? - Reach level 65. - level - 65 - level
+174 - Level UP 69: MilK - Reach level 69. - level - 69 - level
+175 - Level UP 74: LCD - Reach level 74. - level - 74 - level
+176 - Deep Rock Galatic 01: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+177 - Deep Rock Galatic 02: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+178 - Deep Rock Galatic 03: Lead Storm - Purchase for $19,600 to unlock! - money - 19600 - drg
+179 - Deep Rock Galatic 04: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg

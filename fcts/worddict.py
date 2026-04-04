@@ -320,3 +320,14 @@ def random_korean():
     temp = r.choice(readAllRandom())
     result = r.choice(temp[1])
     return result
+
+def existsWord(word: str = "") -> bool:
+    trim_word = word.replace(" ", "")
+    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    c = conn.cursor()
+
+    c.execute("SELECT 1 FROM korean WHERE word = ? LIMIT 1;", (trim_word,))
+    exists = c.fetchone() is not None
+
+    conn.close()
+    return exists

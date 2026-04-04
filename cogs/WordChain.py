@@ -8,13 +8,13 @@ import requests
 import re
 from fcts.koreanbreak import count_break_korean
 import fcts.worddict as wd
+import fcts.koreansearch as ks
 import datetime
 import random
 from time import sleep
 import numpy
 import openpyxl
-from config.rootdir import root_dir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-apikey = "A56D20B6B9466D154FCDFF50433AFB36"
+from config.rootdir import root_dir
 
 player_badge = [
     "",
@@ -175,29 +175,6 @@ def scoreFont(value, digits, type=0):
 
         return result
 
-    
-
-def midReturn(val, s, e):
-    if s in val:
-        val = val[val.find(s) + len(s):]
-        if e in val:
-            val = val[:val.find(e)]
-    return val
-
-
-#지정한 두 개의 문자열 사이의 문자열 여러개를 리턴하는 함수
-#string에서 XML 등의 요소를 분석할때 사용됩니다
-def midReturn_all(val, s, e):
-    if s in val:
-        tmp = val.split(s)
-        val = []
-        for i in range(0, len(tmp)):
-            if e in tmp[i]:
-                val.append(tmp[i][:tmp[i].find(e)])
-    else:
-        val = []
-    return val
-
 
 def replace_sound_char(char):
     SOUND_LIST = {
@@ -284,7 +261,8 @@ def isOneKill(word):
         return True
     else:
         return False
-    
+
+
 def searchKiller(start, length=0):
     HARD_WORD = [
         '겊', '귬', '깆', '껸', '꼇', '꼍', '꾜', '끠', '냔', '른', '녘', '늄', '랒', '읖',
@@ -376,119 +354,6 @@ def shufflePlayer(player, i):
     result = result + player
     print(result)
     return result
-
-
-# 웹 크롤링으로 단어 검색
-def searchWord(query):
-    url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={query}&advanced=y'
-    r = requests.get(url, verify=False)
-    result = int(midReturn(r.text, '<total>', '</total>'))
-
-    if result != 0:
-        word = midReturn(r.text, '<word>', '</word>')
-        word = re.sub('[^A-Za-z0-9가-힣]', '', word)
-        pos = midReturn(r.text, '<pos>', '</pos>')
-        if pos == "":
-            pos = "명사"
-        mean = midReturn(r.text, '<definition>', '</definition >')
-        return [word, pos, mean]
-    else:
-        return None
-
-
-def searchEn(query):
-    url = f'https://api.dictionaryapi.dev/api/v2/entries/en/{query}'
-    r = requests.get(url, verify=False)
-    j = r.json()
-    print(j[0])
-
-    try:
-        word = j[0]['word']
-        word = re.sub('[^A-Za-z0-9]', '', word)
-        print(word)
-        pos = j[0]["meanings"][0]["partOfSpeech"]
-        print(pos)
-        mean = j[0]["meanings"][0]["definitions"][0]["definition"]
-        return [word, pos, mean]
-    except:
-        return None
-
-
-# 봇 끝말잇기 단어 제시 기능
-def startWord(query, history, page=1, length=2, fixed_length=0):
-    ans = []
-    alter = replace_sound_char(query)
-    url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={query}&num=100&start={page}'
-    r = requests.get(url, verify=False)
-    max_page = int(midReturn(r.text, '<total>', '</total>')) // 100
-
-    #단어 목록을 불러오기
-    words = midReturn_all(r.text, '<item>', '</item>')
-    for w in words:
-        word = midReturn(w, '<word>', '</word>')
-        word = re.sub('[^A-Za-z0-9가-힣]', '', word)
-        if word[0] == query and len(word) >= length and not (word in history):
-            if fixed_length == 0:
-                ans.append(word)
-            elif len(word) == fixed_length:
-                ans.append(word)
-    
-    if fixed_length == 0:
-        custom = wd.readAllByStart(query, length)
-        for word in custom:
-            if len(word) > 1 and not (word in history):
-                ans.append(word[1])
-
-    else:
-        custom = wd.readAllByStart(query, fixed_length, True)
-        for word in custom:
-            if len(word) > 1 and not (word in history):
-                ans.append(word[1])
-
-    if alter is not None:
-        url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={alter}&num=100&start={page}'
-        r = requests.get(url, verify=False)
-        max_page = int(midReturn(r.text, '<total>', '</total>')) // 100
-
-        #단어 목록을 불러오기
-        words = midReturn_all(r.text, '<item>', '</item>')
-        for w in words:
-            word = midReturn(w, '<word>', '</word>')
-            word = re.sub('[^A-Za-z0-9가-힣]', '', word)
-            if word[0] == query and len(word) >= length and not (word in history):
-                ans.append(word)
-
-        if fixed_length == 0:
-            custom = wd.readAllByStart(alter, length)
-            for word in custom:
-                if len(word) > 1 and not (word in history):
-                    ans.append(word[1])
-
-        else:
-            custom = wd.readAllByStart(alter, fixed_length, True)
-            for word in custom:
-                if len(word) > 1 and not (word in history):
-                    ans.append(word[1])
-
-    #중복제거
-    ans = list(set(ans))
-
-    if len(ans) > 0:
-        result = random.choice(ans)
-        temp = wd.readInGame(result)
-
-        if temp is None:
-            return searchWord(result)
-
-        else:
-            return temp
-
-    else:
-        if page < max_page:
-            return startWord(query, history, page + 1)
-        else:
-            return None
-
 
 # 단어목록 뷰어 UI
 
@@ -637,7 +502,7 @@ class TestCommands(commands.Cog):
     @commands.hybrid_command(name='사전', description="우리말샘(국립국어원)에 실린 단어 뜻을 검색합니다!")
     async def word_search(self, ctx, *, word: str = ''):
         if word != '':
-            result = searchWord(word)
+            result = ks.searchWord(word)
             if result is not None:
                 wd.newWord(ctx.author, str(result[0]), str(result[1]),
                            str(result[2]))
@@ -659,7 +524,7 @@ class TestCommands(commands.Cog):
     @commands.hybrid_command(name='dict', description="단어 뜻을 검색합니다!")
     async def en_search(self, ctx, word: str = ''):
         if word != '':
-            result = searchEn(word)
+            result = ks.searchEn(word)
             if result is not None:
                 await ctx.reply(f'## {result[0]}\n[{result[1]}] {result[2]}')
             else:
@@ -1075,7 +940,7 @@ class TestCommands(commands.Cog):
                     index = wd.readAll(data[0])[0]
                     if data[2] == "우리말샘":
                         try:
-                            mean = searchWord(data[0])[2]
+                            mean = ks.searchWord(data[0])[2]
                             wd.plModify(ctx.author, int(index), data[1])
                             wd.meanModify(ctx.author, int(index), mean)
                         except: #mean이 none 일 경우
@@ -1141,7 +1006,7 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = searchWord(data[0])[2]
+                            mean = ks.searchWord(data[0])[2]
                             wd.newWordById(uid, data[0], data[1], mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1205,8 +1070,8 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = searchWord(data[0])[2]
-                            pos = searchWord(data[0])[1]
+                            mean = ks.searchWord(data[0])[2]
+                            pos = ks.searchWord(data[0])[1]
                             wd.newWordById(uid, data[0], pos, mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1268,7 +1133,7 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = searchWord(data[0])[2]
+                            mean = ks.searchWord(data[0])[2]
                             wd.newWordById(uid, data[0], data[1], mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1317,8 +1182,8 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = searchWord(data[0])[2]
-                            pos = searchWord(data[0])[1]
+                            mean = ks.searchWord(data[0])[2]
+                            pos = ks.searchWord(data[0])[1]
                             wd.newWordById(uid, data[0], pos, mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1516,13 +1381,13 @@ class TestCommands(commands.Cog):
                                         if len(result) != 0:
                                             input_word = await ctx.send(random.choice(result))
                                         else:
-                                            result = startWord(start, history)
+                                            result = ks.startWord(start, history)
                                             if result is not None:
                                                 input_word = await ctx.send(result[0])
                                             else:
                                                 input_word = await ctx.send("q")
                                     else:
-                                        result = startWord(start, history)
+                                        result = ks.startWord(start, history)
                                         if result is not None:
                                             input_word = await ctx.send(result[0])
                                         else:
@@ -1559,7 +1424,7 @@ class TestCommands(commands.Cog):
                                         result = wd.readInGame(check)
 
                                         if result is None:
-                                            result = searchWord(check)
+                                            result = ks.searchWord(check)
 
                                         if result is not None:
                                             start = check[-1]
@@ -1836,13 +1701,13 @@ class TestCommands(commands.Cog):
                                         if len(result) != 0:
                                             input_word = await ctx.send(random.choice(result))
                                         else:
-                                            result = startWord(start, history, fixed_length=length)
+                                            result = ks.startWord(start, history, fixed_length=length)
                                             if result is not None:
                                                 input_word = await ctx.send(result[0])
                                             else:
                                                 input_word = await ctx.send("q")
                                     else:
-                                        result = startWord(start, history, fixed_length=length)
+                                        result = ks.startWord(start, history, fixed_length=length)
                                         if result is not None:
                                             input_word = await ctx.send(result[0])
                                         else:
@@ -1879,7 +1744,7 @@ class TestCommands(commands.Cog):
                                         result = wd.readInGame(check)
 
                                         if result is None:
-                                            result = searchWord(check)
+                                            result = ks.searchWord(check)
 
                                         if result is not None:
                                             start = check[-1]
