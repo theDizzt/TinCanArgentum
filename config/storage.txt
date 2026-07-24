@@ -154,26 +154,54 @@
 154 - Gaming Prime 08: Player Void - Purchase for $9,900 to unlock! - money - 9900 - abstract
 155 - Anniversary 06: 100000WORDS - 2024년 11월 17일, 은비사전 단어 100,000개 등록 기념 특전입니다. 특별한 코드를 입력하여 보상을 수령하세요. - none - none - anniversary
 156 - Hidden 15: Lilás Cold - (December 3, 2024) Happy 24th birthday, Montee >:D - none - none - hidden
-157 - 2025 New Year 01: Snake - (January 1, 2025) We've got a gift for you for the Year of the Sanke, 2025! Purchase for $9,900 to unlock! - money - 9900 - anniversary
+157 - 2025 New Year: Snake - (January 1, 2025) We've got a gift for you for the Year of the Sanke, 2025! Purchase for $9,900 to unlock! - money - 9900 - anniversary
 158 - Hidden 16: Yolouha~ Oh yeah!! - (October 18, 2025) 문죄송합니다람쥐썬더! $22,222,222로 구매 가능! - money - 22222222 - hidden
 159 - Anniversary 06: 전체공룡 16주년 - (November 16, 2025) 전체공룡 12주년 기념 파클슬래이브즈 Bluewave 스킨입니다. (Purchase for $11,160 to unlock!) - money - 11160 - anniversary
 160 - Hidden 17: Hazard One - (November 16, 2025) - none - none - hidden
-161 - Hidden 18: ?? - (November 16, 2025) - none - none - hidden
-162 - Hidden 19: ?? - (November 16, 2025) - none - none - hidden
+161 - Hidden 18: GOAT - (November 16, 2025) - none - none - hidden
+162 - 2026 New Year: Horse - (January 1, 2026) We've got a gift for you for the Year of the Horse, 2026! Purchase for $9,900 to unlock! - money - 9900 - anniversary
 163 - Level UP Legacy 01: Default Legacy - Legacy Default Skin (2023.07.29. ~ 2025.11.10.) - level - 1 - level
-164 - Level UP 6: ?? - Reach level 6. - level - 6 - level
+164 - Level UP 6: Sprout - Reach level 6. - level - 6 - level
 165 - Level UP 14: Lemon Heart ♥ - Reach level 14. - level - 14 - level
 166 - Level UP 19: Bismuth - Reach level 19. - level - 19 - level
-167 - Level UP 25: ?? - Reach level 25. - level - 25 - level
+167 - Level UP 25: Graph - Reach level 25. - level - 25 - level
 168 - Level UP 39: COINY - Reach level 39. - level - 39 - level
 169 - Level UP 42: Matcha - Reach level 42. - level - 42 - level
 170 - Level UP 46: Lunar - Reach level 46. - level - 46 - level
 171 - Level UP 50: Invert - Reach level 50. - level - 50 - level
 172 - Level UP 55: Thermometer - Reach level 55. - level - 55 - level
-173 - Level UP 65: ?? - Reach level 65. - level - 65 - level
+173 - Level UP 65: Venom - Reach level 65. - level - 65 - level
 174 - Level UP 69: MilK - Reach level 69. - level - 69 - level
 175 - Level UP 74: LCD - Reach level 74. - level - 74 - level
 176 - Deep Rock Galatic 01: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
 177 - Deep Rock Galatic 02: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
 178 - Deep Rock Galatic 03: Lead Storm - Purchase for $19,600 to unlock! - money - 19600 - drg
 179 - Deep Rock Galatic 04: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+180 - Slay the Spire 01: Neow - Purchase for $19,600 to unlock! - money - 19600 - drg
+181 - Slay the Spire 02: Tezcatara - Purchase for $19,600 to unlock! - money - 19600 - drg
+182 - Slay the Spire 03: Lagavulin - Purchase for $19,600 to unlock! - money - 19600 - drg
+183 - Slay the Spire 04: Ironclad - Purchase for $19,600 to unlock! - money - 19600 - drg
+184 - Slay the Spire 05: Silent - Purchase for $19,600 to unlock! - money - 19600 - drg
+185 - Slay the Spire 06: Defect - Purchase for $19,600 to unlock! - money - 19600 - drg
+186 - Slay the Spire 07: Watcher - Purchase for $19,600 to unlock! - money - 19600 - drg
+187 - Slay the Spire 08: Regent - Purchase for $19,600 to unlock! - money - 19600 - drg
+188 - Slay the Spire 09: Necrobinder - Purchase for $19,600 to unlock! - money - 19600 - drg
+189 - Constellation 01: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+190 - Constellation 02: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+191 - Constellation 03: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+192 - Constellation 04: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+193 - Constellation 05: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+194 - Constellation 06: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+195 - Constellation 07: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+196 - Constellation 08: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+197 - Constellation 09: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+198 - Constellation 10: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+199 - Constellation 11: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+200 - Constellation 12: ?? - Purchase for $19,600 to unlock! - money - 19600 - drg
+201 - Hidden 19: ?? - (April 14, 2026) - none - none - hidden
+202 - Pokementle 01: 百發百中 - 9번 이하로 정답을 맞춥니다. - game - none - game
+203 - Pokementle 02: 七顚八起 - 129번 이상 도전해서 정답을 맞춥니다. - game - none - game
+204 - Pokementle 03: 君の名は。 - 너도 이름이 있었구나!?!? - game - none - game
+205 - Pokementle 04: 럭키 비키잖아!? - 내가 외친 포켓몬의 랭킹이 339위 입니다. - game - none - game
+206 - Magma Racing 01: GMR-001 Livery #17 - Purchase for $19,600 to unlock! - money - 19600 - magma
+207 - Magma Racing 02: GMR-001 Livery #19 - Purchase for $19,600 to unlock! - money - 19600 - magma

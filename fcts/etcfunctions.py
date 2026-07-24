@@ -401,10 +401,18 @@ def checkBox(s):
 def process_bar(ratio, length = 10):
 
     xpBar = ["<:bar0:1216622427992227980>", "<:bar1:1216622429934190633>", "<:bar2:1216622432069226617>", "<:bar3:1216622433637892096>", "<:bar4:1216622435902947358>", "<:bar5:1216622437756702720>", "<:bar6:1216622439727890482>", "<:bar7:1216622441502343218>", "<:bar8:1216622443427270677>", "<:bar9:1216622445151129640>", "<:bara:1216622446740901968>"]
-    cons = int((ratio*10*length)//10)
-    detail = int((ratio*10*length)%10)
-    str_process = xpBar[10] * cons + xpBar[detail] + xpBar[0] * (length - cons - 1)
-    return str_process
+
+    if ratio <= 0:
+        return xpBar[0] * 10
+    
+    elif ratio >= 1:
+        return xpBar[10] * 10
+    
+    else:
+        cons = int((ratio*10*length)//10)
+        detail = int((ratio*10*length)%10)
+        str_process = xpBar[10] * cons + xpBar[detail] + xpBar[0] * (length - cons - 1)
+        return str_process
 
 
 # 2.2. Storage List Read
@@ -413,7 +421,7 @@ def storageLineRead(option:str = None):
     temp = []
     for data in file.readlines():
         line = data.split(" - ")
-        print(line)
+        #print(line)
 
         if option == 'all':
             temp.append(line[:5])
@@ -450,6 +458,7 @@ def voiceDelete(user: discord.Member = None):
 
 # 2.4.3. Number Font
 def numFont(i):
+    """
     #old
     num = [
         "<:g0:1216696457164492872>","<:g1:1216696459261640785>",
@@ -458,9 +467,32 @@ def numFont(i):
         "<:g6:1216696470712094723>","<:g7:1216696473459097630>",
         "<:g8:1216696475388743750>","<:g9:1216696478584672306>"
     ]
+    """
+    num = [
+        "<:255_0:1349993274160451636>",
+        "<:255_1:1349993283409022986>",
+        "<:255_2:1349993291210555462>",
+        "<:255_3:1349993298801987626>",
+        "<:255_4:1349993307362562088>",
+        "<:255_5:1349993315675799592>",
+        "<:255_6:1349993323959423007>",
+        "<:255_7:1349993331882459188>",
+        "<:255_8:1349993339964882944>",
+        "<:255_9:1349993348009824279>",
+        "<:255_10:1349993355932864512>",
+        "<:255_11:1349993364459618306>"
+    ]
     result = ''
     for c in str(i):
-        result += num[int(c)]
+        try:
+            result += num[int(c)]
+        except:
+            if c == ".":
+                result += "<:255_12:1495347227432845455>"
+
+            elif c == "#":
+                result += "<:255_13:1495347229026812044>"
+
     return result
 
 

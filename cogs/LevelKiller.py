@@ -200,7 +200,7 @@ class LevelKiller(commands.Cog):  # Cog를 상속하는 클래스를 선언
         self.client = client
 
     async def is_server(ctx):
-        return ctx.channel.id in [1115648878918774794, 1158619424278982736, 1206492963404775535]
+        return ctx.channel.id in [1115648878918774794, 1158619424278982736, 1206492963404775535, 908380307223371806]
 
     # Level Killer [ID: 35]
     @commands.check(is_server)

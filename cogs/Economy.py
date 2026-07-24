@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
+import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import random
@@ -12,7 +14,11 @@ class Economy(commands.Cog):
 
     #Stats [ID: 21]
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
-    @commands.hybrid_command(name='stats', description="Show your stats.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("stats", key="cmd.21.name"),
+        description=app_commands.locale_str("Show your stats", key="cmd.21.desc"),
+        aliases=["통계"]
+    )
     async def stats(self, ctx, option: str = 'mystats'):
         if option == 'mystats':
             name = ctx.author.name
@@ -50,59 +56,55 @@ class Economy(commands.Cog):
             embed.set_thumbnail(url=ctx.author.avatar.url)
 
             embed.add_field(
-                name="NAME",
-                value=f"`Real Name` {name}\n`Nick Name` {nickname}",
+                name=i18n.t(ctx.author, "cmd.21.t001"),
+                value=i18n.t(ctx.author, "cmd.21.t002", name=name, nickname=nickname),
                 inline=False)
 
             embed.add_field(
-                name="ACCOUNT",
-                value=
-                f"`Created` {accountdate}\n`When we were together...` {startdate}",
+                name=i18n.t(ctx.author, "cmd.21.t003"),
+                value=i18n.t(ctx.author, "cmd.21.t004", adate=accountdate, sdate=startdate),
                 inline=False)
 
             embed.add_field(
-                name="LEVELING",
-                value=
-                f"`Level` **{lv}**/300\n`XP` {text_xp}\n{etc.process_bar(xp1 / xp2)}\n`Total XP` {xp:,d}\n`Emblem` {etc.lvicon(lv)} {emblem}",
+                name=i18n.t(ctx.author, "cmd.21.t005"),
+                value=i18n.t(ctx.author, "cmd.21.t006", lv=lv, txp=text_xp, bar=etc.process_bar(xp1 / xp2), xp=xp, icon=etc.lvicon(lv), emblem=emblem),
                 inline=False)
 
-            embed.add_field(name="MONEY",
-                            value=f"`Balance` ${money:,d}",
+            embed.add_field(name=i18n.t(ctx.author, "cmd.21.t007"),
+                            value=i18n.t(ctx.author, "cmd.21.t008", money=money),
                             inline=False)
 
-            embed.add_field(name="SKIN",
-                            value=f"`Equipped` {equip}\n`Progress` {collect}\n{etc.process_bar(collected / total_skins)}",
+            embed.add_field(name=i18n.t(ctx.author, "cmd.21.t009"),
+                            value=i18n.t(ctx.author, "cmd.21.t010", equip=equip, collect=collect, bar=etc.process_bar(collected / total_skins)),
                             inline=False)
 
-            embed.set_footer(text="Developde by Dizzt")
+            embed.set_footer(text=i18n.t(ctx.author, "cmd.dev.footer"))
 
-            await ctx.reply(
-                f":green_circle: **{nickname}**'s request completely loaded!!",
-                embed=embed)
+            await ctx.reply(i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)), embed=embed)
 
     @stats.error
     async def stats_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
 
     #Balance [ID: 22]
     @commands.cooldown(rate=1, per=10, type=commands.BucketType.user)
-    @commands.hybrid_command(name='balance', description="Show your balance.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("balance", key="cmd.22.name"),
+        description=app_commands.locale_str("Show your balance", key="cmd.22.desc"),
+        aliases=["잔액"]
+    )
     async def balance(self, ctx, option: str = 'mybalance'):
         if option == 'mybalance':
-            await ctx.reply(
-                f"**`{q.readTag(ctx.author)}`**'s balance is **${q.readMoney(ctx.author):,d}**! `⸜(*◉ ᴗ ◉)⸝`"
-            )
+            await ctx.reply(i18n.t(ctx.author, "cmd.22.t001", user=q.readTag(ctx.author), money=q.readMoney(ctx.author)))
 
     @balance.error
     async def balance_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
@@ -110,7 +112,10 @@ class Economy(commands.Cog):
     #Transfer [ID: 23]
     @commands.cooldown(rate=1, per=100, type=commands.BucketType.user)
     @commands.hybrid_command(
-        name='transfer', description="Let's send money to people who need it!")
+        name=app_commands.locale_str("transfer", key="cmd.23.name"),
+        description=app_commands.locale_str("Let's send money to people who need it", key="cmd.23.desc"),
+        aliases=["송금"]
+    )
     async def transfer(self, ctx):
         user = ""
         amount = 0
@@ -119,7 +124,7 @@ class Economy(commands.Cog):
         pw = str(random.randint(0, 999999)).zfill(6)
 
         await ctx.reply(
-            "## 계좌이체 | Account Transfer\n`Step: 1/3`\n돈을 받을 사람을 `@mention` 을 통해 지정해 주세요! (`취소` 입력시 거래 취소)\nPlease specify who will receive the money through `@mention`! (Cancel transaction: type 'cancel')"
+            i18n.t(ctx.author, "cmd.23.t001")
         )
 
         while boolean:
@@ -131,18 +136,18 @@ class Economy(commands.Cog):
             check = input_word.content
             if check in ['cancel', '취소']:
                 await ctx.reply(
-                    "거래가 취소되었습니다.\nThe transaction has been cancelled.")
+                    i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
                 break
             try:
                 user = etc.extractUid(check)
                 break
             except:
-                await ctx.reply("`(⩌Δ ⩌ ;)`\n유효하지 않은 사용자입니다.\nInvalid user.")
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t003"))
 
         if boolean:
             await ctx.reply(
-                f"## 계좌이체 | Account Transfer\n`Step: 2/3`\n**{q.readTagById(user)}** 에게 보낼 금액을 입력해 주세요. 현재 잔액은 **${balance:,d}** 입니다. (`취소` 입력시 거래 취소)\nPlease enter the amount to send to **{q.readTagById(user)}**. Your current balance is **${balance:,d}**. (Cancel transaction: type 'cancel')"
+                i18n.t(ctx.author, "cmd.23.t004", obj=q.readTagById(user), balance=balance)
             )
 
         while boolean:
@@ -154,27 +159,26 @@ class Economy(commands.Cog):
             check = input_word.content
             if check in ['cancel', '취소']:
                 await ctx.reply(
-                    "거래가 취소되었습니다.\nThe transaction has been cancelled.")
+                    i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
                 break
             try:
                 amount = int(check)
                 if amount > balance:
                     await ctx.reply(
-                        f"`(⩌Δ ⩌ ;)`\n한도 금액(**${balance:,d}**)을 초과하였습니다.\nThe limit amount (**${balance:,d}**) has been exceeded."
+                        i18n.t(ctx.author, "cmd.23.t007", balance=balance)
                     )
                 elif amount < 1:
-                    await ctx.reply("`(⩌Δ ⩌ ;)`\n유효하지 않은 금액입니다.\nInvalid user."
-                                    )
+                    await ctx.reply(i18n.t(ctx.author, "cmd.23.t005"))
                 else:
                     break
 
             except:
-                await ctx.reply("`(⩌Δ ⩌ ;)`\n유효하지 않은 금액입니다.\nInvalid user.")
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t005"))
 
         if boolean:
             await ctx.reply(
-                f"## 계좌이체 | Account Transfer\n`Step: 3/3`\n**{q.readTagById(user)}** 에게 **${amount:,d}** 를 보내는게 맞다면 `{pw}`를 입력해 주세요. (`취소` 입력시 거래 취소)\nIf it is correct to send **${amount:,d}** to **{q.readTagById(user)}**, enter `{pw}`. (Cancel transaction: type 'cancel')"
+                i18n.t(ctx.author, "cmd.23.t006", obj=q.readTagById(user), amount=amount, pw=pw)
             )
 
         while boolean:
@@ -186,7 +190,7 @@ class Economy(commands.Cog):
             check = input_word.content
             if check in ['cancel', '취소']:
                 await ctx.reply(
-                    "거래가 취소되었습니다.\nThe transaction has been cancelled.")
+                    i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
                 break
 
@@ -194,42 +198,40 @@ class Economy(commands.Cog):
                 break
 
             else:
-                await ctx.reply(
-                    "`(⩌Δ ⩌ ;)`\n비밀번호가 틀렸습니다.\nYour password is incorrect.")
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t008"))
 
         if boolean:
             q.moneyAdd(ctx.author, (-1) * amount)
             q.moneyAddById(user, amount)
 
-            embed = discord.Embed(title="명세서 | Specification",
+            embed = discord.Embed(title=i18n.t(ctx.author, "cmd.23.t009"),
                                   description=f"UID: {ctx.author.id}",
                                   color=0xF2BE22)
 
             embed.set_thumbnail(url=ctx.author.avatar.url)
 
-            embed.add_field(name="받는사람 | Recipient",
+            embed.add_field(name=i18n.t(ctx.author, "cmd.23.t010"),
                             value=f"{q.readTagById(user)}\n`{user}`",
                             inline=False)
 
-            embed.add_field(name="이체금액 | Transfer amount",
+            embed.add_field(name=i18n.t(ctx.author, "cmd.23.t011"),
                             value=f"**${amount:,d}**",
                             inline=False)
 
-            embed.add_field(name="잔액 | Balance",
+            embed.add_field(name=i18n.t(ctx.author, "cmd.23.t012"),
                             value=f"**${balance - amount:,d}**",
                             inline=False)
 
-            embed.set_footer(text="Developed by Dizzt")
+            embed.set_footer(text=i18n.t(ctx.author, "cmd.dev.footer"))
 
             await ctx.reply(
-                "## 계좌이체 | Account Transfer\n거래가 완료되었습니다!\nThe transaction is complete!",
+                i18n.t(ctx.author, "cmd.23.t013"),
                 embed=embed)
 
     @transfer.error
     async def transfer_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error

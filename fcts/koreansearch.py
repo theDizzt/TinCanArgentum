@@ -10,7 +10,9 @@ import random
 
 from config.rootdir import root_dir
 
-apikey = "A56D20B6B9466D154FCDFF50433AFB36"
+from config.settings import get_required_env
+
+apikey = get_required_env('KOREAN_DICTIONARY_API_KEY')
 
 
 def midReturn(val, s, e):

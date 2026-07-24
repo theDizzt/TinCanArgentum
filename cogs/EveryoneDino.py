@@ -1,27 +1,148 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.drawing as dr
 from config.rootdir import root_dir
 import os
 import fcts.koreanbreak as kb
 import random as r
-from datetime import datetime
+from datetime import datetime, timedelta
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 #SERVER id
 server_id = [
     262525769023094785, 716980478992711720, 1114816224522678294,
-    453906917719408642
+    453906917719408642, 348750582200270848
 ]
-
 
 class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
 
+    # [id: 30] 오늘의 인물 카드 제작
+    async def goat_image(self, *, user: discord.Member, title: str) -> io.BytesIO:
+        # 이름
+        dname = "@" + str(user)
+        if dname.endswith("#0"):
+            dname = dname[:-2]
+
+        name = q.readTag(user)
+        
+        # 배경 이미지 불러오기
+        background_image = Image.open(
+            f"{root_dir}/config/rankcard/goat.png"
+        ).convert('RGBA')
+
+        mask_image = Image.open(
+            f"{root_dir}/config/rankcard/goat_mask.png"
+        ).convert('RGBA')
+
+        image = background_image.copy()
+        draw = ImageDraw.Draw(image)
+
+        # 현재시간
+        now = datetime.now() + timedelta(hours=9)
+        now_time = now.strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
+
+        font_name = ImageFont.truetype(f"{root_dir}/font/emblem.ttf", 22)
+        font_date = ImageFont.truetype(f"{root_dir}/font/slay/name.ttf", 14)
+        font_title = ImageFont.truetype(f"{root_dir}/font/slay/name.ttf", 20)
+
+        x1 = (256 - draw.textlength(name, font=font_name)) / 2
+        y1 = 208
+
+        x2 = (256 - draw.textlength(dname, font=font_date)) / 2
+        y2 = 240
+
+        x3 = (256 - draw.textlength(now_time, font=font_date)) / 2
+        y3 = 260
+
+        x4 = (256 - draw.textlength(title, font=font_title)) / 2
+        y4 = 284
+
+        draw.text(
+            (x1, y1), str(name),
+            fill=(255, 255, 255, 255),
+            font=font_name,
+            stroke_width=2,
+            stroke_fill=(46, 139, 255, 255)
+        )
+
+        draw.text(
+            (x2, y2), str(dname),
+            fill=(204, 204, 204, 255),
+            font=font_date,
+            stroke_width=2,
+            stroke_fill=(46, 139, 255, 255)
+        )
+
+        draw.text(
+            (x3, y3), str(now_time),
+            fill=(255, 255, 255, 255),
+            font=font_date,
+            stroke_width=2,
+            stroke_fill=(46, 139, 255, 255)
+        )
+
+        dr.draw_multiline_text_center(
+            draw=draw,
+            text=str(title),
+            font=font_title,
+            start_y=y4,
+            max_width=256,
+            canvas_width=256
+        )
+
+        try:
+            avatar_asset = user.display_avatar
+            buffer_avatar = io.BytesIO()
+            await avatar_asset.save(buffer_avatar)
+            buffer_avatar.seek(0)
+            avatar_image = Image.open(buffer_avatar).convert('RGBA')
+
+        except Exception:
+            avatar_image = Image.open(
+                root_dir + '/config/rankcard/noimage.jpg'
+            )
+
+        # 디스코드 프로필 사진 붙이기
+        avatar_image = avatar_image.resize((96, 96))
+        image.paste(avatar_image, (80, 100), mask=mask_image)
+
+        buffer_output = io.BytesIO()
+        image.save(buffer_output, format='PNG')
+        buffer_output.seek(0)
+        return buffer_output
+
     async def is_server(ctx):
         return ctx.guild.id in server_id
+    
+    # GOAT [ID: 30]
+    @commands.hybrid_command(name="똥딸", description="오늘 큰 일을 저지른 친구를 기념해 보아요",
+                             aliases=["똥딸놈", "스카웃", "똥딸년", "똥잠바", "더러운똥딸년"])
+    @commands.check(is_server)
+    async def goat(self, ctx, user:discord.Member = None, *, title: str = "똥딸"):
+        if user is None:
+            user = ctx.author
+
+        buffer_output = await self.goat_image(user=user, title=title)
+
+        await ctx.reply(
+            f":tada: 오늘의 인물은 <@{user.id}> 입니다!!!",
+            file=discord.File(buffer_output, 'myimage.png')
+        )
+
+        if q.readStorage(user, 161) == 0:
+            q.storageModify(user, 161, 1)
+    
+    @goat.error
+    async def goat_error(self, ctx, error):
+        if isinstance(error, commands.errors.CheckFailure):
+            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
 
     # 쿠모티콘! [ID: 32]
     @commands.hybrid_command(name='쿠모티콘', description="헬창냥이 김종국의 사진 대방출!")
@@ -114,7 +235,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             )
 
     @coomoji.error
-    async def coomoji_error(error, ctx):
+    async def coomoji_error(self, ctx, error):
         if isinstance(error, commands.errors.CheckFailure):
             await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
 
@@ -142,6 +263,11 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             선우=263640824170938369,
             승현=262551155815481345,
             민찬=512098892674760705,
+            우현=584613297643323392,
+            동현=178695589788123136,
+            창훈=316933512852930562,
+            현수=333236160853704714,
+            ㅅㅁ=320827061952315392,
             은비=279909142955687936,
             한비=280900407021010944,
             쿠키=791364491325210625,
@@ -219,6 +345,11 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 310386513236066306,
                 310379466578722816,
                 332793142745104384,
+                584613297643323392,
+                178695589788123136,
+                316933512852930562,
+                333236160853704714,
+                320827061952315392,
                 1115471474250240050,
                 889173206454386689,
                 310404488496283653,
@@ -300,12 +431,12 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
             await ctx.reply(result)
 
+    @kakao.error
+    async def kakao_error(self, error, ctx):
+        if isinstance(error, commands.CheckFailure):
+            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
 
-        @kakao.error
-        async def kakao_error(self, error, ctx):
-            if isinstance(error, commands.CheckFailure):
-                await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
-
+    # 카카오데이터 [id: 10]
     @commands.command(name='kakaodata', description="...")
     @commands.check(is_server)
     async def kakaodata(self, ctx):

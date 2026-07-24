@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
+import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 from PIL import Image, ImageDraw, ImageFont
@@ -13,17 +15,17 @@ with open(root_dir + '/font/font.json', 'r',encoding='UTF-8') as f:
 
 def fontsize(type, font):
     if type == "name":
-        if font in ["brush", "chalk", "legend", "square"]:
+        if font in ["chalk", "legend", "square"]:
             return 26
-        elif font in ["lcd", "minecraft", "serif", "starcraft", "luxury", "nature", "handwrite", "dragon", "ocean"]:
+        elif font in ["lcd", "minecraft", "serif", "starcraft", "luxury", "nature", "handwrite", "dragon", "ocean", "math", "wanted"]:
             return 24
-        elif font in ["fluid", "paper", "gothic", "tedne"]:
+        elif font in ["brush", "fluid", "paper", "gothic", "tedne"]:
             return 22
         else:
             return 20
     
     elif type == "xp":
-        if font in ["fluid", "lcd", "luxury", "minecraft", "brush", "stencil", "legend", "square", "serif"]:
+        if font in ["fluid", "lcd", "luxury", "minecraft", "brush", "stencil", "legend", "square", "serif", "math"]:
             return 18
         elif font in ["condense", "handwrite", "stella", "drg"]:
             return 20
@@ -32,15 +34,15 @@ def fontsize(type, font):
 
 def textAltitude(type, font):
     if type == "name":
-        if font in ["brush", "legend"]:
+        if font in ["brush", "legend", "math"]:
             return -6
-        elif font in ["chalk", "luxury", "lcd", "handwrite", "nature", "square", "dragon", "modern"]:
+        elif font in ["chalk", "luxury", "lcd", "handwrite", "nature", "square", "dragon", "modern", "wanted"]:
             return -3
         else:
             return 0
         
     elif type == "xp":
-        if font in ["pixel", "minecraft", "stencil", "starcraft", "legend", "gothic", "modern"]:
+        if font in ["pixel", "minecraft", "stencil", "starcraft", "legend", "gothic", "modern", "legacy"]:
             return 2
         elif font in ["sans"]:
             return 3
@@ -48,7 +50,7 @@ def textAltitude(type, font):
             return 4
         elif font in ["nature"]:
             return 5
-        elif font in ["lcd", "stella"]:
+        elif font in ["lcd", "stella", "math"]:
             return -1
         else:
             return 0
@@ -76,7 +78,7 @@ class PaginationView(discord.ui.View):
 
     async def send(self, ctx):
         self.message = await ctx.send(
-            f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             view=self)
         await self.update_message(self.get_current_page_data(), self.user)
 
@@ -85,8 +87,8 @@ class PaginationView(discord.ui.View):
         total = len(self.data)
 
         embed = discord.Embed(
-            title="**GLOBAL RANKING**",
-            description=f"Your Ranking: {myrank}/{total}",
+            title=i18n.t(user, "cmd.14.t001"),
+            description=i18n.t(user, "cmd.14.t002", myrank=myrank, total=total),
             color=0xE2F6CA
         )
 
@@ -110,7 +112,7 @@ class PaginationView(discord.ui.View):
             )
 
         embed.set_footer(
-            text=f"Page : {self.current_page} / {self.total_pages}",
+            text=i18n.t(user, "cmd.14.t003", current=self.current_page, total=self.total_pages),
             icon_url=""
         )
 
@@ -341,10 +343,13 @@ class UserProfile(commands.Cog):
 
     # Profile [ID: 11]
     @commands.cooldown(rate=1, per=15, type=commands.BucketType.user)
-    @commands.hybrid_command(name='profile',
-                             description="Show user's profile.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("profile", key="cmd.11.name"),
+        description=app_commands.locale_str("Show user's profile", key="cmd.11.desc"),
+        aliases=["프로필"]
+    )
     #@discord.app_commands.describe(user='User mention')
-    async def profile(self, ctx, user: discord.Member = None):
+    async def profile(self, ctx, user:discord.Member = None):
         if user is None:
             user = ctx.author
 
@@ -356,22 +361,25 @@ class UserProfile(commands.Cog):
         buffer_output = await self.rankcard_image(user=user, skin_id=skin_id, preview=False)
 
         await ctx.reply(
-            f":green_circle: **{q.readTag(user)}**'s profile card completely loaded!!",
+            i18n.t(ctx.author, "cmd.11.t001", username=q.readTag(user)),
             file=discord.File(buffer_output, 'myimage.png')
         )
 
     @profile.error
     async def profile_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
 
     # Emblem [ID: 12]
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
-    @commands.hybrid_command(name='emblem', description="Show emblem icons.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("emblem", key="cmd.12.name"),
+        description=app_commands.locale_str("Show emblem icons", key="cmd.12.desc"),
+        aliases=["계급장"]
+    )
     #@discord.app_commands.describe(lvl='Choose emblem level to show (default: your level)')
     async def emblem(self, ctx, lvl=None):
         xp = q.readXp(ctx.author)
@@ -384,10 +392,10 @@ class UserProfile(commands.Cog):
             try:
                 lv = int(lvl)
             except:
-                await ctx.reply("`(⩌Δ ⩌ ;)` 타입오류!\nType Error!\n")
+                await ctx.reply(i18n.t(ctx.author, "cmd.12.t001"))
 
         if lvl == "1":
-            emblem = "**{}**\nRequired XP: 0 | 0\nProgression: You already reached this level!".format(etc.emblemName(1))
+            emblem = i18n.t(ctx.author, "cmd.12.t002", ename=etc.emblemName(1))
             emblem_image = Image.open(
                     f"{root_dir}/config/rankcard/emblem/1.png").convert('RGBA')
             emblem_image = emblem_image.resize((128, 128))
@@ -419,12 +427,11 @@ class UserProfile(commands.Cog):
                     xp, inf0, 100 * (xp / inf0))
 
                 if xp >= inf0:
-                    ptxt = "You already reached this level!"
+                    ptxt = i18n.t(ctx.author, "cmd.12.t003")
 
                 tlv = int(lv)
                 icon = root_dir + "/config/rankcard/emblem/{}.png".format(lv)
-                emblem = "**{}**\nRequired XP: {:,d} | {:,d}\nProgression: {}".format(
-                    etc.emblemName(tlv), inf0, inf1, ptxt)
+                emblem = i18n.t(ctx.author, "cmd.12.t004", ename=etc.emblemName(tlv), info0=inf0, info1=inf1, ptxt=ptxt)
                 
                 emblem_image = Image.open(
                     f"{root_dir}/config/rankcard/emblem/{lv}.png").convert('RGBA')
@@ -448,45 +455,48 @@ class UserProfile(commands.Cog):
 
             else:
                 await ctx.reply(
-                    "`(⩌Δ ⩌ ;)` 범위에서 벗어난 정수를 입력하였습니다. 1-240 의 자연수를 입력받을 수 있습니다.\nYou entered an integer out of range. You can enter a natural number from 1 to 300.\n`CTX : icon <int: 1~300>`"
+                    i18n.t(ctx.author, "cmd.12.t005")
                 )
 
     @emblem.error
     async def emblem_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
 
     # My Ranking [ID: 13]
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
-    @commands.hybrid_command(name='myrank',
-                             description="Show your global ranking.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("myrank", key="cmd.13.name"),
+        description=app_commands.locale_str("Show your global ranking", key="cmd.13.desc"),
+        aliases=["개인랭킹"]
+    )
     async def myrank(self, ctx, server="global"):
-        if server == "global" or server == "전역":
+        if server in ["global", "전역"]:
             rank = q.xpMyRanking(ctx.author)
             lv = etc.level(q.readXp(ctx.author))
             await ctx.reply(
-                ">>> :green_circle: **{}**'s Global Ranking\n`Ranking` **{}**/{}\n`Level` {} **{}**\n`Total XP` **{:,d}**"
-                .format(q.readTag(ctx.author), etc.numFont(rank),
-                        len(q.xpRanking()), etc.lvicon(lv), lv,
-                        q.readXp(ctx.author)))
+                i18n.t(ctx.author, "cmd.13.t001", user=q.readTag(ctx.author), rank=etc.numFont(rank), total=len(q.xpRanking()), icon=etc.lvicon(lv), lv=lv,
+                        xp=q.readXp(ctx.author))
+            )
 
     @myrank.error
     async def myrank_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
 
     # Ranking [ID: 14]
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
-    @commands.hybrid_command(name='ranking',
-                             description="Show leaderboard of this bot!")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("ranking", key="cmd.14.name"),
+        description=app_commands.locale_str("Show XP leaderboard of this bot", key="cmd.14.desc"),
+        aliases=["전체랭킹"]
+    )
     #@discord.app_commands.describe(server="Select server (default: global)",page="Page number")
     async def ranking(self, ctx, page: int = 1):
         pagination_view = PaginationView(timeout=None)
@@ -498,17 +508,18 @@ class UserProfile(commands.Cog):
     @ranking.error
     async def ranking_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
 
     # Preview [ID: 20]
     @commands.cooldown(rate=1, per=3, type=commands.BucketType.user)
-    @commands.hybrid_command(name='preview',
-                             description="Show user's profile.")
-    #@discord.app_commands.describe(user='User mention')
+    @commands.hybrid_command(
+        name=app_commands.locale_str("preview", key="cmd.20.name"),
+        description=app_commands.locale_str("Previewing profile skins", key="cmd.20.desc"),
+        aliases=["미리보기"]
+    )
     async def preview(self, ctx, skin_id: int = 1):
 
         user = ctx.author
@@ -516,15 +527,14 @@ class UserProfile(commands.Cog):
         buffer_output = await self.rankcard_image(user=user, skin_id=skin_id, preview=True)
 
         await ctx.reply(
-            f":green_circle: **{q.readTag(user)}**'s sample completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             file=discord.File(buffer_output, 'myimage.png')
         )
 
     @preview.error
     async def preview_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error

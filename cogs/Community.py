@@ -117,7 +117,7 @@ class Community(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    # Skin Upload [ID: 18]
+    # Skin Upload [ID: 16]
     @commands.hybrid_command(name='upload',
                              description="Community Skin Upload")
     async def uploadmenu(self, ctx):

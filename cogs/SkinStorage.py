@@ -185,7 +185,7 @@ class SkinStorage(commands.Cog):
     # Purchase Skin [ID: 18]
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @commands.hybrid_command(name='purchase',
-                             description="Purchase skins with money, or unlock them when you complete level up and daily reward stacks.")
+                             description="Purchase skins with money, or unlock them.")
     #@discord.app_commands.describe(action="Option", value="Integer only")
     async def purchase(self, ctx, skin_id:int = None):
 
@@ -269,7 +269,7 @@ class SkinStorage(commands.Cog):
     # Skin Storage [ID: 19]
     @commands.cooldown(rate=1, per=10, type=commands.BucketType.user)
     @commands.hybrid_command(name='skin',
-                             description="Shows your skin repository. You can check the status of your skins and the conditions under which they were acquired.")
+                             description="Shows your skin repository.")
     #@discord.app_commands.describe(action="Option", value="Integer only")
     async def skin(self, ctx, tag: str = 'all', value: int = 1):
 
@@ -294,35 +294,6 @@ class SkinStorage(commands.Cog):
             await ctx.send(msg)
         else:
             raise error
-        
-    @commands.cooldown(rate=1, per=15, type=commands.BucketType.user)
-    @commands.hybrid_command(name='storage',
-                             description="Shows your skin repository. You can check the status of your skins and the conditions under which they were acquired.")
-    #@discord.app_commands.describe(action="Option", value="Integer only")
-    async def storage(self, ctx, tag: str = 'all', value: int = 1):
-
-        try:
-            userdata = q.storageList(ctx.author)
-        except:
-            q.newStorage(ctx.author)
-            userdata = q.storageList(ctx.author)
-
-        pagination_view = PaginationView(timeout=None)
-        pagination_view.data = etc.storageLineRead(tag)
-        pagination_view.alldata = etc.storageLineRead("all")
-        pagination_view.user = ctx.author
-        pagination_view.current_page = value
-        await pagination_view.send(ctx)
-
-    @storage.error
-    async def storage_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
-            await ctx.send(msg)
-        else:
-            raise error
-
 
 async def setup(client):
     await client.add_cog(SkinStorage(client))

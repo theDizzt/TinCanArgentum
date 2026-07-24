@@ -26,7 +26,8 @@ def initSetting():
     skin INTEGER NOT NULL,
     startdate TEXT NOT NULL,
     daily INTEGER NOT NULL,
-    dailydate TEXT NOT NULL
+    dailydate TEXT NOT NULL,
+    language TEXT NOT NULL
     );"""
 
     c.execute(sql)
@@ -63,7 +64,8 @@ def initSetting2():
     skin INTEGER NOT NULL,
     startdate TEXT NOT NULL,
     daily INTEGER NOT NULL,
-    dailydate TEXT NOT NULL);"""
+    dailydate TEXT NOT NULL,
+    language TEXT NOT NULL);"""
 
     c.execute(sql)
     conn.commit()
@@ -94,7 +96,7 @@ def newAccount(user: discord.Member = None):
     conn = sqlite3.connect(root_dir + '/data/user.db')
     c = conn.cursor()
 
-    INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate) VALUES (?,?,?,?,?,?,?,?,?);'
+    INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate, language) VALUES (?,?,?,?,?,?,?,?,?,?);'
 
     nickname = user.name
     discrim = r.randint(1, 10000)
@@ -116,7 +118,7 @@ def newAccount(user: discord.Member = None):
                 nickname += "!"
 
 
-    data = ((user.id, discrim, nickname, 0, 5000, 1, now_date, 0, '-'))
+    data = ((user.id, discrim, nickname, 0, 5000, 1, now_date, 0, '-', 'ko'))
     print(data)
     c.execute(INSERT_SQL, data)
     conn.commit()
@@ -129,7 +131,7 @@ def newAccountById(user: int = None, name: str = None):
     conn = sqlite3.connect(root_dir + '/data/user.db')
     c = conn.cursor()
 
-    INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate) VALUES (?,?,?,?,?,?,?,?,?);'
+    INSERT_SQL = 'INSERT INTO main (id, discrim, nick, xp, money, skin, startdate, daily, dailydate, language) VALUES (?,?,?,?,?,?,?,?,?,?);'
 
     nickname = name
     discrim = r.randint(1, 10000)
@@ -151,7 +153,7 @@ def newAccountById(user: int = None, name: str = None):
                 retry = 0
                 nickname += "!"
 
-    data = ((user, discrim, nickname, 0, 5000, 1, now_date, 0, '-'))
+    data = ((user, discrim, nickname, 0, 5000, 1, now_date, 0, '-', 'ko'))
     print(data)
     c.execute(INSERT_SQL, data)
     conn.commit()
@@ -753,3 +755,72 @@ def tagIsOkay(name: str = "", discrim: int = 0):
 
     else:
         return False
+
+# 3.7. 언어 설정
+# 3.7.0. 언어 초깃값 추가
+def add_language_column():
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+
+    try:
+        c.execute("ALTER TABLE main ADD COLUMN language TEXT NOT NULL DEFAULT 'ko'")
+        conn.commit()
+        print("language column added.")
+    except sqlite3.OperationalError as e:
+        if "duplicate column name" in str(e).lower():
+            print("language column already exists.")
+        else:
+            raise
+    finally:
+        c.close()
+        conn.close()
+
+# 3.7.1. 언어 설정 불러오기
+def readLanguage(user: discord.Member = None):
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+
+    c.execute("SELECT language FROM main WHERE id = ?", (user.id,))
+    result = c.fetchone()
+
+    c.close()
+    conn.close()
+
+    if result is None or result[0] is None:
+        return "ko"
+    return result[0]
+
+def readLanguageById(user: int):
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+
+    c.execute("SELECT language FROM main WHERE id = ?", (user,))
+    result = c.fetchone()
+
+    c.close()
+    conn.close()
+
+    if result is None or result[0] is None:
+        return "ko"
+    return result[0]
+
+# 3.7.2. 언어 설정 수정
+def modifyLanguage(user: discord.Member = None, language: str = None):
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+
+    c.execute("UPDATE main SET language = ? WHERE id = ?", (language, user.id))
+    conn.commit()
+
+    c.close()
+    conn.close()
+
+def modifyLanguageById(user: int, language: str = None):
+    conn = sqlite3.connect(root_dir + '/data/user.db')
+    c = conn.cursor()
+
+    c.execute("UPDATE main SET language = ? WHERE id = ?", (language, user))
+    conn.commit()
+
+    c.close()
+    conn.close()

@@ -200,7 +200,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
         self.client = client
 
     async def is_server(ctx):
-        return ctx.channel.id in [1115648878918774794, 1158619424278982736]
+        return ctx.channel.id in [1115648878918774794, 1158619424278982736, 908380307223371806]
 
     # TEDNE [ID: 38]
     @commands.check(is_server)

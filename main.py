@@ -24,6 +24,8 @@ import fcts.leaderboard as l
 import fcts.lklab as lk
 import fcts.tedne as ted
 from config.rootdir import root_dir
+from fcts.language import JsonTranslator
+from config.settings import get_required_env
 
 # 0.2. Dir. Manager
 import os
@@ -32,7 +34,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# 0.3a. 한글 분석
+# 0.4. 한글 분석
 from konlpy.tag import Okt
 import fcts.koreansearch as ks
 import fcts.koreanbreak as kb
@@ -44,25 +46,19 @@ import math as m
 import time as t
 from time import sleep
 import datetime
-import yaml
 from tqdm import tqdm
 
 ####### 1. Config #######
 
-# 1.0. Open Config & Admin file
-
-with open(root_dir + '/config/config.yml',encoding='UTF-8') as f:
-    keys = yaml.load(f, Loader=yaml.FullLoader)
-
 # 1.1. Discord Bot
-token = keys['Bot']['token']
-prefix = keys['Bot']['prefix']
-Version = keys['Version']['ver']
-Update_Date = keys['Version']['date']
+token = get_required_env('DISCORD_BOT_TOKEN')
+prefix = get_required_env('BOT_PREFIX')
+Version = get_required_env('APP_VERSION')
+Update_Date = get_required_env('APP_VERSION_DATE')
 game_mes = f"{Version} | {Update_Date} | Type '{prefix}help' for help"
 
 # 1.4. Event Variables
-xp_multi = 1.3
+xp_multi = 1.5
 
 ####### 2.Funtions #######
 
@@ -76,14 +72,34 @@ ted.initSetting()
 ####### 3. Discord Bot Client #######
 
 # 3.0. Create Discord Client
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        # 번역기 등록
+        await self.tree.set_translator(JsonTranslator())
+
+        # cog 로드 (기존 자동 로드 코드 대신 여기에 넣어도 됨)
+        cogs_path = 'cogs'
+        abs_cogs_path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            cogs_path
+        )
+
+        for c in tqdm(os.listdir(abs_cogs_path)):
+            if c.endswith(".py"):
+                await self.load_extension(f"cogs.{c.split('.')[0]}")
+
+        # 슬래시 명령어 동기화
+        await self.tree.sync()
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix=prefix,
-                      intents=intents,
-                      help_command=None,
-                      sync_commands=True,
-                      status=discord.Status.online,
-                      activity=discord.Game(game_mes))
+client = MyBot(
+    command_prefix=prefix,
+    intents=intents,
+    help_command=None,
+    sync_commands=True,
+    status=discord.Status.online,
+    activity=discord.Game(game_mes)
+    )
 
 # 한글 자동 분석 모듈
 okt = Okt()
@@ -95,15 +111,12 @@ server_id = [
 # 3.1. Discord Cogs Loading
 
 # 3.2. Discord Bot Ready Events
-
-
 @client.event
 async def on_ready():
     print("New log in as {0.user}".format(client))
 
 
 # 3.3. Voice Channel Event
-
 
 # 3.3.1. Voice Leveling
 @client.event
@@ -119,7 +132,7 @@ async def on_voice_state_update(member, before, after):
 
         voicetime = int(t.time()) - etc.voiceRead(member)
 
-        xp_gain = int((voicetime * 0.2) * xp_multi)
+        xp_gain = int((voicetime * 0.36) * xp_multi)
         money_gain = int(voicetime // 12)
 
         try:
@@ -335,34 +348,16 @@ async def on_message(message):
 
 # 4. Commands
 
-
-# 4.1. Sync
+# 4.1. Sync [id: 99]
 @client.hybrid_command(name='sync',
                        description="Sync commands to the current server.")
 async def sync(ctx):
     await client.tree.sync()
     await ctx.reply("`⸜(*◉ ᴗ ◉)⸝` Synced commands to the current server!")
 
-
-async def load_extensions():
-    # cogs 폴더의 절대 경로 얻기
-    # Pycharm에서 바로 상대 경로를 사용하면 오류가 발생하기 때문에 따로 절대경로를 얻어야한다.
-    cogs_path = 'cogs'
-    abs_cogs_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                 cogs_path)
-
-    # cogs 폴더에 존재하는 cogs(.py파일) 로드
-    for c in tqdm(os.listdir(abs_cogs_path)):
-        if c.endswith(".py"):
-            await client.load_extension(f"cogs.{c.split('.')[0]}"
-                                        )  # .py 부분을 떼고 cog의 이름만 추출
-
-
 async def main():
     async with client:
-        await load_extensions()
         await client.start(token)
-
 
 keep_alive()
 asyncio.run(main())

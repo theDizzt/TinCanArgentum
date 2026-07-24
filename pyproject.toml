@@ -12,6 +12,7 @@ discord = "^2.3.2"
 functions = "^0.7.0"
 pillow = "^10.1.0"
 discord-py = "^2.3.2"
+python-dotenv = "^1.0.1"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md

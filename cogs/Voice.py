@@ -7,13 +7,12 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import json
 from config.rootdir import root_dir
+from config.settings import get_required_env
 import requests
 
-# 자신의 REST_API_KEY를 입력하세요!
-REST_API_KEY = "f9f33bf22016361b7a1373da18ed60fe"
-
 class KakaoTTS:
-	def __init__(self, text, API_KEY=REST_API_KEY):
+	def __init__(self, text, API_KEY=None):
+		API_KEY = API_KEY or get_required_env('KAKAO_REST_API_KEY')
 		self.resp = requests.post(
                url="https://kakaoi-newtone-openapi.kakao.com/v1/synthesize",
                headers={

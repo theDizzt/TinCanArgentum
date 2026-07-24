@@ -4,7 +4,7 @@ main :
  id : "00"
  Essentials : "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`"
  UserProfile : "`profile`, `emblem`, `myrank`, `ranking`, `equip`, `purchase`, `skin`, `preview`"
- Economy : "`stats`, `balance`, `transfer`"
+ Social : "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`"
  Miscellaneous : "`dice`, `kodic`, `argbdic`, `rage`, `translate`"
  Coalition : "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`"
  Minigame : "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`"
@@ -159,6 +159,34 @@ transfer :
  ctx : "transfer"
  discript : "The more you share, the happier you become...\nSend money to the other person!"
  args : "No arguments in this command."
+
+bday_add:
+  title: "Birthday Add Command"
+  id: "24"
+  ctx: "생일추가 <@user> <int: month> <int: day> <#channel> [str: calendar_type] [bool: is_leap_month]"
+  discript: "Register a birthday notification. The bot sends a birthday message every year at midnight based on Korean time."
+  args: "`user` discord member mention, target user for birthday notification. `month` int type, birthday month. `day` int type, birthday day. `channel` discord text channel, notification channel. `calendar_type` str type, enter `양력` or `음력` (default: 양력). `is_leap_month` bool type, enter true only for lunar leap month (default: false)."
+
+anniv_add:
+  title: "Anniversary Add Command"
+  id: "25"
+  ctx: "기념일추가 <str: title> <int: year> <int: month> <int: day> <#channel> [str: calendar_type] [bool: is_leap_month]"
+  discript: "Register an anniversary notification. The bot sends an anniversary message every year at midnight based on Korean time."
+  args: "`title` str type, anniversary name. If spacing is included, wrap it in quotation marks. `year` int type, original anniversary year. `month` int type, anniversary month. `day` int type, anniversary day. `channel` discord text channel, notification channel. `calendar_type` str type, enter `양력` or `음력` (default: 양력). `is_leap_month` bool type, enter true only for lunar leap month (default: false)."
+
+anniv_list:
+  title: "Anniversary List Command"
+  id: "26"
+  ctx: "기념일목록"
+  discript: "Shows the registered birthday and anniversary notification list for the current server."
+  args: "No arguments are required."
+
+anniv_del:
+  title: "Anniversary Delete Command"
+  id: "27"
+  ctx: "기념일삭제 <int: event_id>"
+  discript: "Delete a registered birthday or anniversary notification by event ID."
+  args: "`event_id` int type, the ID of the birthday or anniversary event to delete. You can check the event ID with the `기념일목록` command."
 
 dice :
  title : "Dice"

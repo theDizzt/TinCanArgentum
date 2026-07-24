@@ -1543,7 +1543,7 @@
         "font": "handwrite",
         "name-color": [239, 191, 111, 255],
         "discrim-color": [55, 187, 152, 255],
-        "nametext-outline-width": 3,
+        "nametext-outline-width": 2,
         "nametext-outline-color": [0, 0, 0, 255],
         "xp-color": [255, 255, 255, 255],
         "xp-outline-width": 2,
@@ -1590,21 +1590,21 @@
         "xp-outline-color": [255, 255, 255, 255]
         },
     "skin160": {
-        "font": "legacy",
-        "name-color": [255, 255, 255, 255],
-        "discrim-color": [204, 204, 204, 255],
+        "font": "paper",
+        "name-color": [247, 127, 0, 255],
+        "discrim-color": [252, 191, 73, 255],
         "nametext-outline-width": 2,
         "nametext-outline-color": [0, 0, 0, 255],
-        "xp-color": [255, 255, 255, 255],
-        "xp-outline-width": 1,
+        "xp-color": [252, 191, 73, 255],
+        "xp-outline-width": 2,
         "xp-outline-color": [0, 0, 0, 255]
         },
     "skin161": {
-        "font": "legacy",
+        "font": "modern",
         "name-color": [255, 255, 255, 255],
-        "discrim-color": [204, 204, 204, 255],
+        "discrim-color": [146, 239, 255, 255],
         "nametext-outline-width": 2,
-        "nametext-outline-color": [0, 0, 0, 255],
+        "nametext-outline-color": [46, 139, 255, 255],
         "xp-color": [255, 255, 255, 255],
         "xp-outline-width": 1,
         "xp-outline-color": [0, 0, 0, 255]
@@ -1660,13 +1660,13 @@
         "xp-outline-color": [67, 51, 76, 255]
         },
     "skin167": {
-        "font": "legacy",
-        "name-color": [255, 255, 255, 255],
-        "discrim-color": [204, 204, 204, 255],
-        "nametext-outline-width": 2,
+        "font": "math",
+        "name-color": [0, 0, 0, 255],
+        "discrim-color": [0, 0, 0, 255],
+        "nametext-outline-width": 0,
         "nametext-outline-color": [0, 0, 0, 255],
-        "xp-color": [255, 255, 255, 255],
-        "xp-outline-width": 1,
+        "xp-color": [0, 0, 0, 255],
+        "xp-outline-width": 0,
         "xp-outline-color": [0, 0, 0, 255]
         },
     "skin168": {
@@ -1720,12 +1720,12 @@
         "xp-outline-color": [0, 0, 0, 255]
         },
     "skin173": {
-        "font": "legacy",
-        "name-color": [255, 255, 255, 255],
-        "discrim-color": [204, 204, 204, 255],
+        "font": "brush",
+        "name-color": [121, 174, 111, 255],
+        "discrim-color": [159, 203, 152, 255],
         "nametext-outline-width": 2,
         "nametext-outline-color": [0, 0, 0, 255],
-        "xp-color": [255, 255, 255, 255],
+        "xp-color": [242, 237, 194, 255],
         "xp-outline-width": 1,
         "xp-outline-color": [0, 0, 0, 255]
         },
@@ -1788,6 +1788,286 @@
         "xp-color": [255, 255, 255, 255],
         "xp-outline-width": 1,
         "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin180": {
+        "font": "slay",
+        "name-color": [246, 245, 237, 255],
+        "discrim-color": [146, 206, 226, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [5, 34, 52, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin181": {
+        "font": "slay",
+        "name-color": [246, 245, 237, 255],
+        "discrim-color": [255, 176, 87, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [149, 77, 49, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin182": {
+        "font": "slay",
+        "name-color": [255, 246, 226, 255],
+        "discrim-color": [239, 200, 81, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [39, 19, 9, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin183": {
+        "font": "slay",
+        "name-color": [255, 246, 219, 255],
+        "discrim-color": [247, 106, 20, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [126, 55, 14, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin184": {
+        "font": "slay",
+        "name-color": [245, 255, 222, 255],
+        "discrim-color": [39, 173, 109, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [8, 82, 24, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin185": {
+        "font": "slay",
+        "name-color": [255, 246, 226, 255],
+        "discrim-color": [112, 182, 237, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [22, 62, 100, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin186": {
+        "font": "slay",
+        "name-color": [251, 222, 234, 255],
+        "discrim-color": [226, 161, 246, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [83, 33, 82, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin187": {
+        "font": "slay",
+        "name-color": [255, 255, 244, 255],
+        "discrim-color": [252, 196, 67, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [96, 49, 21, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin188": {
+        "font": "slay",
+        "name-color": [255, 240, 244, 255],
+        "discrim-color": [250, 152, 199, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [105, 47, 109, 255],
+        "xp-color": [250, 249, 236, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [37, 37, 33, 255]
+        },
+    "skin189": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin190": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin191": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin192": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin193": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin194": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin195": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin196": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin197": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin198": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin199": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin200": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin201": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin202": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin203": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin204": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin205": {
+        "font": "legacy",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [204, 204, 204, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin206": {
+        "font": "wanted",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [254, 60, 0, 255],
+        "nametext-outline-width": 1,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [0, 0, 0, 255]
+        },
+    "skin207": {
+        "font": "wanted",
+        "name-color": [0, 0, 0, 255],
+        "discrim-color": [254, 60, 0, 255],
+        "nametext-outline-width": 1,
+        "nametext-outline-color": [255, 255, 255, 255],
+        "xp-color": [0, 0, 0, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [255, 255, 255, 255]
         }
     }
 }

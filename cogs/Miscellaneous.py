@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import yaml
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import random
@@ -10,12 +9,10 @@ from fcts.translator import dataProcessStream
 import urllib
 from urllib.request import HTTPError
 from config.rootdir import root_dir
+from config.settings import get_required_env
 
-with open(root_dir + '/config/config.yml',encoding='UTF-8') as f:
-    keys = yaml.load(f, Loader=yaml.FullLoader)
-
-client_id = keys['Keys']['client_id']
-client_secret = keys['Keys']['client_secret']
+client_id = get_required_env('NAVER_CLIENT_ID')
+client_secret = get_required_env('NAVER_CLIENT_SECRET')
 streamInstance = dataProcessStream(client_id, client_secret)
 
 

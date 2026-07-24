@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
+import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.lklab as lk
@@ -18,7 +20,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
 
-    # LKedit [ID: 87]
+    # LKedit [ID: 86]
     @commands.command()
     async def lkedit(self,
                        ctx,
@@ -32,28 +34,25 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
             if option == 'achievement':
                 lk.achieveModifyById(u, int(value), int(svalue))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
             elif option == 'startdate':
                 lk.dateModifyById(u, str(value)+" "+str(svalue))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
             elif option == 'create':
                 lk.newAchieveById(u)
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
             else:
-                await ctx.reply("Not allowed!")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.reject"))
 
         else:
-            await ctx.reply("Not allowed!")
+            await ctx.reply(i18n.t(ctx.author, "cmd.admin.reject"))
 
 
     # Admin Login [ID: 89]
-    @commands.command()
+    @commands.command(aliases=['로그인'])
     async def login(self, ctx, sid: str = None, spw: str = None):
 
         try:
@@ -67,31 +66,32 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             if admins[user]['id'] == sid and admins[user]['pw'] == spw:
                 global admin_login
                 admin_login.append(ctx.author.id)
-                await ctx.send(f"<@{ctx.author.id}> Logined!")
+                await ctx.send(i18n.t(ctx.author, "cmd.89.accept", uid=ctx.author.id))
                 print(admin_login)
             else:
-                await ctx.send(f"<@{ctx.author.id}> Login Failed...")
+                await ctx.send(i18n.t(ctx.author, "cmd.89.error", uid=ctx.author.id))
 
         except:
-            await ctx.send(f"<@{ctx.author.id}> no admin permissions allowed.")
+            await ctx.send(i18n.t(ctx.author, "cmd.89.reject", uid=ctx.author.id))
 
     # Admin Logout [ID: 90]
-    @commands.command()
+    @commands.command(aliases=['로그아웃'])
     async def logout(self, ctx):
         if ctx.author.id in admin_login:
             admin_login.remove(ctx.author.id)
-            await ctx.reply(f"<@{ctx.author.id}> Logouted!")
+            await ctx.send(i18n.t(ctx.author, "cmd.90.accept", uid=ctx.author.id))
             print(admin_login)
 
     # XP Editing [ID: 91]
-    @commands.hybrid_command(name='xp',
-                             description="Give XP to selected user.")
-    #@discord.app_commands.describe(user="User mention",amount="Write amount of XP to give")
-    async def xp(self, ctx, user="all", amount=0):
+    @commands.hybrid_command(
+        name=app_commands.locale_str("xp", key="cmd.91.name"),
+        description=app_commands.locale_str("Give XP to selected user", key="cmd.91.desc"),
+        aliases=["경험치"]
+    )
+    async def xp(self, ctx, user:str="all", amount:int=0):
         if (user == "all" or user == "전체") and ctx.author.id in admin_login:
             q.xpAddAll(int(amount))
-            await ctx.reply(
-                "**가입자 총원**은 성공적으로 **{}**의 경험치를 받았습니다!".format(amount))
+            await ctx.reply(i18n.t(ctx.author, "cmd.91.t001", val=amount))
 
         elif ctx.author.id in admin_login:
             u = int(etc.extractUid(user))
@@ -102,24 +102,22 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             xp2 = etc.need_exp(lv) - etc.need_exp(lv - 1)
             text = "[Level] {}, [XP] {:,d} / {:,d} ({:.2f}%), [Total] {:,d}".format(
                 lv, xp1, xp2, 100 * xp1 / xp2, xp)
-            await ctx.reply(
-                "**{}**(은)는 성공적으로 **{}**의 경험치를 받았습니다!\n현재 경험치: {}".format(
-                    q.readTagById(u), amount, text))
+            await ctx.reply(i18n.t(ctx.author, "cmd.91.t002", u=q.readTagById(u), val=amount, pg=text))
 
     # User List [ID: 92]
     @commands.command(aliases=['유저목록'])
     async def userlist(self, ctx):
         if ctx.author.id in admin_login:
             rank = q.userList()
-            await ctx.send("출력을 시작합니다!")
-            await ctx.send("총 데이터 수 : `{}`".format(len(rank)))
+            await ctx.send(i18n.t(ctx.author, "cmd.92.t001"))
+            await ctx.send(i18n.t(ctx.author, "cmd.92.t002", amount=len(rank)))
             for user in rank:
                 await ctx.send(
                     "**{}**#{} ({}) | `{} / {}` | `Total : {:,d}`".format(
                         user[2],
                         str(user[1]).zfill(4), user[0], etc.level(user[3]),
                         etc.maxLevel(), user[3]))
-            await ctx.send("출력이 끝났습니다!")
+            await ctx.send(i18n.t(ctx.author, "cmd.92.t003"))
 
     # Rank List [ID: 93]
     @commands.command(aliases=['랭킹목록'])
@@ -127,7 +125,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
         if ctx.author.id in admin_login:
             rank = q.xpRanking()
             rank_value = 1
-            await ctx.send(":green_circle: 랭킹 리스트를 출력합니다! (시간이 오래 걸릴수도 있습니다)")
+            await ctx.send(i18n.t(ctx.author, "cmd.93.t001"))
 
             for user in rank:
                 await ctx.send(
@@ -137,6 +135,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         etc.maxLevel(), user[3]))
                 rank_value += 1
 
+    # Rank Add up [ID: 80]
     @commands.command()
     async def rankingadd(self, ctx):
         if ctx.author.id in admin_login:
@@ -154,20 +153,20 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 rank_value += 1
 
     # Leaderboard Edit [ID: 94]
-    @commands.command()
+    @commands.command(aliases=['리더보드편집'])
     async def lbedit(self, ctx, user: str = None, option: str = None):
         if ctx.author.id in admin_login:
             u = int(etc.extractUid(user))
-            if option == "mathgame":
-                await ctx.reply("Format: `score/scoredate/count/countdate`")
+            if option in ["mathgame", "사칙연산"]:
+                await ctx.reply("Format: `score/scoredate/count/countdate`, Seperator: ,")
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel
 
                 input_word = await self.client.wait_for("message", check=check)
                 check = input_word.content
-                if check == "cancel":
-                    await ctx.reply("`(⩌Δ ⩌ ;)` Cancelled.")
+                if check in ["cancel", "취소"]:
+                    await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
                 else:
                     try:
                         result = check.split(",")
@@ -175,15 +174,13 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         l.mathDataForcedUpdate(u, int(result[0]),
                                                str(result[1]), int(result[2]),
                                                str(result[3]))
-                        await ctx.reply(
-                            "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers..."
-                        )
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                     except:
-                        await ctx.reply("`(⩌Δ ⩌ ;)` Invalid format.")
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
-            elif option == "rps":
+            elif option in ["rps", "가위바위보"]:
                 await ctx.reply(
-                    "Format: `score/s-date/count/c-date/max/m-date/win/w-date/tie/t-date`"
+                    "Format: `score/s-date/count/c-date/max/m-date/win/w-date/tie/t-date`, Seperator: ,"
                 )
 
                 def check(m):
@@ -191,8 +188,8 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
                 input_word = await self.client.wait_for("message", check=check)
                 check = input_word.content
-                if check == "cancel":
-                    await ctx.reply("`(⩌Δ ⩌ ;)` Cancelled.")
+                if check in ["cancel", "취소"]:
+                    await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
                 else:
                     try:
                         result = check.split(",")
@@ -203,15 +200,13 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                                               str(result[5]), int(result[6]),
                                               str(result[7]), int(result[8]),
                                               str(result[9]))
-                        await ctx.reply(
-                            "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers..."
-                        )
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                     except:
-                        await ctx.reply("`(⩌Δ ⩌ ;)` Invalid format.")
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
-            elif option == "wordchain":
+            elif option in ["wordchain", "끝말잇기"]:
                 await ctx.reply(
-                    "Format: `reg/i-score/i-count/i-play/i-win/b-score/b-count/m-half/m-full`"
+                    "Format: `reg/i-score/i-count/i-play/i-win/b-score/b-count/m-half/m-full`, Seperator: ,"
                 )
 
                 def check(m):
@@ -219,8 +214,8 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
                 input_word = await self.client.wait_for("message", check=check)
                 check = input_word.content
-                if check == "cancel":
-                    await ctx.reply("`(⩌Δ ⩌ ;)` Cancelled.")
+                if check in ["cancel", "취소"]:
+                    await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
                 else:
                     try:
                         result = check.split(",")
@@ -230,39 +225,39 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                                          int(result[4]), int(result[5]),
                                          int(result[6]), int(result[7]),
                                          int(result[8]))
-                        await ctx.reply(
-                            "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers..."
-                        )
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                     except:
-                        await ctx.reply("`(⩌Δ ⩌ ;)` Invalid format.")
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
-            elif option == "yahtzee":
-                await ctx.reply("Format: `score/score-date/play/wins`")
+            elif option in ["yahtzee", "야추다이스"]:
+                await ctx.reply("Format: `score/score-date/play/wins`, Seperator: ,")
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel
 
                 input_word = await self.client.wait_for("message", check=check)
                 check = input_word.content
-                if check == "cancel":
-                    await ctx.reply("`(⩌Δ ⩌ ;)` Cancelled.")
+                if check in ["cancel", "취소"]:
+                    await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
                 else:
                     try:
                         result = check.split(",")
                         print(u, result)
                         l.ytForcedUpdate(u, int(result[0]), str(result[1]),
                                          int(result[2]), int(result[3]))
-                        await ctx.reply(
-                            "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers..."
-                        )
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                     except:
-                        await ctx.reply("`(⩌Δ ⩌ ;)` Invalid format.")
+                        await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
             else:
-                await ctx.reply("`(⩌Δ ⩌ ;)` Invalid table name.")
+                await ctx.reply(i18n.t(ctx.author, "cmd.94.t001"))
 
     # Skin Unlock [ID: 95]
-    @commands.hybrid_command(name='unlock', description="Unlock user's skin")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("unlock", key="cmd.95.name"),
+        description=app_commands.locale_str("Unlock user's skin", key="cmd.95.desc"),
+        aliases=["잠금해제"]
+    )
     @discord.app_commands.describe(user="User mention",
                                    skin="Integer only",
                                    lock="Binary only")
@@ -284,28 +279,20 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             if lock == 1:
                 if not q.readStorageById(user.id, skin):
                     q.storageModifyById(user.id, skin, 1)
-                    await ctx.reply(
-                        f":green_circle: **{user_name}** successfully unlocked `{Rank[skin - 1][0]}`!"
-                    )
+                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t001", u=user_name, skin=Rank[skin - 1][0]))
                 else:
-                    await ctx.reply(
-                        f":exclamation: **{user_name}** already unlocked `{Rank[skin - 1][0]}`!"
-                    )
+                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t002", u=user_name, skin=Rank[skin - 1][0]))
             elif lock == 0:
                 if q.readStorageById(user.id, skin):
                     q.storageModifyById(user.id, skin, 0)
-                    await ctx.reply(
-                        f":green_circle: **{user_name}** successfully locked `{Rank[skin - 1][0]}`!"
-                    )
+                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t003", u=user_name, skin=Rank[skin - 1][0]))
                 else:
-                    await ctx.reply(
-                        f":exclamation: **{user_name}** already locked `{Rank[skin - 1][0]}`!"
-                    )
+                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t004", u=user_name, skin=Rank[skin - 1][0]))
             else:
-                await ctx.reply("`(⩌Δ ⩌ ;)` Invalid option.")
+                await ctx.reply(i18n.t(ctx.author, "cmd.95.t005"))
 
     # Ultimate [ID: 96]
-    @commands.command()
+    @commands.command(aliases=["유저편집"])
     async def ultimate(self,
                        ctx,
                        user: str = None,
@@ -315,74 +302,64 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
             u = int(etc.extractUid(user))
 
-            if option == 'xp':
+            if option in ['xp', '경험치']:
                 q.xpModifyById(u, int(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'money':
+            elif option in ['money', '돈']:
                 q.moneyModifyById(u, int(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'skin':
+            elif option in ['skin', '스킨']:
                 q.skinModifyById(u, int(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'discrim':
+            elif option in ['discrim', '식별번호']:
                 q.discrimModifyById(u, int(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'nick':
+            elif option in ['nick', '별명']:
                 q.nickModifyById(u, str(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'startdate':
+            elif option in ['startdate', '가입날짜']:
                 q.startDateModifyById(u, str(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
-            elif option == 'create':
+            elif option in ['create', '생성']:
                 q.newAccountById(u, str(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                 
-            elif option == 'storage':
+            elif option in ['storage', '저장소']:
                 q.newStorageById(u)
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
                 
-            elif option == 'daily':
+            elif option in ['daily', '출석']:
                 q.dailyModifyById(u, str(value))
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` Transformed data with magical powers...")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.accept"))
 
             else:
-                await ctx.reply("Not allowed!")
+                await ctx.reply(i18n.t(ctx.author, "cmd.admin.reject"))
 
         else:
-            await ctx.reply("Not allowed!")
+            await ctx.reply(i18n.t(ctx.author, "cmd.admin.reject"))
 
     # Money Editing [ID: 97]
-    @commands.hybrid_command(name='money',
-                             description="Give money to selected user.")
-    #@discord.app_commands.describe(user="User mention",amount="Write amount of money to give")
-    async def money(self, ctx, user: str = "all", amount: int = 0):
+    @commands.hybrid_command(
+        name=app_commands.locale_str("money", key="cmd.97.name"),
+        description=app_commands.locale_str("Give money to selected user", key="cmd.97.desc"),
+        aliases=["돈"]
+    )
+    async def money(self, ctx, user:str="all", amount:int=0):
         if (user == "all" or user == "전체") and ctx.author.id in admin_login:
             q.moneyAddAll(amount)
-            await ctx.reply(f"**가입자 총원**은 성공적으로 **{amount:,d}$**의 돈을 받았습니다!")
+            await ctx.reply(i18n.t(ctx.author, "cmd.97.t001", val=amount))
 
         elif ctx.author.id in admin_login:
             u = int(etc.extractUid(user))
             q.moneyAddById(u, amount)
             mn = q.readMoneyById(u)
-            await ctx.reply(
-                f"**{q.readTagById(u)}**(은)는 성공적으로 **{amount:,d}$**의 돈을 받았습니다!\n현재 소지 금액: **${mn:,d}**"
-            )
-
+            await ctx.reply(i18n.t(ctx.author, "cmd.97.t002", u=q.readTagById(u),val=amount, pg=mn))
 
 async def setup(client):  # setup 함수로 cog를 추가한다.
     await client.add_cog(Admins(client))
