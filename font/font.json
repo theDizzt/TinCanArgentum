@@ -2069,5 +2069,49 @@
         "xp-outline-width": 1,
         "xp-outline-color": [255, 255, 255, 255]
         }
+    },
+    "skin208": {
+        "font": "mono",
+        "name-color": [255, 255, 255, 255],
+        "discrim-color": [255, 255, 255, 255],
+        "nametext-outline-width": 2,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 0,
+        "xp-outline-color": [0, 0, 0, 255]
+        }
+    },
+    "skin209": {
+        "font": "lcd",
+        "name-color": [255, 0, 0, 255],
+        "discrim-color": [255, 0, 0, 255],
+        "nametext-outline-width": 1,
+        "nametext-outline-color": [0, 0, 0, 255],
+        "xp-color": [255, 255, 255, 255],
+        "xp-outline-width": 0,
+        "xp-outline-color": [255, 255, 255, 255]
+        }
+    },
+    "skin210": {
+        "font": "chalk",
+        "name-color": [157, 200, 243, 255],
+        "discrim-color": [189, 218, 247, 255],
+        "nametext-outline-width": 1,
+        "nametext-outline-color": [255, 255, 255, 255],
+        "xp-color": [157, 200, 243, 255],
+        "xp-outline-width": 1,
+        "xp-outline-color": [255, 255, 255, 255]
+        }
+    },
+    "skin211": {
+        "font": "chalk",
+        "name-color": [0, 0, 0, 255],
+        "discrim-color": [64, 64, 64, 255],
+        "nametext-outline-width": 0,
+        "nametext-outline-color": [255, 255, 255, 255],
+        "xp-color": [0, 0, 0, 255],
+        "xp-outline-width": 0,
+        "xp-outline-color": [255, 255, 255, 255]
+        }
     }
 }
