@@ -43,7 +43,7 @@ codelist = {
     "오도짜세기합바이크": 151,
     "부경타이타닉": 152,
     "100000words": 155,
-    "chelicerata": 156
+    "chelicerata": 156,
     "stargazers": 208
 }
 
