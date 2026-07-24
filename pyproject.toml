@@ -5,7 +5,7 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.10.0,<3.11"
+python = ">=3.10.0,<3.13"
 pyyaml = "^6.0.1"
 tqdm = "^4.66.1"
 discord = "^2.3.2"
