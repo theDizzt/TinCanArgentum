@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 
 #SERVER id
 server_id = [842746723067756554, 1114816224522678294, 453906917719408642]
@@ -43,13 +44,13 @@ class SunriseHuntingParty(commands.Cog):  # Cog를 상속하는 클래스를 선
             point = id % 101
 
         await ctx.reply(
-            f"# `{name}` 의 똥몬창 지수는 **{point}tod** 입니다! \n```똥몬창 지수는 지구상 가장 똥몬창인 TOD를 기준으로 당신의 몬창 인생 데이터를 수집하여 분석한 결과 TOD와의 유사성을 나타낸 수치입니다. \n다시 말해 100tod의 똥몬창지수를 가진 당신은 역사상 최고의 똥몬창 입니다.```"
+            i18n.t(ctx.author, "cmd.37.t001", name=name, point=point)
         )
 
     @monchang.error
-    async def monchange_error(self, error, ctx):
+    async def monchange_error(self, ctx, error):
         if isinstance(error, commands.CommandError):
-            await ctx.reply("`태양수렵단 마이너 갤러리` 전용 명령어 입니다!")
+            await ctx.reply(i18n.t(ctx.author, "common.server_only", server="태양수렵단 마이너 갤러리"))
 
 
 async def setup(client):

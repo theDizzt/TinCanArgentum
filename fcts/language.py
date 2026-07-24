@@ -21,6 +21,8 @@ class JsonTranslator(app_commands.Translator):
             "en-US": load_locale_file("en"),
             "en-GB": load_locale_file("en"),
             "ja": load_locale_file("ja"),
+            "zh-CN": load_locale_file("zh-CN"),
+            "zh-TW": load_locale_file("zh-TW"),
         }
 
         self.fallback = load_locale_file("ko")
@@ -31,8 +33,7 @@ class JsonTranslator(app_commands.Translator):
         locale: discord.Locale,
         context: app_commands.TranslationContext
     ) -> str | None:
-        # locale_str("cmd.help.name") 처럼 key를 message에 넣어둘 예정
-        key = string.message
+        key = string.extras.get("key", string.message)
         locale_code = str(locale)
 
         lang_table = self.translations.get(locale_code, self.fallback)

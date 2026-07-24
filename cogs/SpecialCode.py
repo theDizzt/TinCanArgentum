@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import asyncio
 
 codelist = {
@@ -86,13 +87,13 @@ class SpecialCode(commands.Cog):  # Cog를 상속하는 클래스를 선언
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
 
-    # 3.3.99. Event Code
+    # Event Code [id: 04]
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
     @commands.hybrid_command(name='code', description="Input special codes")
     async def code(self, ctx):
         try:
             msg = await ctx.reply(
-                "## 깜짝 선물 코드 | Special Code\n아래의 버튼을 클릭하면 마법의 코드를 입력할 수 있는 입력 칸이 나옵니다! (단, 10초가 지나면 버튼이 사라지니 빨리 눌러주세요!)\nClick on the button below and you'll get a box to enter the magic code! (However, the button will disappear after 10 seconds, so please press it quickly!)",
+                i18n.t(ctx.author, "cmd.04.t001"),
                 view=ModalButton())
             await self.client.wait_for("interaction",
                                        check=lambda x: x.user == ctx.author)
@@ -103,8 +104,7 @@ class SpecialCode(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @code.error
     async def code_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error

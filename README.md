@@ -29,3 +29,11 @@ python3.10 -m pip install -r requirements-ubuntu.txt
 ```
 
 `.env`는 Git에서 제외되므로 커밋하지 않습니다.
+
+## 다국어 데이터 검증
+
+locale 파일을 수정한 뒤 다음 명령으로 JSON 키, 명령어 ID, 자리표시자 및 Discord 명령어 제한을 검사합니다.
+
+```bash
+python scripts/validate_locales.py
+```

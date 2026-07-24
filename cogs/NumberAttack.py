@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.leaderboard as l
+import fcts.i18n_runtime as i18n
 import numpy
 import datetime
 import asyncio
@@ -28,21 +29,19 @@ class NumberAttack(commands.Cog):
             player = []
             player.append({"id": ctx.author.id, "life": 100})
             while True:
-                embed = discord.Embed(title='Player List',
-                                    description=f'Players: {len(player)}/6',
+                embed = discord.Embed(title=i18n.t(ctx.author, "cmd.46.players.title"),
+                                    description=i18n.t(ctx.author, "cmd.46.players.count", count=len(player)),
                                         color=0xBCE29E)
                 for i in range(len(player)):
                     lv = etc.level(q.readXpById(player[i]['id']))
                     embed.add_field(
                         name=
                         f"{i+1}. {etc.lvicon(lv)}{q.readTagById(player[i]['id'])}",
-                        value=f"Level {lv}",
+                        value=i18n.t(ctx.author, "cmd.46.level", level=lv),
                         inline=False)
                 embed.set_footer(text='Discord Bot by Dizzt')
 
-                await ctx.reply(
-                        "## Number Attack - Recruiting\n* You can invite up to 6 people using `@username`!\n* Once invited, type `start`!\n* If you want to cancel the game, type `cancel`!\n* Once the game starts, the order will automatically change!",
-                        embed=embed)
+                await ctx.reply(i18n.t(ctx.author, "cmd.46.recruit"), embed=embed)
 
                 def check(m):
                         return m.author == ctx.author and m.channel == ctx.channel
@@ -50,42 +49,36 @@ class NumberAttack(commands.Cog):
                 input_word = await self.client.wait_for("message", check=check)
                 check = input_word.content
 
-                if check == 'start':
+                if check.lower() in ('start', '시작', '開始', '开始'):
                     if len(player) > 1:
                         gamestart = True
-                        await ctx.send(":green_circle: Your game has been successfully created!")
+                        await ctx.send(i18n.t(ctx.author, "cmd.46.created"))
                         break
                     else:
-                        await ctx.send(
-                                '`(⩌ʌ ⩌;)` There are too few people... There must be at least 2 people!')
+                        await ctx.send(i18n.t(ctx.author, "cmd.46.too_few"))
 
-                elif check == 'cancel':
-                    await ctx.send(":x: Game creation was canceled.")
+                elif check.lower() in ('cancel', '취소', 'キャンセル', '取消'):
+                    await ctx.send(i18n.t(ctx.author, "cmd.46.cancelled"))
                     break
 
                 else:
                     try:
                         if len(player) >= 6:
-                            await ctx.send(
-                                        '`(⩌ʌ ⩌;)` Too many people... You can have up to 6 participants!')
+                            await ctx.send(i18n.t(ctx.author, "cmd.46.too_many"))
                         else:
                             id = int(etc.extractUid(check))
                             name = q.readTagById(id)
                             player.append({"id": id, "life": 100})
-                            await ctx.send(
-                                    f":green_circle: `{name}` has been added to the list of participants!")
+                            await ctx.send(i18n.t(ctx.author, "cmd.46.added", name=name))
                     except:
-                        await ctx.send(
-                                '`(⩌ʌ ⩌;)` Invalid participant... Please try again...')
+                        await ctx.send(i18n.t(ctx.author, "cmd.46.invalid_player"))
 
             if gamestart:
                 print(player)
                 round = 0
                 end = False
 
-                await ctx.send(
-                    f"**In a few moments, the game will start!**"
-                )
+                await ctx.send(i18n.t(ctx.author, "cmd.46.starting"))
                 sleep(5)
 
                 start_time = datetime.datetime.now().timestamp()
@@ -99,8 +92,8 @@ class NumberAttack(commands.Cog):
                     repeat = True
                     a106 = True
 
-                    embed = discord.Embed(title='Sequence',
-                                            description=f'Player: {len(player)}/6',
+                    embed = discord.Embed(title=i18n.t(ctx.author, "cmd.46.sequence"),
+                                            description=i18n.t(ctx.author, "cmd.46.players.count", count=len(player)),
                                             color=0xBCE29E)
                     for i in range(len(player)):
                         lv = etc.level(q.readXpById(player[i]['id']))
@@ -112,8 +105,12 @@ class NumberAttack(commands.Cog):
                                 inline=False)
                     embed.set_footer(text='Discord Bot by Dizzt')
 
-                    await ctx.send(
-                        f"**[ROUND: {round}/10]** The first turn is `{q.readTagById(player[index]['id'])}`'s! Please enter **`1`** when you're ready.", embed=embed)
+                    await ctx.send(i18n.t(
+                        ctx.author,
+                        "cmd.46.round_start",
+                        round=round,
+                        name=q.readTagById(player[index]['id']),
+                    ), embed=embed)
 
                     while True:
                         def check(m):
@@ -171,8 +168,7 @@ class NumberAttack(commands.Cog):
                                             await input_word.add_reaction("✅")
                                         else:
                                             player[index]['life'] -= (number-1)
-                                            await ctx.send(
-                                                        f"`(⩌ʌ ⩌;)` **`{q.readTagById(player[index]['id'])}` -{(number-1)} Life** | Wrong number... (#{number})")
+                                            await ctx.send(i18n.t(ctx.author, "cmd.46.wrong", name=q.readTagById(player[index]['id']), damage=number-1, number=number))
                                             if player[index]['life'] < 0:
                                                 player[index]['life'] = 0
                                                 
@@ -185,8 +181,7 @@ class NumberAttack(commands.Cog):
                                             await input_word.add_reaction("✅")
                                         else:
                                             player[index]['life'] -= (number-1)
-                                            await ctx.send(
-                                                        f"`(⩌ʌ ⩌;)` **`{q.readTagById(player[index]['id'])}` -{(number-1)} Life** | Wrong number... (#{number})")
+                                            await ctx.send(i18n.t(ctx.author, "cmd.46.wrong", name=q.readTagById(player[index]['id']), damage=number-1, number=number))
                                             if player[index]['life'] < 0:
                                                 player[index]['life'] = 0
                                             repeat = False
@@ -196,8 +191,7 @@ class NumberAttack(commands.Cog):
                                         
                                                 
                                         player[index]['life'] -= (number-1)
-                                        await ctx.send(
-                                                        f"`(⩌ʌ ⩌;)` **`{q.readTagById(input_word.author.id)}` -{(number-1)} Life** | Wrong Number... (#{number})")
+                                        await ctx.send(i18n.t(ctx.author, "cmd.46.wrong", name=q.readTagById(input_word.author.id), damage=number-1, number=number))
                                         if player[index]['life'] < 0:
                                             player[index]['life'] = 0
                                             
@@ -212,8 +206,7 @@ class NumberAttack(commands.Cog):
                                         break
 
                                 player[temp]['life'] -= (number-1)
-                                await ctx.send(
-                                                        f"`(⩌ʌ ⩌;)` **`{q.readTagById(player[temp]['id'])}` -{(number-1)} Life** | It's not your turn... (#{number})")
+                                await ctx.send(i18n.t(ctx.author, "cmd.46.not_turn", name=q.readTagById(player[temp]['id']), damage=number-1, number=number))
                                 if player[temp]['life'] < 0:
                                     player[temp]['life'] = 0
 
@@ -222,8 +215,7 @@ class NumberAttack(commands.Cog):
 
                         except asyncio.TimeoutError:
                             player[index]['life'] -= (number-1)
-                            await ctx.send(
-                                                        f"`(⩌ʌ ⩌;)` **`{q.readTagById(player[index]['id'])}` -{(number-1)} Life** | Time's Up!! (#{number})")
+                            await ctx.send(i18n.t(ctx.author, "cmd.46.timeout", name=q.readTagById(player[index]['id']), damage=number-1, number=number))
                             if player[index]['life'] == 1:
                                 q.storageModify(player[index]['id'], 104, 1)
                             
@@ -237,9 +229,8 @@ class NumberAttack(commands.Cog):
                 record = datetime.datetime.now().timestamp() - start_time
                 recordt = int(record * 100)
                 embed = discord.Embed(
-                                title='RESULT',
-                                description=
-                                f'ROUND: {round}\nTIME: {recordt//6000}분 {(recordt%6000)//100:02d}초 {recordt%100:02d}',
+                                title=i18n.t(ctx.author, "cmd.46.result"),
+                                description=i18n.t(ctx.author, "cmd.46.result.desc", round=round, minute=recordt//6000, second=(recordt%6000)//100, centisecond=recordt%100),
                                 color=0xBCE29E)
 
                 player.sort(key=lambda x: -x['life'])
@@ -263,41 +254,10 @@ class NumberAttack(commands.Cog):
                                     inline=False)
                                 
                 embed.set_footer(text='Discord Bot by Dizzt')
-                await ctx.send("## GAME OVER", embed=embed)
+                await ctx.send(i18n.t(ctx.author, "cmd.46.game_over"), embed=embed)
 
-        elif option == "help":
-            await ctx.send("""
-# NUMBER ATTACK
-## How to play
-- All players enter one number starting at 1 and incrementing by 1!
-- You can't enter a number until it's your turn (3 second time limit).
- - Turns are announced before the game starts, so make sure to memorize them.
- - The unconditional number will increment by 1 after your turn.
-- Special commands are used when the last digit is 3, 6, or 9!
- - If you just type in the correct number, it will go exactly the same.
- - If you type `go` or `g`, you pass the next number to the next person.
- - If you type `back` or `b`, the order is reversed, and the next number is passed to the next person.
- - If you type `jump` or `j`, the next person will be skipped, and it will be the next person's turn.
-- You must type `zero` or `z` when the last digit is zero!
-- The game ends when all 10 rounds have passed, or when one person's life reaches zero.
-            """)
-
-        elif option == "도움말":
-            await ctx.send("""
-# NUMBER ATTACK
-## 게임 방법
-- 모든 플레이어들은 1부터 시작 해서 1씩 증가하는 숫자를 하나 입력 합니다!
-- 자신의 차례가 되어야 숫자 입력 할 수 있습니다. (제한 시간 3초)
- - 차례는 게임 시작 전 알려주니 잘 외워야 합니다.
- - 무조건 숫자는 차례가 지나면 1씩 증가합니다.
-- 일의 자리 숫자가 3, 6, 9 일 때 특수한 명령이 사용이 됩니다!
- - 그냥 올바른 숫자를 입력 할 경우, 그대로 똑같이 진행됩니다.
- - `go`나 `g`를 입력 할 경우, 다음 사람에게 다음 숫자를 전달합니다.
- - `back`나 `b`를 입력 할 경우, 순서가 뒤집히며, 다음 사람에게 다음 숫자를 전달합니다.
- - `jump`나 `j`를 입력 할 경우, 다음 사람을 건너뛰고, 그 다음에 오는 사람의 차례가 됩니다.
-- 일의 자리 숫자가 0 일 때 `zero`나 `z`를 입력 해야 합니다!
-- 게임은 10라운드가 모두 지나거나, 한 사람의 생명이 0이 되면 종료됩니다.
-            """)
+        elif option.lower() in ("help", "도움말"):
+            await ctx.send(i18n.t(ctx.author, "cmd.46.help"))
 
 
 async def setup(client):

@@ -99,14 +99,16 @@ class PaginationView(discord.ui.View):
             rank_num = base_index + offset
 
             embed.add_field(
-                name="{} {}#{}".format(
-                    etc.numFont(rank_num),
+                name="#{} {}#{}".format(
+                    rank_num,
                     item[2],
                     str(item[1]).zfill(4)
                 ),
-                value="{}　•　{:,d} XP".format(
-                    etc.lvicon(etc.level(item[3])),
-                    item[3]
+                value=i18n.t(
+                    user,
+                    "cmd.14.entry",
+                    level=etc.level(item[3]),
+                    xp=item[3],
                 ),
                 inline=False
             )

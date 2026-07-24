@@ -248,7 +248,7 @@ translate :
  title : "Translator"
  id : "39"
  ctx : "translate <lan: before> <lan: after> <str: text>"
- discript : "Papago API-based translation function is provided! A total of 17 languages are supported.\nAlso... Eunbi is good at foreign languages (๑╹ワ╹)"
+ discript : "DeepL API-based translation is provided. Use `auto` as the source language for automatic detection.\nAlso... Eunbi is good at foreign languages (๑╹ワ╹)"
  args : "`before` language code, select the language code of the sentence before translation (defualt: none).\n`after` language code, select the language code for translation results (defualt: none).\n`text` str type, enter the text to be translated (defualt: none)."
 
 rps :

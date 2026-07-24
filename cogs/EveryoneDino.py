@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import fcts.drawing as dr
 from config.rootdir import root_dir
 import os
@@ -18,6 +19,18 @@ server_id = [
     453906917719408642, 348750582200270848
 ]
 
+GOAT_TITLE_MAX_LENGTH = 120
+
+
+def fit_font(draw, text, font_path, max_size, min_size, max_width):
+    """Return the largest font that keeps a single line inside max_width."""
+    for size in range(max_size, min_size - 1, -1):
+        font = ImageFont.truetype(font_path, size)
+        if draw.textlength(str(text), font=font) <= max_width:
+            return font
+    return ImageFont.truetype(font_path, min_size)
+
+
 class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     def __init__(self, client: commands.Bot):  # 생성자 작성
@@ -30,7 +43,11 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         if dname.endswith("#0"):
             dname = dname[:-2]
 
-        name = q.readTag(user)
+        try:
+            name = q.readTag(user)
+        except (IndexError, TypeError):
+            # DB 가입 전인 멤버도 카드에 표시할 수 있게 Discord 표시명을 사용한다.
+            name = user.display_name
         
         # 배경 이미지 불러오기
         background_image = Image.open(
@@ -48,20 +65,22 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         now = datetime.now() + timedelta(hours=9)
         now_time = now.strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
 
-        font_name = ImageFont.truetype(f"{root_dir}/font/emblem.ttf", 22)
+        font_name_path = f"{root_dir}/font/emblem.ttf"
+        font_title_path = f"{root_dir}/font/slay/name.ttf"
+        font_name = fit_font(draw, name, font_name_path, 22, 8, 236)
         font_date = ImageFont.truetype(f"{root_dir}/font/slay/name.ttf", 14)
-        font_title = ImageFont.truetype(f"{root_dir}/font/slay/name.ttf", 20)
+        font_display = fit_font(draw, dname, font_title_path, 14, 8, 236)
+        font_title = ImageFont.truetype(font_title_path, 20)
 
         x1 = (256 - draw.textlength(name, font=font_name)) / 2
         y1 = 208
 
-        x2 = (256 - draw.textlength(dname, font=font_date)) / 2
+        x2 = (256 - draw.textlength(dname, font=font_display)) / 2
         y2 = 240
 
         x3 = (256 - draw.textlength(now_time, font=font_date)) / 2
         y3 = 260
 
-        x4 = (256 - draw.textlength(title, font=font_title)) / 2
         y4 = 284
 
         draw.text(
@@ -75,7 +94,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         draw.text(
             (x2, y2), str(dname),
             fill=(204, 204, 204, 255),
-            font=font_date,
+            font=font_display,
             stroke_width=2,
             stroke_fill=(46, 139, 255, 255)
         )
@@ -88,12 +107,20 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             stroke_fill=(46, 139, 255, 255)
         )
 
+        # 제목 영역(하단 84px)에 들어갈 때까지 글꼴 크기를 자동으로 줄인다.
+        for size in range(20, 7, -1):
+            candidate_font = ImageFont.truetype(font_title_path, size)
+            font_title = candidate_font
+            title_lines = dr.wrap_text(draw, str(title), candidate_font, 236)
+            if len(title_lines) * (size + 4) <= 84:
+                break
+
         dr.draw_multiline_text_center(
             draw=draw,
             text=str(title),
             font=font_title,
             start_y=y4,
-            max_width=256,
+            max_width=236,
             canvas_width=256
         )
 
@@ -107,10 +134,10 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         except Exception:
             avatar_image = Image.open(
                 root_dir + '/config/rankcard/noimage.jpg'
-            )
+            ).convert('RGBA')
 
         # 디스코드 프로필 사진 붙이기
-        avatar_image = avatar_image.resize((96, 96))
+        avatar_image = avatar_image.resize((96, 96), Image.Resampling.LANCZOS)
         image.paste(avatar_image, (80, 100), mask=mask_image)
 
         buffer_output = io.BytesIO()
@@ -119,30 +146,61 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         return buffer_output
 
     async def is_server(ctx):
-        return ctx.guild.id in server_id
+        return ctx.guild is not None and ctx.guild.id in server_id
     
     # GOAT [ID: 30]
-    @commands.hybrid_command(name="똥딸", description="오늘 큰 일을 저지른 친구를 기념해 보아요",
-                             aliases=["똥딸놈", "스카웃", "똥딸년", "똥잠바", "더러운똥딸년"])
+    @commands.hybrid_command(
+        name=app_commands.locale_str("goat", key="cmd.30.name"),
+        description=app_commands.locale_str(
+            "Celebrate the friend who made the biggest impact today",
+            key="cmd.30.desc"
+        ),
+        aliases=["똥딸", "똥딸놈", "스카웃", "똥딸년", "똥잠바", "더러운똥딸년"]
+    )
     @commands.check(is_server)
-    async def goat(self, ctx, user:discord.Member = None, *, title: str = "똥딸"):
+    async def goat(self, ctx, user: discord.Member = None, *, title: str = "똥딸"):
         if user is None:
             user = ctx.author
+
+        title = title.strip() or "똥딸"
+        if len(title) > GOAT_TITLE_MAX_LENGTH:
+            await ctx.reply(i18n.t(
+                ctx.author,
+                "cmd.30.title_too_long",
+                max_length=GOAT_TITLE_MAX_LENGTH
+            ))
+            return
 
         buffer_output = await self.goat_image(user=user, title=title)
 
         await ctx.reply(
-            f":tada: 오늘의 인물은 <@{user.id}> 입니다!!!",
+            i18n.t(ctx.author, "cmd.30.result", user_id=user.id),
             file=discord.File(buffer_output, 'myimage.png')
         )
 
-        if q.readStorage(user, 161) == 0:
-            q.storageModify(user, 161, 1)
+        try:
+            q.ensureStorage(user)
+            if q.readStorage(user, 161) == 0:
+                q.storageModify(user, 161, 1)
+        except Exception as storage_error:
+            # 업적 기록 실패가 이미 생성된 명령 결과까지 실패시키지 않게 한다.
+            print(f"[EveryoneDino.goat] storage update failed: {storage_error}")
     
     @goat.error
     async def goat_error(self, ctx, error):
-        if isinstance(error, commands.errors.CheckFailure):
-            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
+        original = getattr(error, "original", error)
+
+        if isinstance(error, commands.CheckFailure) or isinstance(
+            original, commands.CheckFailure
+        ):
+            await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
+        elif isinstance(error, commands.BadArgument) or isinstance(
+            original, commands.BadArgument
+        ):
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+        else:
+            print(f"[EveryoneDino.goat] {type(original).__name__}: {original}")
+            await ctx.reply(i18n.t(ctx.author, "cmd.30.error"))
 
     # 쿠모티콘! [ID: 32]
     @commands.hybrid_command(name='쿠모티콘', description="헬창냥이 김종국의 사진 대방출!")
@@ -237,7 +295,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @coomoji.error
     async def coomoji_error(self, ctx, error):
         if isinstance(error, commands.errors.CheckFailure):
-            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
+            await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
     # 카카오 데이터 관리 [ID: 98]
     @commands.command(name='카톡', description="...")
@@ -434,7 +492,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @kakao.error
     async def kakao_error(self, error, ctx):
         if isinstance(error, commands.CheckFailure):
-            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
+            await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
     # 카카오데이터 [id: 10]
     @commands.command(name='kakaodata', description="...")
@@ -499,7 +557,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @kakaodata.error
     async def kakaodata_error(self, error, ctx):
         if isinstance(error, commands.CheckFailure):
-            await ctx.reply("`전체공룡` 서버 전용 명령어 입니다!")
+            await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
 
 async def setup(client):

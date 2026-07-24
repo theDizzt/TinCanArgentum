@@ -4,6 +4,7 @@ from discord.ext import commands
 import sqlite3
 import random as r
 import datetime
+from contextlib import closing
 from config.rootdir import root_dir
 
 # 1. Connect DB
@@ -428,13 +429,12 @@ def readDiscrimById(user: int = None):
 
 # 3.3.2.3. Full Tag
 def readTag(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT nick, discrim FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    temp = c.fetchone()
-    result = str(temp[0]) + "#" + str(temp[1]).zfill(4)
-    return result
+    with closing(sqlite3.connect(root_dir + '/data/user.db')) as conn:
+        c = conn.cursor()
+        c.execute("SELECT nick, discrim FROM main WHERE id = ?", (user.id, ))
+        temp = c.fetchone()
+        c.close()
+        return str(temp[0]) + "#" + str(temp[1]).zfill(4)
 
 
 def readTagById(user: int = None):
@@ -449,12 +449,12 @@ def readTagById(user: int = None):
 
 # 3.3.3. Read Xp
 def readXp(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT xp FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    with closing(sqlite3.connect(root_dir + '/data/user.db')) as conn:
+        c = conn.cursor()
+        c.execute("SELECT xp FROM main WHERE id = ?", (user.id, ))
+        result = c.fetchone()[0]
+        c.close()
+        return result
 
 
 def readXpById(user: int = None):
@@ -468,12 +468,12 @@ def readXpById(user: int = None):
 
 # 3.3.4. Read Money
 def readMoney(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT money FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    with closing(sqlite3.connect(root_dir + '/data/user.db')) as conn:
+        c = conn.cursor()
+        c.execute("SELECT money FROM main WHERE id = ?", (user.id, ))
+        result = c.fetchone()[0]
+        c.close()
+        return result
 
 
 def readMoneyById(user: int = None):
@@ -487,12 +487,12 @@ def readMoneyById(user: int = None):
 
 # 3.3.5. Read Skin
 def readSkin(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT skin FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    with closing(sqlite3.connect(root_dir + '/data/user.db')) as conn:
+        c = conn.cursor()
+        c.execute("SELECT skin FROM main WHERE id = ?", (user.id, ))
+        result = c.fetchone()[0]
+        c.close()
+        return result
 
 
 def readSkinById(user: int = None):
@@ -628,9 +628,9 @@ def newStorage(user: discord.Member = None):
     conn = sqlite3.connect(root_dir + '/data/user.db')
     c = conn.cursor()
 
-    INSERT_SQL = 'INSERT INTO storage (id) VALUES (?);'
+    INSERT_SQL = 'INSERT OR IGNORE INTO storage (id) VALUES (?);'
 
-    data = ((user.id))
+    data = (user.id, )
     c.execute(INSERT_SQL, data)
     conn.commit()
 
@@ -650,7 +650,7 @@ def newStorageById(user: int = None):
     conn = sqlite3.connect(root_dir + '/data/user.db')
     c = conn.cursor()
 
-    INSERT_SQL = 'INSERT INTO storage (id) VALUES (?);'
+    INSERT_SQL = 'INSERT OR IGNORE INTO storage (id) VALUES (?);'
 
     c.execute(INSERT_SQL, (user, ))
     conn.commit()
@@ -709,11 +709,21 @@ def readStorageById(user: int = None, id: str = None):
 
 # 3.5.4. User Storage List
 def storageList(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT * FROM storage WHERE id = ?;"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()
+    with closing(sqlite3.connect(root_dir + '/data/user.db')) as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM storage WHERE id = ?;", (user.id, ))
+        result = c.fetchone()
+        c.close()
+        return result
+
+
+def ensureStorage(user: discord.Member = None):
+    result = storageList(user)
+    if result is None:
+        newStorage(user)
+        result = storageList(user)
+    if result is None:
+        raise RuntimeError(f"Failed to initialize storage for user {user.id}")
     return result
 
 

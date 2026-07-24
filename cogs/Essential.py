@@ -17,6 +17,106 @@ prefix = get_required_env('BOT_PREFIX')
 Version = get_required_env('APP_VERSION')
 Update_Date = get_required_env('APP_VERSION_DATE')
 
+LANGUAGE_ALIASES = {
+    "ko": "ko",
+    "kr": "ko",
+    "en": "en",
+    "ja": "ja",
+    "jp": "ja",
+    "zh": "zh-CN",
+    "cn": "zh-CN",
+    "zh-cn": "zh-CN",
+    "zh-hans": "zh-CN",
+    "tw": "zh-TW",
+    "zh-tw": "zh-TW",
+    "zh-hant": "zh-TW",
+}
+
+LANGUAGE_OPTIONS = (
+    ("ko", "🇰🇷"),
+    ("en", "🇺🇸"),
+    ("ja", "🇯🇵"),
+    ("zh-CN", "🇨🇳"),
+    ("zh-TW", "🇹🇼"),
+)
+
+
+def normalize_language_choice(language):
+    if language is None:
+        return None
+    normalized = str(language).strip().lower().replace("_", "-")
+    return LANGUAGE_ALIASES.get(normalized)
+
+
+class LanguageSelect(discord.ui.Select):
+    def __init__(self, user):
+        current = q.readLanguage(user)
+        options = [
+            discord.SelectOption(
+                label=i18n.t(user, f"cmd.79.lang.{code}"),
+                value=code,
+                description=code,
+                emoji=emoji,
+                default=current == code,
+            )
+            for code, emoji in LANGUAGE_OPTIONS
+        ]
+        super().__init__(
+            placeholder=i18n.t(user, "cmd.79.select.placeholder"),
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        selected = self.values[0]
+        q.modifyLanguage(interaction.user, selected)
+        language_name = i18n.t(
+            interaction.user,
+            f"cmd.79.lang.{selected}",
+        )
+
+        view = self.view
+        if view is not None:
+            for item in view.children:
+                item.disabled = True
+            view.stop()
+
+        await interaction.response.edit_message(
+            content=i18n.t(
+                interaction.user,
+                "cmd.79.changed",
+                language=language_name,
+            ),
+            view=view,
+        )
+
+
+class LanguageView(discord.ui.View):
+    def __init__(self, user):
+        super().__init__(timeout=60)
+        self.owner_id = user.id
+        self.message = None
+        self.add_item(LanguageSelect(user))
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.user.id == self.owner_id:
+            return True
+        await interaction.response.send_message(
+            i18n.t(interaction.user, "cmd.79.select.denied"),
+            ephemeral=True,
+        )
+        return False
+
+    async def on_timeout(self):
+        for item in self.children:
+            item.disabled = True
+        if self.message is not None:
+            try:
+                await self.message.edit(view=self)
+            except discord.HTTPException:
+                pass
+
 
 class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
@@ -91,23 +191,22 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                     f"`{prefix}{helps[command]['ctx']}`",
                     color=0xF2D7D9)
 
-                embed.add_field(name="**Feature Description**",
+                embed.add_field(name=i18n.t(ctx.author, "cmd.00.feature"),
                                 value=helps[command]['discript'],
                                 inline=False)
-                embed.add_field(name="**Arguments**",
+                embed.add_field(name=i18n.t(ctx.author, "cmd.00.arguments"),
                                 value=helps[command]['args'],
                                 inline=False)
                 if command == 'translate':
                     embed.add_field(
-                        name="**Language Code**",
-                        value=
-                        "`ko` Korean, `ja` Japanese, `zh-CN` Simplified Chinese, `zh-TW` Traditional Chinese, `hi` Hindi, `en` English, `es` Spanish, `fr` French, `de` German, `pt` Portuguese, `vi` Vietnamese, `id` Indonesian,  `fa` Persian, `ar` Arabic, `mm` Burmese, `th` Thai, `ru` Russian, `it` Italian",
+                        name=i18n.t(ctx.author, "cmd.00.language_code"),
+                        value=i18n.t(ctx.author, "cmd.00.language_list"),
                         inline=False)
             except:
                 pass
 
         #Common Part
-        embed.set_footer(text="Developed by Dizzt", icon_url="")
+        embed.set_footer(text=i18n.t(ctx.author, "cmd.dev.footer"), icon_url="")
         await ctx.reply(
             i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             embed=embed)
@@ -218,7 +317,7 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 new = q.readTag(user)
                 await ctx.reply(i18n.t(ctx.author, "cmd.05.accept", old=old, new=new))
             except:
-                await ctx.reply("???")
+                await ctx.reply(i18n.t(ctx.author, "cmd.05.error3"))
 
     @nickname.error
     async def nickname_error(self, ctx, error):
@@ -391,8 +490,7 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @daily.error
     async def daily_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
@@ -404,32 +502,34 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @commands.hybrid_command(
         name=app_commands.locale_str("language", key="cmd.79.name"),
         description=app_commands.locale_str("Change the default language", key="cmd.79.desc"),
-        aliases=["언어"]
+        aliases=["언어", "言語", "语言", "語言"]
     )
-    async def language(self, ctx, lang:str = None):
-
-        available = ['ko', 'en', 'ja']
-        if lang == None:
+    async def language(self, ctx, lang: str = None):
+        if lang is None:
             current = q.readLanguage(ctx.author)
-            if current == "ko":
-                await ctx.reply("현재 언어는 한국어입니다.")
-            elif current == "en":
-                await ctx.reply("Your current language is English.")
-            elif current == "ja":
-                await ctx.reply("現在の言語は日本語です。")
+            language_name = i18n.t(ctx.author, f"cmd.79.lang.{current}")
+            view = LanguageView(ctx.author)
+            view.message = await ctx.reply(
+                "\n".join((
+                    i18n.t(
+                        ctx.author,
+                        "cmd.79.current",
+                        language=language_name,
+                    ),
+                    i18n.t(ctx.author, "cmd.79.select.prompt"),
+                )),
+                view=view,
+            )
+            return
 
-        elif lang in available:
-            q.modifyLanguage(ctx.author, lang)
+        selected = normalize_language_choice(lang)
+        if selected is not None:
+            q.modifyLanguage(ctx.author, selected)
             current = q.readLanguage(ctx.author)
-            if current == "ko":
-                await ctx.reply("현재 언어는 한국어입니다.")
-            elif current == "en":
-                await ctx.reply("Your current language is English.")
-            elif current == "ja":
-                await ctx.reply("現在の言語は日本語です。")
-        
+            language_name = i18n.t(ctx.author, f"cmd.79.lang.{current}")
+            await ctx.reply(i18n.t(ctx.author, "cmd.79.changed", language=language_name))
         else:
-            pass
+            await ctx.reply(i18n.t(ctx.author, "cmd.79.invalid"))
 
     @language.error
     async def language_error(self, ctx, error):

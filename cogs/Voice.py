@@ -3,6 +3,7 @@ import nacl
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 from PIL import Image, ImageDraw, ImageFont
 import io
 import json
@@ -39,16 +40,15 @@ class Voice(commands.Cog):
     async def join(self, ctx):
         if ctx.author.voice and ctx.author.voice.channel:
             channel = ctx.author.voice.channel
-            await ctx.send("봇이 **`{0.author.voice.channel}`** 채널에 입장합니다.".format(ctx))
+            await ctx.send(i18n.t(ctx.author, "cmd.61.t001", channel=ctx.author.voice.channel))
             await channel.connect()
         else:
-            await ctx.send("음성 채널이 존재하지 않습니다.")
+            await ctx.send(i18n.t(ctx.author, "cmd.61.error"))
 
     @join.error
     async def join_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
@@ -61,24 +61,23 @@ class Voice(commands.Cog):
     async def leave(self, ctx, skin_id: int = None):
         try:
             await ctx.voice_client.disconnect()
-            await ctx.send("봇을 **`{0.author.voice.channel}`** 에서 내보냈습니다.".format(ctx))
+            await ctx.send(i18n.t(ctx.author, "cmd.62.t001", channel=ctx.author.voice.channel))
         except IndexError as error_message:
             print(f"에러 발생: {error_message}")
-            await ctx.send("{0.author.voice.channel}에 유저가 존재하지 않거나 봇이 존재하지 않습니다.\\n다시 입장후 퇴장시켜주세요.".format(ctx))
+            await ctx.send(i18n.t(ctx.author, "cmd.62.error1", channel=ctx.author.voice.channel))
         except AttributeError as not_found_channel:
             print(f"에러 발생: {not_found_channel}")
-            await ctx.send("봇이 존재하는 채널을 찾는 데 실패했습니다.")
+            await ctx.send(i18n.t(ctx.author, "cmd.62.error2"))
 
     @leave.error
     async def preview_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
         
-    # TTS [ID: 69]
+    # TTS [ID: 63]
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @commands.hybrid_command(name='tts',
                              description="The bot will leave the voice channel you are currently in.")
@@ -94,8 +93,7 @@ class Voice(commands.Cog):
     @tts.error
     async def tts_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error

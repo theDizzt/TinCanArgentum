@@ -4,23 +4,24 @@ from games.pokemantle_engine import PokemantleEngine
 import asyncio
 import fcts.etcfunctions as etc
 import fcts.sqlcontrol as q
+import fcts.i18n_runtime as i18n
 import random
 import math
 
 class PokemantleListView(discord.ui.View):
-    def __init__(self, data, user, sep=12, title="포케멘틀 추측 목록", description="지금까지 입력한 포켓몬을 랭킹 순서대로 보여드릴게요.", empty_text="표시할 데이터가 없어요."):
+    def __init__(self, data, user, sep=12, title=None, description=None, empty_text=None):
         super().__init__(timeout=300)
         self.data = data
         self.user = user
         self.sep = sep
         self.current_page = 1
         self.message = None
-        self.title = title
-        self.description = description
-        self.empty_text = empty_text
+        self.title = title or i18n.t(user, "cmd.47.list.title")
+        self.description = description or i18n.t(user, "cmd.47.list.desc")
+        self.empty_text = empty_text or i18n.t(user, "cmd.47.list.empty")
 
     async def send(self, ctx):
-        self.message = await ctx.send(":notebook: 목록을 불러오는 중이에요.", view=self)
+        self.message = await ctx.send(i18n.t(self.user, "cmd.47.list.loading"), view=self)
         await self.update_message(self.get_current_page_data())
 
     def max_page(self):
@@ -49,13 +50,19 @@ class PokemantleListView(discord.ui.View):
             result_text = self.empty_text
 
         embed.add_field(
-            name="목록",
+            name=i18n.t(self.user, "cmd.47.list.field"),
             value=result_text[:1024],
             inline=False
         )
 
         embed.set_footer(
-            text=f"페이지: {self.current_page} / {self.max_page()} · 항목 수: {len(self.data)}개"
+            text=i18n.t(
+                self.user,
+                "cmd.47.list.footer",
+                current=self.current_page,
+                pages=self.max_page(),
+                count=len(self.data),
+            )
         )
         return embed
 
@@ -131,13 +138,13 @@ class Pokemantle(commands.Cog):
     @commands.hybrid_command(name="포케멘틀", description="유사도 수치를 바탕으로 내가 생각하는 포켓몬을 맞출 수 있을까?")
     async def pokemantle(self, ctx):
         if ctx.guild is None:
-            await ctx.reply("서버 채널에서만 사용할 수 있어요.")
+            await ctx.reply(i18n.t(ctx.author, "cmd.47.server_only"))
             return
 
         channel_id = ctx.channel.id
 
         if channel_id in self.active_games:
-            await ctx.reply("이 채널에서는 이미 포케멘틀이 진행 중이에요.")
+            await ctx.reply(i18n.t(ctx.author, "cmd.47.already_running"))
             return
 
         self.active_games.add(channel_id)
@@ -156,11 +163,7 @@ class Pokemantle(commands.Cog):
         participants = set()   # discord.Member 저장
         guess_count = 0        # 중복 제외 실제 시도 횟수
 
-        await ctx.reply(
-            "<:pokeball:1145214279134482503> 포케멘틀 시작!\n"
-            "이제 이 채널에 포켓몬 이름을 그냥 입력하면 돼요.\n"
-            "`포기` 또는 `종료`를 입력하면 게임이 끝나요."
-        )
+        await ctx.reply(i18n.t(ctx.author, "cmd.47.start"))
 
         print(self.display_name(self.engine.pokedex.iloc[answer_index]["name"]))
 
@@ -175,7 +178,7 @@ class Pokemantle(commands.Cog):
                 try:
                     message = await self.bot.wait_for("message", check=check, timeout=300)
                 except asyncio.TimeoutError:
-                    await ctx.send(":hourglass: 5분 동안 입력이 없어서 게임을 종료할게요.")
+                    await ctx.send(i18n.t(ctx.author, "cmd.47.timeout"))
                     break
 
                 content = message.content.strip()
@@ -183,22 +186,27 @@ class Pokemantle(commands.Cog):
                 if not content:
                     continue
 
-                if content in ["종료", "그만", "취소"]:
-                    await ctx.send(":stop_sign: 게임을 종료했어요.")
+                if content.lower() in [
+                    "종료", "그만", "취소", "stop", "cancel", "quit",
+                    "終了", "结束", "結束", "キャンセル", "取消"
+                ]:
+                    await ctx.send(i18n.t(ctx.author, "cmd.47.stopped"))
                     break
 
-                if content in ["포기", "gg", "GG"]:
+                if content.lower() in [
+                    "포기", "gg", "give up", "放棄", "放弃"
+                ]:
                     index = answer_index
                     answer = self.display_name(self.engine.pokedex.iloc[index]["name"])
-                    await ctx.send(f":skull_crossbones: 정답은 **{answer}** 였어요.")
+                    await ctx.send(i18n.t(ctx.author, "cmd.47.give_up", answer=answer))
                     full_rank_data = self.build_full_rank_data(answer_index)
                     view = PokemantleListView(
                         full_rank_data,
                         ctx.author,
                         sep=12,
-                        title="전체 포켓몬 순위",
-                        description="정답 포켓몬을 기준으로 모든 포켓몬의 랭킹을 보여드릴게요.",
-                        empty_text="표시할 전체 순위가 없어요."
+                        title=i18n.t(ctx.author, "cmd.47.all.title"),
+                        description=i18n.t(ctx.author, "cmd.47.all.desc"),
+                        empty_text=i18n.t(ctx.author, "cmd.47.all.empty")
                     )
                     await view.send(ctx)
                     break
@@ -207,7 +215,7 @@ class Pokemantle(commands.Cog):
                     participants.add(message.author)
                     
                     if not guessed_results:
-                        await ctx.send(":x: 아직 입력한 포켓몬이 없어요.")
+                        await ctx.send(i18n.t(ctx.author, "cmd.47.no_guesses"))
                         continue
 
                     sorted_results = sorted(
@@ -219,9 +227,9 @@ class Pokemantle(commands.Cog):
                         sorted_results,
                         ctx.author,
                         sep=12,
-                        title="포케멘틀 추측 목록",
-                        description="지금까지 입력한 포켓몬을 랭킹 순서대로 보여드릴게요.",
-                        empty_text="아직 입력한 포켓몬이 없어요."
+                        title=i18n.t(ctx.author, "cmd.47.list.title"),
+                        description=i18n.t(ctx.author, "cmd.47.list.desc"),
+                        empty_text=i18n.t(ctx.author, "cmd.47.no_guesses")
                     )
                     await view.send(ctx)
                     continue
@@ -236,7 +244,7 @@ class Pokemantle(commands.Cog):
                 result = self.engine.guess_by_index(answer_index, content)
 
                 if result is None:
-                    await ctx.send(":x: 존재하지 않거나 인식할 수 없는 포켓몬 이름이에요.")
+                    await ctx.send(i18n.t(ctx.author, "cmd.47.unknown"))
                     continue
 
                 # 업적 205: 내가 추측한 포켓몬의 순위가 339위면 해금
@@ -249,12 +257,12 @@ class Pokemantle(commands.Cog):
 
                     embed = discord.Embed(
                         title=f":exclamation: {old_result['display_name']}",
-                        description="이미 시도한 포켓몬이에요. 이전 결과를 다시 보여드릴게요.",
+                        description=i18n.t(ctx.author, "cmd.47.duplicate"),
                         color=random.randint(0x000000, 0xFFFFFF)
                     )
-                    embed.add_field(name="랭킹", value=f"{etc.numFont('#'+str(old_result['rank']))}", inline=False)
-                    embed.add_field(name="유사도", value=f"**`{old_result['similarity']*100:.4f}%`**", inline=False)
-                    embed.set_footer(text=f"시도 횟수: {len(guessed_results)}회")
+                    embed.add_field(name=i18n.t(ctx.author, "cmd.47.rank"), value=f"{etc.numFont('#'+str(old_result['rank']))}", inline=False)
+                    embed.add_field(name=i18n.t(ctx.author, "cmd.47.similarity"), value=f"**`{old_result['similarity']*100:.4f}%`**", inline=False)
+                    embed.set_footer(text=i18n.t(ctx.author, "cmd.47.attempts", count=len(guessed_results)))
 
                     await ctx.send(embed=embed)
                     continue
@@ -285,23 +293,23 @@ class Pokemantle(commands.Cog):
                                 q.storageModify(member, 203, 1)
 
                     embed = discord.Embed(
-                        title=":tada: 정답!",
+                        title=i18n.t(ctx.author, "cmd.47.correct"),
                         description=f"**{self.display_name(result['name'])}**",
                         color=random.randint(0x000000, 0xFFFFFF)
                     )
-                    embed.add_field(name="시도 횟수", value=str(len(guessed_results))+"회")
+                    embed.add_field(name=i18n.t(ctx.author, "cmd.47.attempts.field"), value=i18n.t(ctx.author, "cmd.47.count.times", count=len(guessed_results)))
+                    embed.add_field(name=i18n.t(ctx.author, "cmd.47.participants"), value=i18n.t(ctx.author, "cmd.47.count.people", count=len(participants)), inline=True)
+                    embed.add_field(name=i18n.t(ctx.author, "cmd.47.reward"), value=i18n.t(ctx.author, "cmd.47.reward.value", xp=xp_gain, money=money_gain), inline=False)
                     await ctx.send(embed=embed)
-                    embed.add_field(name="참여자 수", value=str(len(participants))+"명", inline=True)
-                    embed.add_field(name="보상", value=f"경험치 `+{xp_gain:,d}XP` / 돈 `+${money_gain:,d}`", inline=False)
 
                     full_rank_data = self.build_full_rank_data(answer_index)
                     view = PokemantleListView(
                         full_rank_data,
                         ctx.author,
                         sep=12,
-                        title="전체 포켓몬 순위",
-                        description="정답 포켓몬을 기준으로 모든 포켓몬의 랭킹을 보여드릴게요.",
-                        empty_text="표시할 전체 순위가 없어요."
+                        title=i18n.t(ctx.author, "cmd.47.all.title"),
+                        description=i18n.t(ctx.author, "cmd.47.all.desc"),
+                        empty_text=i18n.t(ctx.author, "cmd.47.all.empty")
                     )
                     await view.send(ctx)
                     break
@@ -310,9 +318,9 @@ class Pokemantle(commands.Cog):
                     title=f":mag_right: {self.display_name(result['name'])}",
                     color=random.randint(0x000000, 0xFFFFFF)
                 )
-                embed.add_field(name="랭킹", value=f"{etc.numFont('#'+str(result['rank']))}", inline=False)
-                embed.add_field(name="유사도", value=f"**`{result['similarity']*100:.4f}%`**", inline=False)
-                embed.set_footer(text=f"시도 횟수: {len(guessed_results)}회")
+                embed.add_field(name=i18n.t(ctx.author, "cmd.47.rank"), value=f"{etc.numFont('#'+str(result['rank']))}", inline=False)
+                embed.add_field(name=i18n.t(ctx.author, "cmd.47.similarity"), value=f"**`{result['similarity']*100:.4f}%`**", inline=False)
+                embed.set_footer(text=i18n.t(ctx.author, "cmd.47.attempts", count=len(guessed_results)))
 
                 await ctx.send(embed=embed)
 

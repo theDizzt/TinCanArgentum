@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import datetime
 import random
 import math
@@ -293,18 +294,14 @@ class GamePrime(commands.Cog):
                 elif user == 2:
                     return 0
 
-        await ctx.reply(
-            f":green_circle: **{q.readTag(ctx.author)}** The game will start in a moment!\n**Input tips**\n:fist: `바위, 0, rock, r`\n:v: `가위, 1, scissors, s`\n:hand_splayed: `보, 2, paper, p`"
-        )
+        await ctx.reply(i18n.t(ctx.author, "cmd.40.start", name=q.readTag(ctx.author)))
         sleep(3)
         while True:
             count += 1
             computer = random.choice(range(3))
             print(computer)
 
-            await ctx.reply(
-                f"**[COUNT: {count} | W/T: {win}/{tie} | SCORE: {score:,d}]**\n`{q.readTag(ctx.author)}` Prepare for the next attack!"
-            )
+            await ctx.reply(i18n.t(ctx.author, "cmd.40.round", count=count, win=win, tie=tie, score=score, name=q.readTag(ctx.author)))
 
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel and rspValue(
@@ -322,9 +319,7 @@ class GamePrime(commands.Cog):
                 l.rpsDataUpdate(ctx.author, score, count - 1, max, win, tie)
                 q.moneyAdd(ctx.author, money_gain)
                 q.xpAdd(ctx.author, xp_gain)
-                await ctx.reply(
-                    f"**LOSE**\n## USER:{rspEmoji(user)} VS {rspEmoji(computer)}:BOT\nYOUR SCORE: **{score:,d}** (**{win}**wins / **{tie}**ties / **{max}**max chains)\nPRIZE: +{xp_gain}XP, +${money_gain}"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.40.lose", user=rspEmoji(user), bot=rspEmoji(computer), score=score, win=win, tie=tie, chain=max, xp=xp_gain, money=money_gain))
 
                 #스킨해금 77번
                 if score >= 1000 and q.readStorage(ctx.author, 77) == 0:
@@ -335,9 +330,7 @@ class GamePrime(commands.Cog):
             elif result == 0:
                 chain = 0
                 tie += 1
-                await ctx.reply(
-                    f"**TIE**\n## USER:{rspEmoji(user)} VS {rspEmoji(computer)}:BOT"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.40.tie", user=rspEmoji(user), bot=rspEmoji(computer)))
 
                 #스킨해금 75번
                 if tie == 9 and q.readStorage(ctx.author, 75) == 0:
@@ -349,9 +342,7 @@ class GamePrime(commands.Cog):
                 if max < chain:
                     max = chain
                 score += (2**(chain - 1)) * max
-                await ctx.reply(
-                    f"**WIN**\n## USER:{rspEmoji(user)} VS {rspEmoji(computer)}:BOT"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.40.win", user=rspEmoji(user), bot=rspEmoji(computer)))
 
                 #스킨해금 74, 76번
                 if win == 3 and q.readStorage(ctx.author, 74) == 0:
@@ -362,8 +353,7 @@ class GamePrime(commands.Cog):
     @rps.error
     async def rps_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
@@ -376,17 +366,13 @@ class GamePrime(commands.Cog):
         if bet is not None:
             money = q.readMoney(ctx.author)
             if bet > money:
-                await ctx.reply(
-                    f"`(⩌Δ ⩌ ;)` Your bet is more than you have!\n(Your balance: ${money:,d})"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.43.insufficient", balance=money))
             elif bet < 100:
-                await ctx.reply(
-                    "`(⩌Δ ⩌ ;)` Inappropriate amount entered...\nBet amount must be 100 or more!"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.43.minimum"))
             else:
                 check = True
         else:
-            await ctx.reply("`(⩌Δ ⩌ ;)` Bet amount must be 100 or more!")
+            await ctx.reply(i18n.t(ctx.author, "cmd.43.minimum"))
 
         if check:
             q.moneyAdd(ctx.author, (-1) * bet)
@@ -431,19 +417,18 @@ class GamePrime(commands.Cog):
             q.moneyAdd(ctx.author, prize)
             q.xpAdd(ctx.author, xp)
 
-            embed = discord.Embed(title="**:gem: LUCKY MACHINE :gem:**",
+            embed = discord.Embed(title=i18n.t(ctx.author, "cmd.43.title"),
                                   description=f"{s1} | {s2} | {s3}",
                                   color=0xE2F6CA)
             embed.add_field(
-                name="RESULT",
-                value=
-                f"${bet} x {multi} x {round(shape,2)} = **${prize:,d}!**\nBalance: **${q.readMoney(ctx.author):,d}** ({prize-bet:+,d})"
+                name=i18n.t(ctx.author, "cmd.43.result"),
+                value=i18n.t(ctx.author, "cmd.43.result.value", bet=bet, multi=multi, shape=round(shape,2), prize=prize, balance=q.readMoney(ctx.author), change=prize-bet)
             )
 
-            embed.set_footer(text="Developed by Dizzt")
+            embed.set_footer(text=i18n.t(ctx.author, "cmd.dev.footer"))
 
             await ctx.reply(
-                f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+                i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
                 embed=embed)
 
             #스킨해금 78-79번
@@ -455,8 +440,7 @@ class GamePrime(commands.Cog):
     @slot.error
     async def slot_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error
@@ -469,9 +453,7 @@ class GamePrime(commands.Cog):
         count = 0
         end = False
         t = 0
-        await ctx.reply(
-            f":green_circle: **{q.readTag(ctx.author)}** The game will start in a moment!\nAll questions must be answered correctly within 5 seconds."
-        )
+        await ctx.reply(i18n.t(ctx.author, "cmd.44.start", name=q.readTag(ctx.author)))
         sleep(3)
 
         while True:
@@ -497,9 +479,7 @@ class GamePrime(commands.Cog):
             quest = generateProblem(t)
             answer = quest[2]
             print(f"Q{count}: {answer}")
-            await ctx.reply(
-                f"**[COUNT: {count}]** {quest[0]}\n## {quest[1]}\nSCORE: **{score:,d}**"
-            )
+            await ctx.reply(i18n.t(ctx.author, "cmd.44.question", count=count, category=quest[0], question=quest[1], score=score))
             stime = datetime.datetime.now().timestamp()
 
             def check(m):
@@ -542,9 +522,7 @@ class GamePrime(commands.Cog):
 
             q.moneyAdd(ctx.author, money)
             q.xpAdd(ctx.author, xp)
-            await ctx.reply(
-                f"## GAME OVER\nThe correct answer is `{answer}`!\n**{q.readTag(ctx.author)}**'s result:\nCorrect: **{count-1}**\nScore: **{score:,d}**\nPrize: +{xp}XP, +${money}"
-            )
+            await ctx.reply(i18n.t(ctx.author, "cmd.44.game_over", answer=answer, name=q.readTag(ctx.author), correct=count-1, score=score, xp=xp, money=money))
 
             #스킨해금 65~71번
             if count > 11 and q.readStorage(ctx.author, 65) == 0:

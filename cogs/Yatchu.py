@@ -4,6 +4,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.leaderboard as l
+import fcts.i18n_runtime as i18n
 import random
 from time import sleep
 
@@ -670,8 +671,8 @@ class Yatchu(commands.Cog):
         })
         money.append(q.readMoney(ctx.author))
         while True:
-            embed = discord.Embed(title='참가자 목록',
-                                  description=f'인원: {len(player)}/6',
+            embed = discord.Embed(title=i18n.t(ctx.author, "cmd.41.players.title"),
+                                  description=i18n.t(ctx.author, "cmd.41.players.count", count=len(player)),
                                   color=0xBCE29E)
             for i in range(len(player)):
                 lv = etc.level(q.readXpById(player[i]['id']))
@@ -682,9 +683,7 @@ class Yatchu(commands.Cog):
                     f"Level {lv} | ${q.readMoneyById(player[i]['id']):,d}",
                     inline=False)
             embed.set_footer(text='Discord Bot by Dizzt')
-            await ctx.reply(
-                "## 야추다이스ㄱㄱ - 인원 모집\n* `@username`을 이용하여 최대 6명 까지 초대가 가능합니다!\n* 초대가 완료되면 `시작`를 입력해 주세요!\n* 게임 생성을 취소하고 싶다면 `취소`를 입력해 주세요!",
-                embed=embed)
+            await ctx.reply(i18n.t(ctx.author, "cmd.41.recruit"), embed=embed)
 
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
@@ -692,20 +691,19 @@ class Yatchu(commands.Cog):
             input_word = await self.client.wait_for("message", check=check)
             check = input_word.content
 
-            if check == '시작':
+            if check.lower() in ('시작', 'start', '開始', '开始'):
                 gamestart = True
-                await ctx.send(":green_circle: 게임이 성공적으로 생성 되었습니다!")
+                await ctx.send(i18n.t(ctx.author, "cmd.41.created"))
                 break
 
-            elif check == '취소':
-                await ctx.send(":x: 게임 생성이 취소되었습니다.")
+            elif check.lower() in ('취소', 'cancel', 'キャンセル', '取消'):
+                await ctx.send(i18n.t(ctx.author, "cmd.41.cancelled"))
                 break
 
             else:
                 try:
                     if len(player) >= 6:
-                        await ctx.send(
-                            '`(⩌ʌ ⩌;)` 인원이 너무 많습니다... 최대 6명 까지 참가가 가능합니다!')
+                        await ctx.send(i18n.t(ctx.author, "cmd.41.too_many"))
                     else:
                         id = int(etc.extractUid(check))
                         name = q.readTagById(id)
@@ -720,16 +718,12 @@ class Yatchu(commands.Cog):
                             0
                         })
                         money.append(q.readMoneyById(id))
-                        await ctx.send(
-                            f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
+                        await ctx.send(i18n.t(ctx.author, "cmd.41.added", name=name))
                 except:
-                    await ctx.send('`(⩌ʌ ⩌;)` 유효하지 않은 참가자 입니다... 다시 시도해 보세요...'
-                                   )
+                    await ctx.send(i18n.t(ctx.author, "cmd.41.invalid_player"))
 
         while gamestart and len(player) > 1:
-            await ctx.reply(
-                f"## 야추다이스ㄱㄱ - 베팅 금액 설정\n* 배팅 금액을 입력해 주세요! 최소 `$0` 에서 `${min(money):,d}`까지 금액을 입력 할 수 있습니다!\n* 숫자만 입력해 주세요. 단위($)와 쉼표(천 단위 구분자)를 제외하고 숫자만 입력합니다!\n* 게임 생성을 취소하고 싶다면 `취소`를 입력해 주세요!"
-            )
+            await ctx.reply(i18n.t(ctx.author, "cmd.41.bet.prompt", maximum=min(money)))
 
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
@@ -737,9 +731,9 @@ class Yatchu(commands.Cog):
             input_value = await self.client.wait_for("message", check=check)
             check = input_value.content
 
-            if check == '취소':
+            if check.lower() in ('취소', 'cancel', 'キャンセル', '取消'):
                 gamestart = False
-                await ctx.send(":x: 게임 생성이 취소되었습니다.")
+                await ctx.send(i18n.t(ctx.author, "cmd.41.cancelled"))
                 break
 
             else:
@@ -748,14 +742,12 @@ class Yatchu(commands.Cog):
                     if 0 <= betting and betting <= min(money):
                         for user in player:
                             q.moneyAddById(user['id'], (-1) * betting)
-                        await ctx.send(":green_circle: 게임이 성공적으로 생성 되었습니다!")
+                        await ctx.send(i18n.t(ctx.author, "cmd.41.created"))
                         break
                     else:
-                        await ctx.send(
-                            f"`(⩌ʌ ⩌;)` 범위에 맞지 않은 금액입니다... 최소 `$0`, 최대 `${min(money):,d}` 입니다."
-                        )
+                        await ctx.send(i18n.t(ctx.author, "cmd.41.bet.range", maximum=min(money)))
                 except:
-                    await ctx.send('`(⩌ʌ ⩌;)` 숫자만 입력해 주세요...')
+                    await ctx.send(i18n.t(ctx.author, "cmd.41.bet.number"))
 
         if gamestart:
             game_view = GameScreen(timeout=None)

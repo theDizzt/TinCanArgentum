@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import fcts.tedne as ted
 import asyncio
 import json
@@ -57,7 +58,7 @@ class PaginationView(discord.ui.View):
 
     async def send(self, ctx):
         self.message = await ctx.send(
-            f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             view=self)
         if self.current_page == 1:
             await self.update_message(self.data[:self.sep], self.user)
@@ -228,7 +229,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
             embed.set_footer(text=name, icon_url=ctx.author.avatar.url)
 
             await ctx.reply(
-                f":green_circle: **{name}**'s request completely loaded!!",
+                i18n.t(ctx.author, "reply.complete", name=name),
                 embed=embed)
 
         elif option == "achievements" or option == "achieve" or option == "a":
@@ -269,7 +270,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 inline=False)
 
             await ctx.reply(
-                f":green_circle: **{name}**'s request completely loaded!!",
+                i18n.t(ctx.author, "reply.complete", name=name),
                 embed=embed)
 
         elif option == "hint" or option == "ht":
@@ -309,7 +310,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 embed.set_footer(text=name, icon_url=ctx.author.avatar.url)
 
                 await ctx.reply(
-                    f":green_circle: **{name}**'s request completely loaded!!",
+                    i18n.t(ctx.author, "reply.complete", name=name),
                     embed=embed)
 
             else:
@@ -334,7 +335,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
                     user = await ctx.author.create_dm()
                     await user.send(
-                        f":green_circle: **{name}**'s request completely loaded!!",
+                        i18n.t(ctx.author, "reply.complete", name=name),
                         embed=embed)
 
                     await ctx.reply(
@@ -343,8 +344,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @tedne.error
     async def discrim_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
 
         elif isinstance(error, commands.errors.CheckFailure):

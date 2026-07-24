@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 
 emoji = {
     'rps': '<:rps:1154728998677512242>',
@@ -583,8 +584,7 @@ class Leaderboard(commands.Cog):
     @leaderboard.error
     async def discrim_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
         else:
             raise error

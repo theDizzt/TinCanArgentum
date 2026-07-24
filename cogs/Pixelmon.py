@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.pixelmon as px
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import os
 import requests
 import re
@@ -21,7 +22,7 @@ class PaginationDexView(discord.ui.View):
 
     async def send(self, ctx):
         self.message = await ctx.send(
-            f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             view=self)
         if self.current_page == 1:
             await self.update_message(self.data[:self.sep], self.user)
@@ -147,7 +148,7 @@ class PaginationStatView(discord.ui.View):
 
     async def send(self, ctx):
         self.message = await ctx.send(
-            f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             view=self)
         await self.update_message(self.data[self.current_page-1], self.user)
 
@@ -274,7 +275,7 @@ class PaginationTMView(discord.ui.View):
 
     async def send(self, ctx):
         self.message = await ctx.send(
-            f":green_circle: **{q.readTag(ctx.author)}**'s request completely loaded!!",
+            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
             view=self)
         if self.current_page == 1:
             await self.update_message(self.data[:self.sep], self.user)
@@ -431,7 +432,7 @@ class Pixelmon(commands.Cog):
                 result.append(line)
 
         except:
-            await ctx.send(f"[오류] tm.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file="tm.xlsx"))
             bool = False
 
         if bool:
@@ -448,7 +449,7 @@ class Pixelmon(commands.Cog):
                     fail_count += 1
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     # 도감 리로드 [ID: 83]
@@ -479,7 +480,7 @@ class Pixelmon(commands.Cog):
                 result.append(line)
 
         except:
-            await ctx.send(f"[오류] pixel.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file="pixel.xlsx"))
             bool = False
 
         if bool:
@@ -496,7 +497,7 @@ class Pixelmon(commands.Cog):
                     fail_count += 1
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     #Pokedex [ID: 84]
@@ -627,8 +628,7 @@ class Pixelmon(commands.Cog):
     @pokedex.error
     async def discrim_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
 
     #TMdex [ID: 85]
@@ -679,8 +679,7 @@ class Pixelmon(commands.Cog):
     @tmdex.error
     async def discrim_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg = '`(⩌ʌ ⩌;)` This command is ratelimited, please try again in **{:.2f} seconds**.'.format(
-                error.retry_after)
+            msg = i18n.t(ctx.author, "reply.ratelimit", second=error.retry_after)
             await ctx.send(msg)
 
 async def setup(client):

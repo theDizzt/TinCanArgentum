@@ -158,7 +158,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
         if ctx.author.id in admin_login:
             u = int(etc.extractUid(user))
             if option in ["mathgame", "사칙연산"]:
-                await ctx.reply("Format: `score/scoredate/count/countdate`, Seperator: ,")
+                await ctx.reply(i18n.t(ctx.author, "cmd.94.format.math"))
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel
@@ -179,9 +179,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
             elif option in ["rps", "가위바위보"]:
-                await ctx.reply(
-                    "Format: `score/s-date/count/c-date/max/m-date/win/w-date/tie/t-date`, Seperator: ,"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.94.format.rps"))
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel
@@ -205,9 +203,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
             elif option in ["wordchain", "끝말잇기"]:
-                await ctx.reply(
-                    "Format: `reg/i-score/i-count/i-play/i-win/b-score/b-count/m-half/m-full`, Seperator: ,"
-                )
+                await ctx.reply(i18n.t(ctx.author, "cmd.94.format.wordchain"))
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel
@@ -230,7 +226,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                         await ctx.reply(i18n.t(ctx.author, "cmd.admin.invalid"))
 
             elif option in ["yahtzee", "야추다이스"]:
-                await ctx.reply("Format: `score/score-date/play/wins`, Seperator: ,")
+                await ctx.reply(i18n.t(ctx.author, "cmd.94.format.yahtzee"))
 
                 def check(m):
                     return m.author == ctx.author and m.channel == ctx.channel

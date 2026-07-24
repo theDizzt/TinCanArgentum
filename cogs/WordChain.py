@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.i18n_runtime as i18n
 import fcts.leaderboard as l
 import os
 import requests
@@ -485,7 +486,7 @@ class TestCommands(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    # Wordcount Test [ID: 79]
+    # Wordcount Test [ID: 45]
     @commands.hybrid_command(name='점수', description="단어 점수를 계산합니다.")
     async def word_count_test(self, ctx, word: str = ''):
         if word != '':
@@ -926,7 +927,7 @@ class TestCommands(commands.Cog):
             for row in sheet.rows:
                 result.append([row[0].value, row[1].value, row[2].value])
         except:
-            await ctx.send(f"[오류] {file}.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
 
         if bool:
@@ -970,7 +971,7 @@ class TestCommands(commands.Cog):
                     )
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     # Functions [ID: 87]
@@ -993,7 +994,7 @@ class TestCommands(commands.Cog):
             for row in sheet.rows:
                 result.append([row[0].value, row[1].value, row[2].value])
         except:
-            await ctx.send(f"[오류] {file}.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
 
         if bool:
@@ -1035,7 +1036,7 @@ class TestCommands(commands.Cog):
                     )
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     @commands.hybrid_command(name='조건등록',
@@ -1057,7 +1058,7 @@ class TestCommands(commands.Cog):
             for row in sheet.rows:
                 result.append([row[0].value, row[1].value, row[2].value])
         except:
-            await ctx.send(f"[오류] {file}.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
 
         if bool:
@@ -1098,7 +1099,7 @@ class TestCommands(commands.Cog):
                     )
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     @commands.hybrid_command(name='빠른등록',
@@ -1120,7 +1121,7 @@ class TestCommands(commands.Cog):
             for row in sheet.rows:
                 result.append([row[0].value, row[1].value, row[2].value])
         except:
-            await ctx.send(f"[오류] {file}.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
 
         if bool:
@@ -1147,7 +1148,7 @@ class TestCommands(commands.Cog):
                 print(f"[{suc_count+fail_count}/{total} | {(suc_count+fail_count)/total:.2%}] 작업 완료")
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
     @commands.hybrid_command(name='빠른조건등록',
@@ -1169,7 +1170,7 @@ class TestCommands(commands.Cog):
             for row in sheet.rows:
                 result.append([row[0].value, row[1].value, row[2].value])
         except:
-            await ctx.send(f"[오류] {file}.xlsx 파일이 없거나 손상된 것 같습니다...")
+            await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
 
         if bool:
@@ -1197,7 +1198,7 @@ class TestCommands(commands.Cog):
                 print(f"[{suc_count+fail_count}/{total} | {(suc_count+fail_count)/total:.2%}] 작업 완료")
 
             await ctx.send(
-                f'작업이 모두 완료되었습니다! [총 {total}개 / 성공 {suc_count}개 / 실패 {fail_count}개]'
+                i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
 
@@ -2018,7 +2019,7 @@ class TestCommands(commands.Cog):
                             await ctx.send(
                                 '`(⩌ʌ ⩌;)` 유효하지 않은 참가자 입니다... 다시 시도해 보세요...')
 
-    # Wordchain Test [ID: 79]
+    # Wordchain Test [ID: 48]
     @commands.hybrid_command(name='테스트용',
                              description="테스트")
     async def wordchain_test(self, ctx):

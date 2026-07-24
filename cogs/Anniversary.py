@@ -16,6 +16,7 @@ import discord
 from discord.ext import commands, tasks
 
 from korean_lunar_calendar import KoreanLunarCalendar
+import fcts.i18n_runtime as i18n
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -102,19 +103,23 @@ def parse_bool_text(value) -> bool:
     if value in false_values:
         return False
 
-    raise ValueError("윤달 여부는 `true` 또는 `false`로 입력해주세요.")
+    raise ValueError("cmd.24.error.leap")
 
 
 def parse_calendar_type_text(value: str) -> str:
     value = str(value).strip().lower()
 
-    if value in ["양력", "solar", "s"]:
+    if value in [
+        "양력", "solar", "s", "太陽暦", "公历", "公曆", "阳历", "陽曆"
+    ]:
         return "solar"
 
-    if value in ["음력", "lunar", "l"]:
+    if value in [
+        "음력", "lunar", "l", "太陰暦", "农历", "農曆", "阴历", "陰曆"
+    ]:
         return "lunar"
 
-    raise ValueError("달력 종류는 `양력` 또는 `음력`으로 입력해주세요.")
+    raise ValueError("cmd.24.error.calendar")
 
 
 async def resolve_text_channel(ctx: commands.Context, channel_text: str):
@@ -128,7 +133,7 @@ async def resolve_text_channel(ctx: commands.Context, channel_text: str):
     elif channel_text.isdigit():
         channel_id = int(channel_text)
     else:
-        raise ValueError("채널은 `<#채널ID>` 멘션 또는 채널 ID 숫자로 입력해주세요.")
+        raise ValueError("cmd.24.error.channel_format")
 
     channel = ctx.guild.get_channel(channel_id)
 
@@ -136,7 +141,7 @@ async def resolve_text_channel(ctx: commands.Context, channel_text: str):
         channel = await ctx.bot.fetch_channel(channel_id)
 
     if not isinstance(channel, discord.TextChannel):
-        raise ValueError("알림 채널은 일반 텍스트 채널이어야 합니다.")
+        raise ValueError("cmd.24.error.text_channel")
 
     return channel
 
@@ -152,7 +157,7 @@ async def resolve_member_or_user(ctx: commands.Context, user_text: str):
     elif user_text.isdigit():
         user_id = int(user_text)
     else:
-        raise ValueError("유저는 `@멘션` 또는 유저 ID 숫자로 입력해주세요.")
+        raise ValueError("cmd.24.error.user_format")
 
     member = ctx.guild.get_member(user_id)
 
@@ -264,46 +269,29 @@ def mark_sent(event_id: int, sent_on: str):
 
 def build_message(row: sqlite3.Row, today: date) -> str:
     is_lunar = row["calendar_type"] == "lunar"
-    leap_text = "윤달 " if row["is_leap_month"] else ""
+    leap_text = i18n.t_by_lang("ko", "cmd.24.leap_prefix") if row["is_leap_month"] else ""
 
     if row["kind"] == "birthday":
         if is_lunar:
-            date_text = (
-                f"오늘 **{today.month}월 {today.day}일**, "
-                f"음력 **{leap_text}{row['month']}월 {row['day']}일**은"
-            )
+            date_text = i18n.t_by_lang("ko", "cmd.24.notice.date_lunar", today_month=today.month, today_day=today.day, leap=leap_text, month=row["month"], day=row["day"])
         else:
-            date_text = f"오늘 **{today.month}월 {today.day}일**은"
+            date_text = i18n.t_by_lang("ko", "cmd.24.notice.date_solar", month=today.month, day=today.day)
 
-        return (
-            f"{date_text} <@{row['user_id']}> 의 귀빠진 날입니다. "
-            f"그의 빠진 귓구멍에 사랑의 메세지를 쑤셔 넣어 줍시다.\n"
-            f"`ex) 태어나줘서 고맙다, 이 사랑스러운 녀석, 영혼의 듀오같은 친구, 복 1000포인트 받아도 부족한 녀석...`"
-        )
+        return i18n.t_by_lang("ko", "cmd.24.notice.message", date=date_text, user_id=row["user_id"])
 
     years = today.year - row["year"]
 
     if is_lunar:
-        anniversary_date_text = (
-            f"음력 {row['year']}년 {leap_text}{row['month']}월 {row['day']}일"
-        )
-        today_text = f"오늘은 양력 **{today.month}월 {today.day}일**,"
+        anniversary_date_text = i18n.t_by_lang("ko", "cmd.25.notice.lunar_date", year=row["year"], leap=leap_text, month=row["month"], day=row["day"])
+        today_text = i18n.t_by_lang("ko", "cmd.25.notice.today", month=today.month, day=today.day)
     else:
-        anniversary_date_text = (
-            f"{row['year']}년 {row['month']}월 {row['day']}일"
-        )
+        anniversary_date_text = i18n.t_by_lang("ko", "cmd.25.notice.solar_date", year=row["year"], month=row["month"], day=row["day"])
         today_text = ""
 
     if is_lunar:
-        return (
-            f"{today_text} {anniversary_date_text}인 "
-            f"**{row['title']}** 입니다! 올해로 {years}주년입니다."
-        )
+        return i18n.t_by_lang("ko", "cmd.25.notice.lunar", today=today_text, date=anniversary_date_text, title=row["title"], years=years)
 
-    return (
-        f"{anniversary_date_text}은 "
-        f"**{row['title']}** 입니다! 올해로 {years}주년입니다."
-    )
+    return i18n.t_by_lang("ko", "cmd.25.notice.solar", date=anniversary_date_text, title=row["title"], years=years)
 
 
 class Anniversary(commands.Cog):
@@ -328,21 +316,21 @@ class Anniversary(commands.Cog):
     
     async def cog_command_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.reply("이 명령어를 사용하려면 `서버 관리` 권한이 필요합니다.")
+            await ctx.reply(i18n.t(ctx.author, "common.missing_permissions", permission="서버 관리"))
             print(f"[Anniversary ERROR] MissingPermissions | {ctx.author} | {ctx.message.content}")
             return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.reply(f"필수 인자가 빠졌습니다: `{error.param.name}`")
+            await ctx.reply(i18n.t(ctx.author, "common.missing_argument", argument=error.param.name))
             print(f"[Anniversary ERROR] MissingRequiredArgument | {error}")
             return
 
         if isinstance(error, commands.BadArgument):
-            await ctx.reply("인자 형식이 잘못되었습니다. 유저/채널 멘션, 날짜 형식을 확인해주세요.")
+            await ctx.reply(i18n.t(ctx.author, "common.bad_argument"))
             print(f"[Anniversary ERROR] BadArgument | {error}")
             return
 
-        await ctx.reply(f"명령어 오류가 발생했습니다: `{type(error).__name__}`")
+        await ctx.reply(i18n.t(ctx.author, "common.command_error", error=type(error).__name__))
         print(f"[Anniversary ERROR] {type(error).__name__} | {repr(error)}")
 
     @tasks.loop(time=MIDNIGHT_KST)
@@ -398,7 +386,7 @@ class Anniversary(commands.Cog):
         if ctx.guild is None:
             await self.send_reply(
                 ctx,
-                "서버 안에서만 사용할 수 있는 명령어입니다.",
+                i18n.t(ctx.author, "cmd.24.server_only"),
                 ephemeral=True,
             )
             return
@@ -412,7 +400,7 @@ class Anniversary(commands.Cog):
         except ValueError as e:
             await self.send_reply(
                 ctx,
-                str(e),
+                i18n.t(ctx.author, str(e)),
                 ephemeral=True,
             )
             return
@@ -420,7 +408,7 @@ class Anniversary(commands.Cog):
         except discord.NotFound:
             await self.send_reply(
                 ctx,
-                "유저 또는 채널을 찾을 수 없습니다. 멘션/ID를 확인해주세요.",
+                i18n.t(ctx.author, "cmd.24.not_found"),
                 ephemeral=True,
             )
             return
@@ -428,7 +416,7 @@ class Anniversary(commands.Cog):
         except discord.Forbidden:
             await self.send_reply(
                 ctx,
-                "봇이 유저 또는 채널 정보를 가져올 권한이 없습니다.",
+                i18n.t(ctx.author, "cmd.24.forbidden"),
                 ephemeral=True,
             )
             return
@@ -439,7 +427,7 @@ class Anniversary(commands.Cog):
             if not validate_solar_month_day(month, day):
                 await self.send_reply(
                     ctx,
-                    "날짜가 이상합니다. 예: 7월 2일",
+                    i18n.t(ctx.author, "cmd.24.invalid_solar_date"),
                     ephemeral=True,
                 )
                 return
@@ -448,7 +436,7 @@ class Anniversary(commands.Cog):
             if not (1 <= month <= 12 and 1 <= day <= 30):
                 await self.send_reply(
                     ctx,
-                    "음력 날짜가 이상합니다. 음력은 보통 1~12월, 1~30일 범위로 입력해주세요.",
+                    i18n.t(ctx.author, "cmd.24.invalid_lunar_date"),
                     ephemeral=True,
                 )
                 return
@@ -473,14 +461,12 @@ class Anniversary(commands.Cog):
                 ),
             )
 
-        calendar_type_kor = "음력" if db_calendar_type == "lunar" else "양력"
-        leap_text = " 윤달" if leap_bool and db_calendar_type == "lunar" else ""
+        calendar_type_kor = i18n.t(ctx.author, f"cmd.24.calendar.{db_calendar_type}")
+        leap_text = i18n.t(ctx.author, "cmd.24.leap_suffix") if leap_bool and db_calendar_type == "lunar" else ""
 
         await self.send_reply(
             ctx,
-            f"{user.mention} 생일을 등록했습니다.\n"
-            f"- 날짜: {calendar_type_kor}{leap_text} {month}월 {day}일\n"
-            f"- 알림 채널: {channel.mention}",
+            i18n.t(ctx.author, "cmd.24.created", user=user.mention, calendar=calendar_type_kor, leap=leap_text, month=month, day=day, channel=channel.mention),
             ephemeral=True,
         )
 
@@ -505,7 +491,7 @@ class Anniversary(commands.Cog):
         if ctx.guild is None:
             await self.send_reply(
                 ctx,
-                "서버 안에서만 사용할 수 있는 명령어입니다.",
+                i18n.t(ctx.author, "cmd.24.server_only"),
                 ephemeral=True,
             )
             return
@@ -518,7 +504,7 @@ class Anniversary(commands.Cog):
         except ValueError as e:
             await self.send_reply(
                 ctx,
-                str(e),
+                i18n.t(ctx.author, str(e)),
                 ephemeral=True,
             )
             return
@@ -526,7 +512,7 @@ class Anniversary(commands.Cog):
         except discord.NotFound:
             await self.send_reply(
                 ctx,
-                "채널을 찾을 수 없습니다. 채널 ID를 확인해주세요.",
+                i18n.t(ctx.author, "cmd.25.not_found"),
                 ephemeral=True,
             )
             return
@@ -534,7 +520,7 @@ class Anniversary(commands.Cog):
         except discord.Forbidden:
             await self.send_reply(
                 ctx,
-                "봇이 해당 채널 정보를 가져올 권한이 없습니다.",
+                i18n.t(ctx.author, "cmd.25.forbidden"),
                 ephemeral=True,
             )
             return
@@ -551,7 +537,7 @@ class Anniversary(commands.Cog):
         ):
             await self.send_reply(
                 ctx,
-                "날짜가 이상하거나 음력 변환 범위를 벗어났습니다.",
+                i18n.t(ctx.author, "cmd.25.invalid_date"),
                 ephemeral=True,
             )
             return
@@ -577,15 +563,12 @@ class Anniversary(commands.Cog):
                 ),
             )
 
-        calendar_type_kor = "음력" if db_calendar_type == "lunar" else "양력"
-        leap_text = " 윤달" if leap_bool and db_calendar_type == "lunar" else ""
+        calendar_type_kor = i18n.t(ctx.author, f"cmd.24.calendar.{db_calendar_type}")
+        leap_text = i18n.t(ctx.author, "cmd.24.leap_suffix") if leap_bool and db_calendar_type == "lunar" else ""
 
         await self.send_reply(
             ctx,
-            f"기념일을 등록했습니다.\n"
-            f"- 이름: {title}\n"
-            f"- 날짜: {calendar_type_kor}{leap_text} {year}년 {month}월 {day}일\n"
-            f"- 알림 채널: {channel.mention}",
+            i18n.t(ctx.author, "cmd.25.created", title=title, calendar=calendar_type_kor, leap=leap_text, year=year, month=month, day=day, channel=channel.mention),
             ephemeral=True,
         )
 
@@ -600,7 +583,7 @@ class Anniversary(commands.Cog):
         if ctx.guild is None:
             await self.send_reply(
                 ctx,
-                "서버 안에서만 사용할 수 있는 명령어입니다.",
+                i18n.t(ctx.author, "cmd.24.server_only"),
                 ephemeral=True,
             )
             return
@@ -620,7 +603,7 @@ class Anniversary(commands.Cog):
         if not rows:
             await self.send_reply(
                 ctx,
-                "등록된 생일/기념일이 없습니다.",
+                i18n.t(ctx.author, "cmd.26.empty"),
                 ephemeral=True,
             )
             return
@@ -628,8 +611,8 @@ class Anniversary(commands.Cog):
         lines = []
 
         for row in rows[:30]:
-            calendar_name = "음력" if row["calendar_type"] == "lunar" else "양력"
-            leap_text = " 윤달" if row["is_leap_month"] else ""
+            calendar_name = i18n.t(ctx.author, f"cmd.24.calendar.{row['calendar_type']}")
+            leap_text = i18n.t(ctx.author, "cmd.24.leap_suffix") if row["is_leap_month"] else ""
             channel_text = f"<#{row['channel_id']}>"
 
             if row["kind"] == "birthday":
@@ -645,7 +628,7 @@ class Anniversary(commands.Cog):
                 )
 
         if len(rows) > 30:
-            lines.append(f"...외 {len(rows) - 30}개 더 있음")
+            lines.append(i18n.t(ctx.author, "cmd.26.more", count=len(rows) - 30))
 
         await self.send_reply(
             ctx,
@@ -668,7 +651,7 @@ class Anniversary(commands.Cog):
         if ctx.guild is None:
             await self.send_reply(
                 ctx,
-                "서버 안에서만 사용할 수 있는 명령어입니다.",
+                i18n.t(ctx.author, "cmd.24.server_only"),
                 ephemeral=True,
             )
             return
@@ -687,14 +670,14 @@ class Anniversary(commands.Cog):
         if cur.rowcount == 0:
             await self.send_reply(
                 ctx,
-                "해당 ID의 생일/기념일을 찾지 못했습니다.",
+                i18n.t(ctx.author, "cmd.27.not_found"),
                 ephemeral=True,
             )
             return
 
         await self.send_reply(
             ctx,
-            f"`{event_id}` 항목을 삭제했습니다.",
+            i18n.t(ctx.author, "cmd.27.deleted", event_id=event_id),
             ephemeral=True,
         )
 

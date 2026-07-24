@@ -134,7 +134,7 @@ class Economy(commands.Cog):
 
             input_word = await self.client.wait_for("message", check=check)
             check = input_word.content
-            if check in ['cancel', '취소']:
+            if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(
                     i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
@@ -157,7 +157,7 @@ class Economy(commands.Cog):
 
             input_word = await self.client.wait_for("message", check=check)
             check = input_word.content
-            if check in ['cancel', '취소']:
+            if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(
                     i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
@@ -188,7 +188,7 @@ class Economy(commands.Cog):
 
             input_word = await self.client.wait_for("message", check=check)
             check = input_word.content
-            if check in ['cancel', '취소']:
+            if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(
                     i18n.t(ctx.author, "cmd.23.t002"))
                 boolean = False
@@ -235,8 +235,6 @@ class Economy(commands.Cog):
             await ctx.send(msg)
         else:
             raise error
-
-    #Ranking [ID: 24]
 
 
 async def setup(client):

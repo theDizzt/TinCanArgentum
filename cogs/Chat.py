@@ -2,10 +2,12 @@ import os
 import re
 import sqlite3
 import discord
+from discord import app_commands
 from discord.ext import commands
 from openai import OpenAI
 from config.rootdir import root_dir
 from config.settings import get_required_env
+import fcts.i18n_runtime as i18n
 
 # 채팅봇 세팅
 class Chat(commands.Cog):
@@ -388,11 +390,11 @@ Keep responses natural, human-like, and lightly expressive.
     @commands.hybrid_command(name="대화", description="은비와 대화합니다.", aliases=["chat"])
     async def ai_chat(self, ctx, *, user_message: str = None):
         if user_message is None or user_message.strip() == "":
-            await ctx.reply("음... 하고 싶은 말을 먼저 적어주세요.")
+            await ctx.reply(i18n.t(ctx.author, "cmd.69.error1"))
             return
 
         if len(user_message) > self.max_input_length:
-            await ctx.reply(f"메시지가 너무 길어요. {self.max_input_length}자 이하로 보내주세요.")
+            await ctx.reply(i18n.t(ctx.author, "cmd.69.error2", limit=self.max_input_length))
             return
 
         user_id = str(ctx.author.id)
@@ -414,99 +416,142 @@ Keep responses natural, human-like, and lightly expressive.
                 reply_text = (response.output_text or "").strip()
 
                 if not reply_text:
-                    reply_text = "음... 이번엔 뭐라고 답해야 할지 잠깐 헷갈렸어요. 다시 한 번 말해줄래요?"
+                    reply_text = i18n.t(ctx.author, "cmd.69.error3")
 
                 self.save_history(user_id, user_message, reply_text)
                 await self.send_long_message(ctx, reply_text)
 
             except Exception as e:
-                await ctx.reply(f"`(｡•́︿•̀｡)` 대화 거부!\n`{e}`")
+                await ctx.reply(i18n.t(ctx.author, "cmd.69.error4", error=e))
 
     # 은비와의 대화 초기화 [ID: 70]
-    @commands.hybrid_command(name="대화초기화", description="은비 대화 기록을 초기화합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("chat-reset", key="cmd.70.name"),
+        description=app_commands.locale_str(
+            "Reset your chat history with Eunbi", key="cmd.70.desc"
+        ),
+        aliases=["대화초기화"]
+    )
     async def clear_chat(self, ctx):
         user_id = str(ctx.author.id)
 
         if user_id in self.histories:
             del self.histories[user_id]
 
-        await ctx.reply("`☆ﾐ(o*･ω･)ﾉ ` 은비와의 대화 기록을 초기화했어요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.70.t001"))
 
     # 은비와의 대화 기억 추가 [ID: 71]
-    @commands.hybrid_command(name="기억", description="은비에게 정보를 직접 기억시킵니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("remember", key="cmd.71.name"),
+        description=app_commands.locale_str(
+            "Ask Eunbi to remember information", key="cmd.71.desc"
+        ),
+        aliases=["기억", "記憶", "记忆"]
+    )
     async def remember(self, ctx, key: str = None, *, value: str = None):
         if not key or not value:
-            await ctx.reply("사용법: `;기억 항목 내용`\n예시: `;기억 취미 COH`")
+            await ctx.reply(i18n.t(ctx.author, "cmd.71.help"))
             return
 
         user_id = str(ctx.author.id)
         self.save_memory(user_id, key, value)
         self.add_affinity(user_id, 3)
 
-        await ctx.reply(f"`(◍•ᴗ•◍)` 알겠어요. **{key}**는(은) **{value}**로 기억해둘게요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.71.t001", key=key, value=value))
 
     # 은비와의 대화 기억 목록 [ID: 72]
-    @commands.hybrid_command(name="기억목록", description="은비가 기억 중인 정보를 확인합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("memory-list", key="cmd.72.name"),
+        description=app_commands.locale_str(
+            "View what Eunbi remembers", key="cmd.72.desc"
+        ),
+        aliases=["기억목록"]
+    )
     async def memory_list(self, ctx):
         user_id = str(ctx.author.id)
         memories = self.load_memory(user_id)
 
         if not memories:
-            await ctx.reply("아직 기억해둔 내용이 없어요.")
+            await ctx.reply(i18n.t(ctx.author, "cmd.72.empty"))
             return
 
         lines = []
         for key, value in memories.items():
             lines.append(f"• **{key}**: {value}")
 
-        text = "## 은비의 기억 목록\n" + "\n".join(lines)
+        text = i18n.t(ctx.author, "cmd.72.title") + "\n" + "\n".join(lines)
         await self.send_long_message(ctx, text)
 
     # 은비와의 대화 기억 삭제 [ID: 73]
-    @commands.hybrid_command(name="기억삭제", description="은비가 기억 중인 특정 항목을 삭제합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("memory-delete", key="cmd.73.name"),
+        description=app_commands.locale_str(
+            "Delete an item from Eunbi's memory", key="cmd.73.desc"
+        ),
+        aliases=["기억삭제", "記憶削除", "删除记忆", "刪除記憶"]
+    )
     async def memory_delete(self, ctx, key: str = None):
         if not key:
-            await ctx.reply("사용법: `;기억삭제 항목`")
+            await ctx.reply(i18n.t(ctx.author, "cmd.73.help"))
             return
 
         user_id = str(ctx.author.id)
         self.delete_memory(user_id, key)
-        await ctx.reply(f"`(｡•̀ᴗ-)✧` **{key}** 기억은 지웠어요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.73.t001", key=key))
 
     # 은비와의 대화 기억 초기화 [ID: 74]
-    @commands.hybrid_command(name="기억초기화", description="은비의 장기 기억을 전부 초기화합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("memory-reset", key="cmd.74.name"),
+        description=app_commands.locale_str(
+            "Clear all of Eunbi's long-term memories", key="cmd.74.desc"
+        ),
+        aliases=["기억초기화"]
+    )
     async def memory_clear(self, ctx):
         user_id = str(ctx.author.id)
         self.clear_memory(user_id)
-        await ctx.reply("`☆ﾐ(o*･ω･)ﾉ ` 장기 기억도 전부 초기화했어요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.74.t001"))
 
     # 은비와의 대화 호감도 [ID: 75]
-    @commands.hybrid_command(name="호감도", description="은비와의 친밀도를 확인합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("affinity", key="cmd.75.name"),
+        description=app_commands.locale_str(
+            "Check your affinity with Eunbi", key="cmd.75.desc"
+        ),
+        aliases=["호감도"]
+    )
     async def affinity_check(self, ctx):
         user_id = str(ctx.author.id)
         score = self.get_affinity(user_id)
         stage = self.get_affinity_stage(score)
 
-        stage_text = {
-            "neutral": "아직은 조금 조심스러운 사이예요.",
-            "friendly": "꽤 편하게 이야기할 수 있는 사이예요.",
-            "close": "제법 가까운 사이 같아요.",
-            "very_close": "꽤 많이 친해진 것 같아요."
-        }
+        stage_text = i18n.t(ctx.author, f"cmd.75.{stage}")
 
         await ctx.reply(
-            f"`(｡･ω･｡)ﾉ♡ ` 현재 호감도는 **{score}**이고,\n{stage_text[stage]}"
+            i18n.t(ctx.author, "cmd.75.t001", score=score, stage=stage_text)
         )
 
     # 은비와의 대화 호감도 초기화 [ID: 76]
-    @commands.hybrid_command(name="호감도초기화", description="은비와의 친밀도를 초기화합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("affinity-reset", key="cmd.76.name"),
+        description=app_commands.locale_str(
+            "Reset your affinity with Eunbi", key="cmd.76.desc"
+        ),
+        aliases=["호감도초기화"]
+    )
     async def affinity_reset(self, ctx):
         user_id = str(ctx.author.id)
         self.reset_affinity(user_id)
-        await ctx.reply("`☆ﾐ(o*･ω･)ﾉ ` 호감도는 다시 처음부터예요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.76.t001"))
 
     # 은비와의 대화 전체 초기화 [ID: 77]
-    @commands.hybrid_command(name="은비초기화", description="은비의 대화 기록과 장기 기억, 호감도를 모두 초기화합니다.")
+    @commands.hybrid_command(
+        name=app_commands.locale_str("eunbi-reset", key="cmd.77.name"),
+        description=app_commands.locale_str(
+            "Reset chat history, memories, and affinity", key="cmd.77.desc"
+        ),
+        aliases=["은비초기화"]
+    )
     async def full_reset(self, ctx):
         user_id = str(ctx.author.id)
 
@@ -516,7 +561,7 @@ Keep responses natural, human-like, and lightly expressive.
         self.clear_memory(user_id)
         self.reset_affinity(user_id)
 
-        await ctx.reply("`☆ﾐ(o*･ω･)ﾉ ` 대화 기록이랑 장기 기억, 호감도까지 전부 초기화했어요.")
+        await ctx.reply(i18n.t(ctx.author, "cmd.77.t001"))
 
 
 async def setup(bot):
