@@ -11,7 +11,7 @@ codelist = {
     "dasihanbeon": 8,
     "heart": 9,
     "20200402": 10,
-    "sectorform": 11,
+    "finalpractice": 11,
     "agility": 12,
     "crossfooting": 13,
     "obliqueroot": 14,
@@ -44,6 +44,7 @@ codelist = {
     "부경타이타닉": 152,
     "100000words": 155,
     "chelicerata": 156
+    "stargazers": 208
 }
 
 
