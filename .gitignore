@@ -4,3 +4,4 @@
 .env.*
 !.env.example
 .venv/
+data/voice/*.txt
