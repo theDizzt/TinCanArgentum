@@ -4,7 +4,7 @@ main :
  id : "00"
  Essentials : "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`"
  UserProfile : "`profile`, `emblem`, `myrank`, `ranking`, `equip`, `purchase`, `skin`, `preview`"
- Social : "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`"
+ Social : "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`, `emergency-call`"
  Miscellaneous : "`dice`, `kodic`, `argbdic`, `rage`, `translate`"
  Coalition : "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`"
  Minigame : "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`"
@@ -187,6 +187,13 @@ anniv_del:
   ctx: "기념일삭제 <int: event_id>"
   discript: "Delete a registered birthday or anniversary notification by event ID."
   args: "`event_id` int type, the ID of the birthday or anniversary event to delete. You can check the event ID with the `기념일목록` command."
+
+emergency-call:
+  title: "Emergency Call"
+  id: "49"
+  ctx: "비상소집"
+  discript: "Validate registered users through a modal, then send each user 32 direct messages after a public one-time confirmation."
+  args: "Enter one or more `nickname#0001`, Discord user IDs, or mentions separated by commas or new lines, followed by the message to send. Up to 20 users can be selected. Cooldown: 14,400 seconds."
 
 dice :
  title : "Dice"
