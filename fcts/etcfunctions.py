@@ -2,6 +2,7 @@ import os
 import discord
 from config.rootdir import root_dir
 import datetime
+from fcts.skin_catalog import storage_rows
 
 # 1.3.1 최고 레벨
 final_lv = 300
@@ -417,19 +418,8 @@ def process_bar(ratio, length = 10):
 
 # 2.2. Storage List Read
 def storageLineRead(option:str = None):
-    file = open(root_dir + "/config/storage.txt", "r", encoding='UTF8')
-    temp = []
-    for data in file.readlines():
-        line = data.split(" - ")
-        #print(line)
-
-        if option == 'all':
-            temp.append(line[:5])
-        else:
-            if line[5].replace("\n", "") == option:
-                temp.append(line[:5])
-
-    return temp
+    """Return legacy list rows backed by config/storage.json."""
+    return storage_rows(option)
 
 
 # 2.3. voice

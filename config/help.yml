@@ -3,7 +3,7 @@ main :
  title : "Helpdesk"
  id : "00"
  Essentials : "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`"
- UserProfile : "`profile`, `emblem`, `myrank`, `ranking`, `equip`, `purchase`, `skin`, `preview`"
+ UserProfile : "`profile`, `emblem`, `myrank`, `ranking`, `queue`, `workshop`, `equip`, `purchase`, `skin`, `preview`"
  Social : "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`, `emergency-call`"
  Miscellaneous : "`dice`, `kodic`, `argbdic`, `rage`, `translate`"
  Coalition : "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`"
@@ -104,6 +104,20 @@ ranking :
  discript : "You can see the ranking of users. Ranking is output based on total acquired experience."
  args : "`range` option, (default: global).\n`page` int type, enter a value for the page to view (default: 1)."
 
+queue :
+ title : "Community Skin Queue"
+ id : "15"
+ ctx : "queue <str: search>"
+ discript : "View community skins submitted through the workshop and waiting for review."
+ args : "Search with `type:money`, `keyword:pixel`, and `page:2` (default: all skins, page 1)."
+
+workshop :
+ title : "Community Skin Workshop"
+ id : "16"
+ ctx : "workshop <upload | edit t_id>"
+ discript : "Upload a community rank-card skin or edit one of your queued submissions."
+ args : "Use `workshop` or `workshop upload` to register. Use `workshop edit t16` to edit a queued skin."
+
 equip :
  title : "Equip"
  id : "17"
@@ -121,23 +135,23 @@ purchase :
 storage :
  title : "Skin Storage"
  id : "19"
- ctx : "skin <str: category = all> <int: page>"
- discript : "You can see the ranking of users. Ranking is output based on total acquired experience (default: skin all 1)."
- args : "`category` option, enter keywords to display only related skins (default: all).\n`page` int type, enter a value for the page to view (default: 1)."
+ ctx : "storage <str: search>"
+ discript : "View and search the available profile skin collection."
+ args : "Search with `type:money`, `keyword:pixel`, and `page:2`. The legacy `pokemon 2` format is also supported."
 
 skin :
  title : "Skin Storage"
  id : "19"
- ctx : "skin <str: category = all> <int: page>"
- discript : "You can see the ranking of users. Ranking is output based on total acquired experience (default: skin all 1)."
- args : "`category` option, enter keywords to display only related skins (default: all).\n`page` int type, enter a value for the page to view (default: 1)."
+ ctx : "skin <str: search>"
+ discript : "View and search the available profile skin collection."
+ args : "Search with `type:money`, `keyword:pixel`, and `page:2`. The legacy `pokemon 2` format is also supported."
 
 preview :
  title : "Skin Preview"
  id : "20"
- ctx : "preview <int: value>"
- discript : "Preview the appearance after changing the skin."
- args : "`value` int type, enter skin id value."
+ ctx : "preview <str: skin_id>"
+ discript : "Preview a published skin or a skin waiting in the workshop queue."
+ args : "Use a number for a published skin, or a `t` prefix for a queued skin (examples: `preview 16`, `preview t16`)."
 
 stats :
  title : "User Statistics"

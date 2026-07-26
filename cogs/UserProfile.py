@@ -4,6 +4,7 @@ from discord import app_commands
 import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
+import fcts.skin_catalog as catalog
 from PIL import Image, ImageDraw, ImageFont
 import io
 import json
@@ -99,16 +100,14 @@ class PaginationView(discord.ui.View):
             rank_num = base_index + offset
 
             embed.add_field(
-                name="#{} {}#{}".format(
-                    rank_num,
+                name="{} {}#{}".format(
+                    etc.numFont(rank_num),
                     item[2],
                     str(item[1]).zfill(4)
                 ),
-                value=i18n.t(
-                    user,
-                    "cmd.14.entry",
-                    level=etc.level(item[3]),
-                    xp=item[3],
+                value="{}　•　{:,d} XP".format(
+                    etc.lvicon(etc.level(item[3])),
+                    item[3]
                 ),
                 inline=False
             )
@@ -196,7 +195,13 @@ class UserProfile(commands.Cog):
         self.client = client
 
     # [id: 11, 20] rankcard generator
-    async def rankcard_image(self, *, user: discord.Member, skin_id: int, preview: bool) -> io.BytesIO:
+    async def rankcard_image(
+        self,
+        *,
+        user: discord.Member,
+        skin_id: int | str,
+        preview: bool,
+    ) -> io.BytesIO:
         dname = "@" + str(user)
         if dname.endswith("#0"):
             dname = dname[:-2]
@@ -215,12 +220,29 @@ class UserProfile(commands.Cog):
             xp1 = xp - etc.need_exp(lv - 1)
             xp2 = etc.need_exp(lv) - etc.need_exp(lv - 1)
 
-        background_image = Image.open(
-            f"{root_dir}/config/rankcard/rankcard_skins/rankcard{skin_id}.png"
-        ).convert('RGBA')
-        bar_cover_image = Image.open(
-            f"{root_dir}/config/rankcard/bar_skins/bar{skin_id}.png"
-        ).convert('RGBA')
+        queue_skin = None
+        normal_skin_id = None
+        if isinstance(skin_id, str) and skin_id.strip().casefold().startswith("t"):
+            queue_id = catalog.normalize_queue_id(skin_id)
+            queue_skin = catalog.load_queue_skin(queue_id)
+            if queue_skin is None:
+                raise ValueError(f"Queue skin {queue_id} does not exist.")
+            background_path = queue_skin["_path"] / "rankcard.png"
+            bar_path = queue_skin["_path"] / "bar.png"
+            font_option = queue_skin["_font"]
+        else:
+            normal_skin_id = int(skin_id)
+            background_path = (
+                f"{root_dir}/config/rankcard/rankcard_skins/"
+                f"rankcard{normal_skin_id}.png"
+            )
+            bar_path = (
+                f"{root_dir}/config/rankcard/bar_skins/bar{normal_skin_id}.png"
+            )
+            font_option = font_data['profile'][f'skin{normal_skin_id}']
+
+        background_image = Image.open(background_path).convert('RGBA')
+        bar_cover_image = Image.open(bar_path).convert('RGBA')
         emblem_image = Image.open(
             f"{root_dir}/config/rankcard/emblem/{lv}.png"
         ).convert('RGBA')
@@ -235,8 +257,6 @@ class UserProfile(commands.Cog):
 
         text_xp = f"{xp1:,d} / {xp2:,d} | {100 * xp1 / xp2:.2f}% | {xp:,d}"
         emblem = etc.emblemName(lv)
-
-        font_option = font_data['profile'][f'skin{skin_id}']
 
         font_name = ImageFont.truetype(
             f"{root_dir}/font/{font_option['font']}/name.ttf",
@@ -317,7 +337,7 @@ class UserProfile(commands.Cog):
             await avatar_asset.save(buffer_avatar)
             buffer_avatar.seek(0)
             avatar_image = Image.open(buffer_avatar).convert('RGBA')
-            if skin_id == 140:
+            if normal_skin_id == 140:
                 avatar_image = Image.open(
                     root_dir + '/config/rankcard/image140.png'
                 )
@@ -522,14 +542,39 @@ class UserProfile(commands.Cog):
         description=app_commands.locale_str("Previewing profile skins", key="cmd.20.desc"),
         aliases=["미리보기"]
     )
-    async def preview(self, ctx, skin_id: int = 1):
+    async def preview(self, ctx, skin_id: str = "1"):
 
         user = ctx.author
 
-        buffer_output = await self.rankcard_image(user=user, skin_id=skin_id, preview=True)
+        try:
+            normalized_id: int | str
+            if skin_id.strip().casefold().startswith("t"):
+                normalized_id = catalog.normalize_queue_id(skin_id)
+                if catalog.load_queue_skin(normalized_id) is None:
+                    raise ValueError
+            else:
+                normalized_id = int(skin_id)
+                if normalized_id < 1:
+                    raise ValueError
+
+            buffer_output = await self.rankcard_image(
+                user=user,
+                skin_id=normalized_id,
+                preview=True,
+            )
+        except (ValueError, KeyError, FileNotFoundError, json.JSONDecodeError):
+            await ctx.reply(
+                i18n.t(ctx.author, "cmd.20.invalid_id", skin_id=skin_id)
+            )
+            return
 
         await ctx.reply(
-            i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
+            i18n.t(
+                ctx.author,
+                "cmd.20.complete",
+                name=q.readTag(ctx.author),
+                skin_id=normalized_id,
+            ),
             file=discord.File(buffer_output, 'myimage.png')
         )
 

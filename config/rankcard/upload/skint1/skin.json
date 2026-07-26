@@ -1,0 +1,47 @@
+{
+  "skin": {
+    "id": "t1",
+    "name": "test",
+    "desc": "test",
+    "unlock_type": "level",
+    "unlock_val": 1,
+    "keyword": "test",
+    "creater": 262517377575550977,
+    "date": "2026-07-26"
+  },
+  "font": {
+    "font": "legacy",
+    "name-color": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "discrim-color": [
+      204,
+      204,
+      204,
+      255
+    ],
+    "nametext-outline-width": 0,
+    "nametext-outline-color": [
+      0,
+      0,
+      0,
+      255
+    ],
+    "xp-color": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "xp-outline-width": 0,
+    "xp-outline-color": [
+      0,
+      0,
+      0,
+      255
+    ]
+  }
+}

@@ -4,6 +4,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
+import fcts.skin_catalog as catalog
 from PIL import Image, ImageDraw, ImageFont
 import io
 
@@ -35,22 +36,46 @@ class PaginationView(discord.ui.View):
         name = q.readTag(user)
         choice = q.readSkin(user)
         total_skins = len(self.alldata)
-        collected = userdata[1:].count(1)
+        collected = sum(
+            1
+            for skin in self.alldata
+            if userdata[int(skin["id"])] == 1
+        )
         money = q.readMoney(user)
         lv = etc.level(q.readXp(user))
+        equipped = next(
+            (
+                skin
+                for skin in self.alldata
+                if int(skin["id"]) == choice
+            ),
+            self.alldata[0],
+        )
 
         embed = discord.Embed(
             title=i18n.t(user, "cmd.19.title", name=name),
-            description=i18n.t(user, "cmd.19.summary", icon=etc.lvicon(lv), money=money, skin=self.alldata[choice - 1][0], badge=self.alldata[choice - 1][1], collected=collected, total=total_skins, percent=(collected / total_skins) * 100, bar=etc.process_bar(collected / total_skins)),
+            description=i18n.t(user, "cmd.19.summary", icon=etc.lvicon(lv), money=money, skin=equipped["id"], badge=equipped["name"], collected=collected, total=total_skins, percent=(collected / total_skins) * 100, bar=etc.process_bar(collected / total_skins)),
             color=0xE2F6CA)
 
         embed.set_thumbnail(url=user.display_avatar.url)
 
         for item in data:
-            idv = int(item[0])
+            idv = int(item["id"])
             embed.add_field(name="`{}` {}".format(
-                " " * (3 - len(str(idv))) + str(idv), item[1]),
-                            value=f"{etc.checkBox(userdata[idv])} *{item[2]}*",
+                str(idv).rjust(3), item["name"]),
+                            value=i18n.t(
+                                user,
+                                "cmd.19.entry",
+                                owned=etc.checkBox(userdata[idv]),
+                                desc=item["desc"],
+                                unlock_type=item["unlock_type"],
+                                unlock_val=(
+                                    "••••"
+                                    if item["unlock_type"] == "code"
+                                    else item.get("unlock_val", "")
+                                ),
+                                keyword=item["keyword"],
+                            ),
                             inline=False)
 
         embed.set_footer(
@@ -254,19 +279,27 @@ class SkinStorage(commands.Cog):
     @commands.cooldown(rate=1, per=10, type=commands.BucketType.user)
     @commands.hybrid_command(
         name=app_commands.locale_str("skin", key="cmd.19.name"),
-        aliases=['스킨'],
+        aliases=['스킨', '저장소', 'storage'],
         description=app_commands.locale_str(
             "View your profile skin collection", key="cmd.19.desc"))
-    #@discord.app_commands.describe(action="Option", value="Integer only")
-    async def skin(self, ctx, tag: str = 'all', value: int = 1):
+    async def skin(self, ctx, *, search: str = ""):
 
         self.get_or_create_storage(ctx.author)
 
-        pagination_view = PaginationView(timeout=None)
-        pagination_view.data = etc.storageLineRead(tag)
-        pagination_view.alldata = etc.storageLineRead("all")
+        try:
+            all_skins = catalog.load_storage()
+            skins, page = catalog.filter_skins(all_skins, search)
+        except ValueError as error:
+            await ctx.reply(
+                i18n.t(ctx.author, "cmd.19.invalid_search", error=str(error))
+            )
+            return
+
+        pagination_view = PaginationView(timeout=300)
+        pagination_view.data = skins
+        pagination_view.alldata = all_skins
         pagination_view.user = ctx.author
-        pagination_view.current_page = value
+        pagination_view.current_page = page
         await pagination_view.send(ctx)
 
     @skin.error
