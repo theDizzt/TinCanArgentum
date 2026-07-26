@@ -5,3 +5,4 @@
 !.env.example
 .venv/
 data/voice/*.txt
+config/rankcard/upload/*
