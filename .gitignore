@@ -1,8 +1,62 @@
-*.db
-*.xlsx
+# Secrets and local configuration
 .env
 .env.*
 !.env.example
+config/admin.yml
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# Virtual environments
 .venv/
+venv/
+env/
+ENV/
+
+# Test, coverage, and build output
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+build/
+dist/
+*.egg-info/
+
+# Runtime databases and generated files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+/userdb.xlsx
+*.log
+logs/
+tts.mp3
 data/voice/*.txt
-config/rankcard/upload/*
+config/rankcard/upload/**
+!config/rankcard/upload/.gitkeep
+data/word_enlist/**
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+~$*
+
+# Editor and operating-system files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
