@@ -3,6 +3,7 @@ from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
+from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.tedne as ted
 import asyncio
 import json
@@ -356,7 +357,12 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
             raise error
 
     @commands.command(name='tedaccount', description="")
-    async def tedaccount(self, ctx, user: discord.Member = None):
+    async def tedaccount(self, ctx, user: str = None):
+        try:
+            user = await resolve_discord_user(ctx, user)
+        except UserResolutionError:
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+            return
         ted.newAchieve(user)
         await ctx.reply("Done")
 

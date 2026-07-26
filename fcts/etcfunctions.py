@@ -3,6 +3,7 @@ import discord
 from config.rootdir import root_dir
 import datetime
 from fcts.skin_catalog import storage_rows
+from fcts.user_resolver import resolve_user_id
 
 # 1.3.1 최고 레벨
 final_lv = 300
@@ -488,7 +489,8 @@ def numFont(i):
 
 # 2.4.5. uid Extract
 def extractUid(author):
-    return int(author[2:][:-1])
+    """Resolve a numeric ID, member mention, or registered nickname tag."""
+    return resolve_user_id(author)
 
 
 # Times until end of day

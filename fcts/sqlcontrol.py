@@ -731,22 +731,11 @@ def ensureStorage(user: discord.Member = None):
 
 # 3.6.1. Full Tag to UID
 def tagToUid(tag: str = None):
-    name = ""
-    discrim = 0
-
     try:
-        temp = tag.split('#')
-        name = temp[0]
-        discrim = int(temp[1])
-    except:
+        from fcts.user_resolver import resolve_user_id
+        return resolve_user_id(tag)
+    except ValueError:
         return None
-    
-    conn = sqlite3.connect(root_dir + '/data/user.db')
-    c = conn.cursor()
-    sql = "SELECT id FROM main WHERE nick = ? AND discrim = ?;"
-    c.execute(sql, (name, discrim, ))
-    result = c.fetchone()[0]
-    return result
 
 # 3.6.2. Duplicate Check
 def tagIsOkay(name: str = "", discrim: int = 0):

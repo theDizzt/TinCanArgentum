@@ -6,6 +6,7 @@ import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import yaml
 import fcts.etcfunctions as etc
+from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from datetime import datetime
 from config.rootdir import root_dir
 from config.settings import get_required_env
@@ -450,11 +451,14 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
         description=app_commands.locale_str("Get daily rewards", key="cmd.09.desc"),
         aliases=["출석", "출석체크"]
     )
-    async def daily(self, ctx ,user:discord.Member = None):
+    async def daily(self, ctx, user: str = None):
+        try:
+            user = await resolve_discord_user(ctx, user)
+        except UserResolutionError:
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+            return
 
-        if user == None:
-            user = ctx.author
-        elif ctx.author != user:
+        if ctx.author != user:
             if ctx.author.id == 262517377575550977:
                 pass
             else:

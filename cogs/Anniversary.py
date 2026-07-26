@@ -17,6 +17,7 @@ from discord.ext import commands, tasks
 
 from korean_lunar_calendar import KoreanLunarCalendar
 import fcts.i18n_runtime as i18n
+from fcts.user_resolver import resolve_discord_user
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,29 +148,10 @@ async def resolve_text_channel(ctx: commands.Context, channel_text: str):
 
 
 async def resolve_member_or_user(ctx: commands.Context, user_text: str):
-    user_text = str(user_text).strip()
-
-    # <@123>, <@!123> 형태 처리
-    match = re.match(r"^<@!?(\d+)>$", user_text)
-
-    if match:
-        user_id = int(match.group(1))
-    elif user_text.isdigit():
-        user_id = int(user_text)
-    else:
-        raise ValueError("cmd.24.error.user_format")
-
-    member = ctx.guild.get_member(user_id)
-
-    if member is not None:
-        return member
-
     try:
-        member = await ctx.guild.fetch_member(user_id)
-        return member
-    except discord.NotFound:
-        user = await ctx.bot.fetch_user(user_id)
-        return user
+        return await resolve_discord_user(ctx, user_text)
+    except ValueError as error:
+        raise ValueError("cmd.24.error.user_format") from error
 
 
 def validate_solar_month_day(month: int, day: int) -> bool:

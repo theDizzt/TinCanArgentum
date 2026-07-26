@@ -72,16 +72,16 @@ ping :
 daily :
  title : "Daily Rewards"
  id : "09"
- ctx : "daily"
+ ctx : "daily <str: user>"
  discript : "You will receive a daily reward once per day, and the cooldown will be reset to UTC+0."
- args : "No arguments in this command."
+ args : "`user` accepts a numeric Discord ID, member mention, or nickname tag. Only the configured administrator can claim rewards for another user."
 
 profile :
  title : "User Profile"
  id : "11"
- ctx : "profile <user: Discord.user.id>"
+ ctx : "profile <str: user>"
  discript : "Displays the user profile. You can check the level, experience, nickname, profile picture, and skin you are applying."
- args : "`user` discord.user.id type, Select the user to view the profile with the user mention function of Discord. If left blank, the command user himself is specified (defualt: none)."
+ args : "`user` accepts a numeric Discord ID, member mention, or nickname tag. If omitted, the command user is selected."
 
 emblem :
  title : "Emblem"
@@ -401,9 +401,9 @@ login :
 xp :
  title : "XP Edit - Experience Edit"
  id : "91"
- ctx : "[ctx: xp | 경험치] <user: Discord.user.id> <int: value>"
+ ctx : "[ctx: xp | 경험치] <str: user> <int: value>"
  discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nGive XP to the recipient."
- args : "`user` discord.user.id type, Specify which users will receive the experience. Give everyone experience when you type 'all' (default: none).\n`value` int type, enter a xp value (default value: 0)."
+ args : "`user` accepts a numeric Discord ID, member mention, nickname tag, or `all`.\n`value` int type, enter a XP value (default: 0)."
 
 userlist :
  title : "User List"
@@ -429,9 +429,9 @@ lbedit :
 unlock :
  title : "Storage Editor"
  id : "95"
- ctx : "unlock <discord.user:user> <int:skin_id> <binary:option>"
+ ctx : "unlock <str:user> <int:skin_id> <binary:option>"
  discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nEdit skin repository data."
- args : "(￣▽￣)ノ"
+ args : "`user` accepts a numeric Discord ID, member mention, or nickname tag."
 
 ultimate :
  title : "Ultimate POWER!!!!!!"
@@ -443,9 +443,9 @@ ultimate :
 money :
  title : "Money Editor"
  id : "97"
- ctx : "[ctx: money | 돈] <user: Discord.user.id> <int: value>"
+ ctx : "[ctx: money | 돈] <str: user> <int: value>"
  discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nGive money to the recipient."
- args : "`user` discord.user.id type, Specify which users will receive the money. Give everyone money when you type 'all' (default: none).\n`value` int type, enter a money value (default value: 0)."
+ args : "`user` accepts a numeric Discord ID, member mention, nickname tag, or `all`.\n`value` int type, enter a money value (default: 0)."
 
 kakao :
  title : "ALTERED Ultimate POWER!!!!!!"

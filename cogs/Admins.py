@@ -254,33 +254,32 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
         description=app_commands.locale_str("Unlock user's skin", key="cmd.95.desc"),
         aliases=["잠금해제"]
     )
-    @discord.app_commands.describe(user="User mention",
+    @discord.app_commands.describe(user="User ID, mention, or nickname tag",
                                    skin="Integer only",
                                    lock="Binary only")
     async def unlock(self,
                      ctx,
-                     user: discord.Member = None,
+                     user: str = None,
                      skin: int = None,
                      lock: int = 1):
         if ctx.author.id in admin_login:
-            """
             try:
-                user = etc.extractUid(obj)
-            except:
-                await ctx.reply("`(⩌Δ ⩌ ;)` Invalid User id...")
-            """
+                user_id = etc.extractUid(user)
+            except ValueError:
+                await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+                return
             Rank = etc.storageLineRead('all')
-            user_name = q.readTag(user)
+            user_name = q.readTagById(user_id)
 
             if lock == 1:
-                if not q.readStorageById(user.id, skin):
-                    q.storageModifyById(user.id, skin, 1)
+                if not q.readStorageById(user_id, skin):
+                    q.storageModifyById(user_id, skin, 1)
                     await ctx.reply(i18n.t(ctx.author, "cmd.95.t001", u=user_name, skin=Rank[skin - 1][0]))
                 else:
                     await ctx.reply(i18n.t(ctx.author, "cmd.95.t002", u=user_name, skin=Rank[skin - 1][0]))
             elif lock == 0:
-                if q.readStorageById(user.id, skin):
-                    q.storageModifyById(user.id, skin, 0)
+                if q.readStorageById(user_id, skin):
+                    q.storageModifyById(user_id, skin, 0)
                     await ctx.reply(i18n.t(ctx.author, "cmd.95.t003", u=user_name, skin=Rank[skin - 1][0]))
                 else:
                     await ctx.reply(i18n.t(ctx.author, "cmd.95.t004", u=user_name, skin=Rank[skin - 1][0]))

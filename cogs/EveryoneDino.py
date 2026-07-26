@@ -4,6 +4,7 @@ from discord import app_commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
+from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.drawing as dr
 from config.rootdir import root_dir
 import os
@@ -158,9 +159,12 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         aliases=["똥딸", "똥딸놈", "스카웃", "똥딸년", "똥잠바", "더러운똥딸년"]
     )
     @commands.check(is_server)
-    async def goat(self, ctx, user: discord.Member = None, *, title: str = "똥딸"):
-        if user is None:
-            user = ctx.author
+    async def goat(self, ctx, user: str = None, *, title: str = "똥딸"):
+        try:
+            user = await resolve_discord_user(ctx, user)
+        except UserResolutionError:
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+            return
 
         title = title.strip() or "똥딸"
         if len(title) > GOAT_TITLE_MAX_LENGTH:
@@ -340,21 +344,18 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                  503185794509438976, 422295213294354432, 429629511227670528,
                  811193433423216650, 265388034415919104))
 
-        if option == "경험치":
-
+        if option in {"경험치", "돈"}:
             try:
-                q.xpAddById(kakao[user], value)
-                xp = q.readXpById(kakao[user])
-                lv = etc.level(xp)
-                xp1 = xp - etc.need_exp(lv - 1)
-                xp2 = etc.need_exp(lv) - etc.need_exp(lv - 1)
-                text = "[Level] {}, [XP] {:,d} / {:,d} ({:.2f}%), [Total] {:,d}".format(
-                    lv, xp1, xp2, 100 * xp1 / xp2, xp)
-                await ctx.reply(
-                    "`⸜(*◉ ᴗ ◉)⸝` **{}**에게 **{}**의 경험치를 주었습니다!\n`변경 후` {}".
-                    format(q.readTagById(kakao[user]), value, text))
-            except:
-                for u in kakao[user]:
+                target = kakao.get(user)
+                if target is None:
+                    target = etc.extractUid(user)
+            except ValueError:
+                await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+                return
+
+            targets = target if isinstance(target, tuple) else (target,)
+            for u in targets:
+                if option == "경험치":
                     q.xpAddById(u, value)
                     xp = q.readXpById(u)
                     lv = etc.level(xp)
@@ -365,16 +366,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                     await ctx.reply(
                         "`⸜(*◉ ᴗ ◉)⸝` **{}**에게 **{}**의 경험치를 주었습니다!\n`변경 후` {}".
                         format(q.readTagById(u), value, text))
-
-        elif option == "돈":
-            try:
-                q.moneyAddById(kakao[user], value)
-                mn = q.readMoneyById((kakao[user]))
-                await ctx.reply(
-                    f"`⸜(*◉ ᴗ ◉)⸝` **{q.readTagById(kakao[user])}**에게 **${value:,d}**의 돈을 주었습니다!\n현재 소지금액은 **${mn:,d}** 입니다!"
-                )
-            except:
-                for u in kakao[user]:
+                else:
                     q.moneyAddById(u, value)
                     mn = q.readMoneyById(u)
                     await ctx.reply(

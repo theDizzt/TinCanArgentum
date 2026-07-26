@@ -5,6 +5,7 @@ import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.skin_catalog as catalog
+from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from PIL import Image, ImageDraw, ImageFont
 import io
 import json
@@ -43,7 +44,7 @@ def textAltitude(type, font):
             return 0
         
     elif type == "xp":
-        if font in ["pixel", "minecraft", "stencil", "starcraft", "legend", "gothic", "modern", "legacy"]:
+        if font in ["pixel", "minecraft", "stencil", "starcraft", "legend", "gothic", "modern", "legacy","paradox"]:
             return 2
         elif font in ["sans"]:
             return 3
@@ -370,10 +371,15 @@ class UserProfile(commands.Cog):
         description=app_commands.locale_str("Show user's profile", key="cmd.11.desc"),
         aliases=["프로필"]
     )
-    #@discord.app_commands.describe(user='User mention')
-    async def profile(self, ctx, user:discord.Member = None):
-        if user is None:
-            user = ctx.author
+    @discord.app_commands.describe(
+        user="User ID, member mention, or nickname tag"
+    )
+    async def profile(self, ctx, user: str = None):
+        try:
+            user = await resolve_discord_user(ctx, user)
+        except UserResolutionError:
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+            return
 
         try:
             skin_id = q.readSkin(user)

@@ -68,12 +68,7 @@ class PaginationView(discord.ui.View):
                                 "cmd.19.entry",
                                 owned=etc.checkBox(userdata[idv]),
                                 desc=item["desc"],
-                                unlock_type=item["unlock_type"],
-                                unlock_val=(
-                                    "••••"
-                                    if item["unlock_type"] == "code"
-                                    else item.get("unlock_val", "")
-                                ),
+                                unlock=catalog.format_unlock_condition(item, user),
                                 keyword=item["keyword"],
                             ),
                             inline=False)

@@ -159,6 +159,29 @@ def font_families() -> list[str]:
     )
 
 
+def format_unlock_condition(skin: dict[str, Any], user) -> str:
+    from fcts import i18n_runtime as i18n
+
+    unlock_type = str(skin.get("unlock_type", "none")).strip().casefold()
+    value = skin.get("unlock_val", "")
+
+    if unlock_type == "level":
+        try:
+            value = int(value)
+        except (TypeError, ValueError):
+            pass
+        return i18n.t(user, "skin.unlock.level", value=value)
+    if unlock_type == "money":
+        try:
+            value = f"{int(value):,d}"
+        except (TypeError, ValueError):
+            value = str(value)
+        return i18n.t(user, "skin.unlock.money", value=value)
+    if unlock_type in {"code", "game", "none"}:
+        return i18n.t(user, f"skin.unlock.{unlock_type}")
+    return unlock_type or "-"
+
+
 def parse_search(query: str | None) -> SkinSearch:
     text = (query or "").strip()
     if not text:

@@ -4,6 +4,7 @@ import asyncio
 import io
 import ipaddress
 import json
+import re
 import shutil
 import socket
 import tempfile
@@ -22,6 +23,7 @@ from PIL import Image, UnidentifiedImageError
 
 import fcts.i18n_runtime as i18n
 import fcts.skin_catalog as catalog
+from fcts.user_resolver import registered_user_tag
 
 
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
@@ -37,6 +39,13 @@ DEFAULT_FONT = {
     "xp-outline-width": 0,
     "xp-outline-color": [0, 0, 0, 255],
 }
+COLOR_FIELDS = (
+    "name-color",
+    "discrim-color",
+    "nametext-outline-color",
+    "xp-color",
+    "xp-outline-color",
+)
 
 
 @dataclass
@@ -588,14 +597,11 @@ class QueuePaginationView(OwnerOnlyView):
                     self.owner,
                     "cmd.15.entry",
                     desc=skin["desc"],
-                    unlock_type=skin["unlock_type"],
-                    unlock_val=(
-                        "••••"
-                        if skin["unlock_type"] == "code"
-                        else skin.get("unlock_val", "")
-                    ),
+                    unlock=catalog.format_unlock_condition(skin, self.owner),
                     keyword=skin["keyword"],
-                    creator=skin.get("creater", "-"),
+                    creator=discord.utils.escape_markdown(
+                        registered_user_tag(skin.get("creater", "-"))
+                    ),
                     date=skin.get("date", "-"),
                 ),
                 inline=False,
@@ -792,6 +798,24 @@ class Community(commands.Cog):
         return rankcard, bar
 
     @staticmethod
+    def _serialize_skin_data(skin_data: dict) -> str:
+        text = json.dumps(skin_data, ensure_ascii=False, indent=2)
+        for key in COLOR_FIELDS:
+            value = skin_data["font"].get(key)
+            if not isinstance(value, list):
+                continue
+            pattern = re.compile(
+                rf'("{re.escape(key)}": )\[\s*'
+                r"-?\d+\s*,\s*-?\d+\s*,\s*-?\d+\s*,\s*-?\d+\s*\]"
+            )
+            text = pattern.sub(
+                lambda match: match.group(1) + json.dumps(value),
+                text,
+                count=1,
+            )
+        return text + "\n"
+
+    @staticmethod
     def _write_workshop_files(
         directory: Path,
         skin_data: dict,
@@ -800,8 +824,7 @@ class Community(commands.Cog):
     ):
         directory.mkdir(parents=True, exist_ok=False)
         with (directory / "skin.json").open("w", encoding="utf-8") as file:
-            json.dump(skin_data, file, ensure_ascii=False, indent=2)
-            file.write("\n")
+            file.write(Community._serialize_skin_data(skin_data))
         rankcard.save(directory / "rankcard.png", format="PNG")
         bar.save(directory / "bar.png", format="PNG")
 
