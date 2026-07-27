@@ -17,11 +17,11 @@ with open(root_dir + '/font/font.json', 'r',encoding='UTF-8') as f:
 
 def fontsize(type, font):
     if type == "name":
-        if font in ["chalk", "legend", "square"]:
+        if font in ["brush", "chalk", "legend", "square", "typewriter"]:
             return 26
-        elif font in ["lcd", "minecraft", "serif", "starcraft", "luxury", "nature", "handwrite", "dragon", "ocean", "math", "wanted"]:
+        elif font in ["lcd", "minecraft", "serif", "starcraft", "luxury", "nature", "handwrite", "dragon", "ocean", "math", "wanted", "metal", "slay"]:
             return 24
-        elif font in ["brush", "fluid", "paper", "gothic", "tedne"]:
+        elif font in ["fluid", "paper", "gothic", "tedne"]:
             return 22
         else:
             return 20
@@ -29,8 +29,10 @@ def fontsize(type, font):
     elif type == "xp":
         if font in ["fluid", "lcd", "luxury", "minecraft", "brush", "stencil", "legend", "square", "serif", "math"]:
             return 18
-        elif font in ["condense", "handwrite", "stella", "drg"]:
+        elif font in ["condense", "handwrite", "stella", "drg", "metal", "distort"]:
             return 20
+        elif font in ["jelly"]:
+            return 14
         else:
             return 16
 
@@ -38,7 +40,7 @@ def textAltitude(type, font):
     if type == "name":
         if font in ["brush", "legend", "math"]:
             return -6
-        elif font in ["chalk", "luxury", "lcd", "handwrite", "nature", "square", "dragon", "modern", "wanted"]:
+        elif font in ["chalk", "luxury", "lcd", "handwrite", "nature", "square", "dragon", "modern", "wanted", "jelly"]:
             return -3
         else:
             return 0
@@ -46,7 +48,7 @@ def textAltitude(type, font):
     elif type == "xp":
         if font in ["pixel", "minecraft", "stencil", "starcraft", "legend", "gothic", "modern", "legacy","paradox"]:
             return 2
-        elif font in ["sans"]:
+        elif font in ["sans", "jelly"]:
             return 3
         elif font in ["fluid"]:
             return 4

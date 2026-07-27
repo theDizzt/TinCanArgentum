@@ -1602,7 +1602,7 @@
   "skin161": {
     "id": "161",
     "name": "Hidden 18: GOAT",
-    "desc": "(November 16, 2025)",
+    "desc": "(November 16, 2025) 이달의 인물로 선정되어야 합니다!",
     "unlock_type": "none",
     "unlock_val": "none",
     "keyword": "hidden",
@@ -1617,7 +1617,7 @@
     "unlock_val": 9900,
     "keyword": "anniversary",
     "creater": 262517377575550977,
-    "date": "0000-00-00"
+    "date": "2026-01-01"
   },
   "skin163": {
     "id": "163",
@@ -1795,7 +1795,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1805,7 +1805,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1815,7 +1815,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1825,7 +1825,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1835,7 +1835,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1845,7 +1845,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1855,7 +1855,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1865,7 +1865,7 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
@@ -1875,139 +1875,139 @@
     "desc": "Purchase for $19,600 to unlock!",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "slay",
     "creater": 262517377575550977,
     "date": "2026-04-27"
   },
   "skin189": {
     "id": "189",
-    "name": "Constellation 01: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 01: Aries",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin190": {
     "id": "190",
-    "name": "Constellation 02: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 02: Taurus",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin191": {
     "id": "191",
-    "name": "Constellation 03: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 03: Gemini",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin192": {
     "id": "192",
-    "name": "Constellation 04: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 04: Cancer",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin193": {
     "id": "193",
-    "name": "Constellation 05: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 05: Leo",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin194": {
     "id": "194",
-    "name": "Constellation 06: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 06: Virgo",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin195": {
     "id": "195",
-    "name": "Constellation 07: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 07: Libra",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin196": {
     "id": "196",
-    "name": "Constellation 08: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 08: Scorpio",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin197": {
     "id": "197",
-    "name": "Constellation 09: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 09: Sagittarius",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin198": {
     "id": "198",
-    "name": "Constellation 10: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 10: Capricorn",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin199": {
     "id": "199",
-    "name": "Constellation 11: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 11: Aquarius",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin200": {
     "id": "200",
-    "name": "Constellation 12: ??",
-    "desc": "Purchase for $19,600 to unlock!",
+    "name": "Constellation 12: Pisces",
+    "desc": "The 12 goddesses of the western zodiac based on Dizzt's hand-drawn.",
     "unlock_type": "money",
     "unlock_val": 19600,
-    "keyword": "drg",
+    "keyword": "zodiac",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2026-08-01"
   },
   "skin201": {
     "id": "201",
-    "name": "Hidden 19: ??",
-    "desc": "(April 14, 2026)",
-    "unlock_type": "none",
-    "unlock_val": "none",
+    "name": "Hidden 19: Cream Soda!!",
+    "desc": "(August 1, 2026) 전체공룡 여름 정모회 기념 스킨!",
+    "unlock_type": "code",
+    "unlock_val": "sodapop59",
     "keyword": "hidden",
     "creater": 262517377575550977,
-    "date": "2023-07-25"
+    "date": "2023-08-01"
   },
   "skin202": {
     "id": "202",

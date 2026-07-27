@@ -19,7 +19,7 @@ import aiohttp
 import discord
 from discord import app_commands
 from discord.ext import commands
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 
 import fcts.i18n_runtime as i18n
 import fcts.skin_catalog as catalog
@@ -46,6 +46,18 @@ COLOR_FIELDS = (
     "xp-color",
     "xp-outline-color",
 )
+FONT_SAMPLE_LINES = (
+    "파티에 참석한 키다리 부자",
+    "BRIGHT VIXENS JUMP; DOZY FOWL QUACK",
+    "pack my box with five dozen liquor jugs:",
+    "0123456789.-/%",
+)
+FONT_SAMPLE_WIDTH = 1280
+FONT_SAMPLE_MIN_HEIGHT = 680
+FONT_SAMPLE_BACKGROUND = (35, 39, 47, 255)
+FONT_SAMPLE_NAME_COLOR = (167, 243, 208, 255)
+FONT_SAMPLE_XP_COLOR = (255, 255, 255, 255)
+FONT_SAMPLE_OUTLINE_COLOR = (0, 0, 0, 255)
 
 
 @dataclass
@@ -74,6 +86,159 @@ def _text_value(value, default="") -> str:
 
 def _rgba_text(value) -> str:
     return json.dumps(value, ensure_ascii=False)
+
+
+def _is_skin_creator(skin: dict | None, user_id: int) -> bool:
+    if not skin:
+        return False
+    try:
+        return int(skin.get("creater")) == int(user_id)
+    except (TypeError, ValueError):
+        return False
+
+
+def _fit_sample_font(
+    path: Path,
+    lines: tuple[str, ...],
+    maximum_size: int,
+    maximum_width: int,
+    stroke_width: int,
+) -> ImageFont.FreeTypeFont:
+    probe = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    for size in range(maximum_size, 11, -1):
+        font = ImageFont.truetype(str(path), size)
+        if all(
+            probe.textbbox((0, 0), line, font=font, stroke_width=stroke_width)[2]
+            <= maximum_width
+            for line in lines
+        ):
+            return font
+    return ImageFont.truetype(str(path), 12)
+
+
+def _draw_sample_section(
+    draw: ImageDraw.ImageDraw,
+    font: ImageFont.FreeTypeFont,
+    label: str,
+    lines: tuple[str, ...],
+    y: int,
+    color: tuple[int, int, int, int],
+) -> int:
+    stroke_width = 2
+    section_lines = (label, *lines)
+    line_height = _sample_line_height(draw, font, section_lines, stroke_width)
+    for index, line in enumerate(section_lines):
+        draw.text(
+            (32, y),
+            line,
+            font=font,
+            fill=color,
+            stroke_width=stroke_width,
+            stroke_fill=FONT_SAMPLE_OUTLINE_COLOR,
+        )
+        y += line_height
+        if index == 0:
+            y += 8
+    return y
+
+
+def _sample_line_height(
+    draw: ImageDraw.ImageDraw,
+    font: ImageFont.FreeTypeFont,
+    lines: tuple[str, ...],
+    stroke_width: int,
+) -> int:
+    return max(
+        draw.textbbox(
+            (0, 0),
+            line,
+            font=font,
+            stroke_width=stroke_width,
+        )[3]
+        for line in lines
+    ) + 12
+
+
+def _render_font_sample(font_name: str) -> io.BytesIO:
+    font_directory = catalog.FONT_ROOT / font_name
+    name_path = font_directory / "name.ttf"
+    xp_path = font_directory / "xp.ttf"
+    if not name_path.is_file() or not xp_path.is_file():
+        raise FileNotFoundError(f"{font_name}: name.ttf 또는 xp.ttf 파일이 없습니다.")
+
+    maximum_width = FONT_SAMPLE_WIDTH - 64
+    name_font = _fit_sample_font(
+        name_path,
+        FONT_SAMPLE_LINES,
+        maximum_size=40,
+        maximum_width=maximum_width,
+        stroke_width=2,
+    )
+    xp_font = _fit_sample_font(
+        xp_path,
+        FONT_SAMPLE_LINES,
+        maximum_size=34,
+        maximum_width=maximum_width,
+        stroke_width=2,
+    )
+
+    probe = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    name_height = (
+        _sample_line_height(
+            probe,
+            name_font,
+            ("name.ttf", *FONT_SAMPLE_LINES),
+            2,
+        )
+        * (len(FONT_SAMPLE_LINES) + 1)
+        + 8
+    )
+    xp_height = (
+        _sample_line_height(
+            probe,
+            xp_font,
+            ("xp.ttf", *FONT_SAMPLE_LINES),
+            2,
+        )
+        * (len(FONT_SAMPLE_LINES) + 1)
+        + 8
+    )
+    image_height = max(
+        FONT_SAMPLE_MIN_HEIGHT,
+        24 + name_height + 20 + xp_height + 24,
+    )
+    image = Image.new(
+        "RGBA",
+        (FONT_SAMPLE_WIDTH, image_height),
+        FONT_SAMPLE_BACKGROUND,
+    )
+    draw = ImageDraw.Draw(image)
+    y = _draw_sample_section(
+        draw,
+        name_font,
+        "name.ttf",
+        FONT_SAMPLE_LINES,
+        24,
+        FONT_SAMPLE_NAME_COLOR,
+    )
+    draw.line(
+        (32, y + 2, FONT_SAMPLE_WIDTH - 32, y + 2),
+        fill=(93, 101, 116, 255),
+        width=2,
+    )
+    _draw_sample_section(
+        draw,
+        xp_font,
+        "xp.ttf",
+        FONT_SAMPLE_LINES,
+        y + 20,
+        FONT_SAMPLE_XP_COLOR,
+    )
+
+    output = io.BytesIO()
+    image.save(output, format="PNG", optimize=True)
+    output.seek(0)
+    return output
 
 
 def _parse_rgba(value: str, field_name: str) -> list[int]:
@@ -694,6 +859,62 @@ class Community(commands.Cog):
         parts = argument.strip().split(maxsplit=1)
         action = parts[0].casefold() if parts else ""
 
+        if action in {"font", "폰트"}:
+            fonts = catalog.font_families()
+            if len(parts) == 1:
+                embed = discord.Embed(
+                    title=i18n.t(ctx.author, "cmd.16.font_list.title"),
+                    description=(
+                        i18n.t(
+                            ctx.author,
+                            "cmd.16.font_list.body",
+                            count=len(fonts),
+                        )
+                        + "\n\n"
+                        + " · ".join(f"`{font}`" for font in fonts)
+                    ),
+                    color=0xA7F3D0,
+                )
+                await ctx.reply(embed=embed)
+                return
+
+            font_lookup = {font.casefold(): font for font in fonts}
+            requested_font = parts[1].strip().casefold()
+            if requested_font not in font_lookup:
+                await ctx.reply(
+                    i18n.t(
+                        ctx.author,
+                        "cmd.16.invalid_font",
+                        fonts=", ".join(fonts),
+                    )
+                )
+                return
+
+            font_name = font_lookup[requested_font]
+            try:
+                sample = await asyncio.to_thread(_render_font_sample, font_name)
+            except (OSError, ValueError) as error:
+                await ctx.reply(
+                    i18n.t(
+                        ctx.author,
+                        "cmd.16.font_sample_error",
+                        error=str(error),
+                    )
+                )
+                return
+            await ctx.reply(
+                i18n.t(
+                    ctx.author,
+                    "cmd.16.font_sample",
+                    font=font_name,
+                ),
+                file=discord.File(
+                    sample,
+                    filename=f"{font_name}-font-sample.png",
+                ),
+            )
+            return
+
         if action in {"edit", "편집"}:
             if len(parts) != 2:
                 await ctx.reply(i18n.t(ctx.author, "cmd.16.edit_usage"))
@@ -706,7 +927,7 @@ class Community(commands.Cog):
             if skin is None:
                 await ctx.reply(i18n.t(ctx.author, "cmd.16.not_found", skin_id=parts[1]))
                 return
-            if int(skin.get("creater", 0)) != ctx.author.id:
+            if not _is_skin_creator(skin, ctx.author.id):
                 await ctx.reply(i18n.t(ctx.author, "cmd.16.edit_owner_only"))
                 return
 
@@ -834,6 +1055,21 @@ class Community(commands.Cog):
         draft: WorkshopDraft,
     ):
         try:
+            if draft.editing:
+                current = catalog.load_queue_skin(draft.queue_id)
+                if current is None:
+                    raise ValueError(
+                        i18n.t(
+                            interaction.user,
+                            "cmd.16.not_found",
+                            skin_id=draft.queue_id,
+                        )
+                    )
+                if not _is_skin_creator(current, interaction.user.id):
+                    raise ValueError(
+                        i18n.t(interaction.user, "cmd.16.edit_owner_only")
+                    )
+
             rankcard, bar = await self._prepare_images(draft)
             async with self.workshop_lock:
                 catalog.QUEUE_ROOT.mkdir(parents=True, exist_ok=True)
@@ -843,8 +1079,10 @@ class Community(commands.Cog):
                     current = catalog.load_queue_skin(queue_id)
                     if current is None:
                         raise ValueError("편집할 대기열 스킨이 더 이상 존재하지 않습니다.")
-                    if int(current.get("creater", 0)) != interaction.user.id:
-                        raise ValueError("등록한 사용자만 이 대기열 스킨을 편집할 수 있습니다.")
+                    if not _is_skin_creator(current, interaction.user.id):
+                        raise ValueError(
+                            i18n.t(interaction.user, "cmd.16.edit_owner_only")
+                        )
                     creator = int(current["creater"])
                     created_date = current.get("date", "2017-05-20")
                 else:

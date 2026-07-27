@@ -114,9 +114,9 @@ queue :
 workshop :
  title : "Community Skin Workshop"
  id : "16"
- ctx : "workshop <upload | edit t_id>"
- discript : "Upload a community rank-card skin or edit one of your queued submissions."
- args : "Use `workshop` or `workshop upload` to register. Use `workshop edit t16` to edit a queued skin."
+ ctx : "workshop <upload | edit t_id | font [font_name]>"
+ discript : "Upload or edit a community rank-card skin, and browse the available fonts."
+ args : "Use `workshop` or `workshop upload` to register. Use `workshop edit t16` to edit your queued skin. Use `workshop font` to list fonts or `workshop font legacy` to render a sample."
 
 equip :
  title : "Equip"
