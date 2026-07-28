@@ -5,12 +5,11 @@ import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
 import random
-from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import io
 import asyncio
 from fcts.translator import DeepLTranslationError, DeepLTranslator
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR, FONT_DIR
 from config.settings import get_required_env
 
 GRADIENT_PRESETS = (
@@ -107,7 +106,7 @@ def _wrap_rage_text(draw, text, font, max_width):
 
 def create_rage_image(text, font_path):
     image = Image.open(
-        Path(root_dir) / "config" / "rage" / "ivory_rage.png"
+        CONFIG_DIR / "rage" / "ivory_rage.png"
     ).convert("RGBA")
     draw = ImageDraw.Draw(image)
 
@@ -173,7 +172,7 @@ class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         lucky_num = random.randint(0 if non_zero == 0 else 1, rand)
 
-        font_paths = sorted(Path(root_dir).glob("font/*/name.ttf"))
+        font_paths = sorted(FONT_DIR.glob("*/name.ttf"))
         if not font_paths:
             await ctx.reply(i18n.t(ctx.author, "cmd.31.font_error"))
             return
@@ -195,7 +194,7 @@ class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
             q.ensureStorage(ctx.author)
             if q.readStorage(ctx.author, 22) == 0:
                 q.storageModify(ctx.author, 22, 1)
-                await ctx.send(file=discord.File(root_dir + '/config/easter/22222.jpg'))
+                await ctx.send(file=discord.File(CONFIG_DIR / "easter" / "22222.jpg"))
 
         await ctx.reply(
             i18n.t(ctx.author, "cmd.31.result"),
@@ -240,9 +239,9 @@ class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 await ctx.reply(i18n.t(ctx.author, "cmd.36.prompt"))
                 return
 
-        preferred_font = Path(root_dir) / "font" / "gothic" / "name.ttf"
+        preferred_font = FONT_DIR / "gothic" / "name.ttf"
         font_paths = [preferred_font] if preferred_font.exists() else sorted(
-            Path(root_dir).glob("font/*/name.ttf")
+            FONT_DIR.glob("*/name.ttf")
         )
         if not font_paths:
             await ctx.reply(i18n.t(ctx.author, "cmd.36.font_error"))

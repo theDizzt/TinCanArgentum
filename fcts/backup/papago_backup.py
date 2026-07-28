@@ -2,8 +2,9 @@ import json
 from typing import Any, MutableSequence
 from urllib.parse import quote, quote_plus
 from urllib.request import Request, urlopen
+from project_paths import CONFIG_DIR
 
-prefix = str(open("./config/prefix.txt", "r+").read())
+prefix = (CONFIG_DIR / "prefix.txt").read_text(encoding="utf-8").strip()
 
 DataDictionary = {
     prefix + "ke": ["ko", "Korean", "en", "English"],

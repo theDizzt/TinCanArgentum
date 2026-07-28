@@ -6,7 +6,6 @@
 """
 
 import sqlite3
-from pathlib import Path
 from datetime import datetime, date, time
 from zoneinfo import ZoneInfo
 from typing import Literal
@@ -16,12 +15,12 @@ import discord
 from discord.ext import commands, tasks
 
 from korean_lunar_calendar import KoreanLunarCalendar
+from project_paths import DATA_DIR
 import fcts.i18n_runtime as i18n
 from fcts.user_resolver import resolve_discord_user
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR / "data" / "anniversary.db"
+DB_PATH = DATA_DIR / "anniversary.db"
 KST = ZoneInfo("Asia/Seoul")
 MIDNIGHT_KST = time(hour=0, minute=0, second=0, tzinfo=KST)
 

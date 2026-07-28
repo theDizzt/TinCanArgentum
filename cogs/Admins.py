@@ -7,11 +7,11 @@ import fcts.leaderboard as l
 import fcts.lklab as lk
 import yaml
 import fcts.etcfunctions as etc
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR
 import random as r
 
 admin_login = []
-with open(root_dir + '/config/admin.yml',encoding='UTF-8') as f:
+with (CONFIG_DIR / "admin.yml").open(encoding="UTF-8") as f:
     admins = yaml.load(f, Loader=yaml.FullLoader)
 
 

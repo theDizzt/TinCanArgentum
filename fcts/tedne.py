@@ -3,10 +3,13 @@ import discord
 from discord.ext import commands
 import sqlite3
 import datetime
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
+
+
+DB_PATH = DATA_DIR / "tedne.db"
 
 # 1. Connect DB
-conn = sqlite3.connect(root_dir + '/data/tedne.db')
+conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
 # 2. Sub Functions
@@ -14,7 +17,7 @@ c = conn.cursor()
 
 # 2.1. Init Setting
 def initSetting():
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     sql = """CREATE TABLE IF NOT EXISTS achievements(
@@ -64,7 +67,7 @@ def initSetting():
 
 # 3.5.1 Add data
 def newAchieve(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     now = datetime.datetime.now() + datetime.timedelta(hours=9)
     now_time = now.strftime('%Y/%m/%d %H:%M:%S')
@@ -81,7 +84,7 @@ def newAchieve(user: discord.Member = None):
 
 
 def newAchieveById(user: int = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     now = datetime.datetime.now() + datetime.timedelta(hours=9)
     now_time = now.strftime('%Y/%m/%d %H:%M:%S')
@@ -101,7 +104,7 @@ def newAchieveById(user: int = None):
 def achieveModify(user: discord.Member = None,
                   id: int = None,
                   value: int = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     if value == 0:
@@ -137,7 +140,7 @@ def achieveModify(user: discord.Member = None,
 
 
 def achieveModifyById(user: int = None, id: int = None, value: int = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if value == 0:
         c.execute(
@@ -173,7 +176,7 @@ def achieveModifyById(user: int = None, id: int = None, value: int = None):
 
 # 3.5.3. Read Storage
 def readAchieve(user: discord.Member = None, id: str = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT {} FROM achievements WHERE id = ?;".format("id" + str(id))
     c.execute(sql, (user.id, ))
@@ -182,7 +185,7 @@ def readAchieve(user: discord.Member = None, id: str = None):
 
 
 def readAchieveById(user: int = None, id: str = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT {} FROM achievements WHERE id = ?;".format("id" + str(id))
     c.execute(sql, (user, ))
@@ -191,7 +194,7 @@ def readAchieveById(user: int = None, id: str = None):
 
 
 def readAchieveTime(user: discord.Member = None, id: str = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT {} FROM achievetime WHERE id = ?;".format("id" + str(id))
     c.execute(sql, (user.id, ))
@@ -200,7 +203,7 @@ def readAchieveTime(user: discord.Member = None, id: str = None):
 
 
 def readJoinTime(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT createdate FROM userdata WHERE id = ?;"
     c.execute(sql, (user.id, ))
@@ -210,7 +213,7 @@ def readJoinTime(user: discord.Member = None):
 
 # 3.5.4. User Storage List
 def achieveList(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/tedne.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT * FROM achievements WHERE id = ?;"
     c.execute(sql, (user.id, ))

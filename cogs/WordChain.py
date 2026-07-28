@@ -4,7 +4,6 @@ import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
 import fcts.leaderboard as l
-import os
 import requests
 import re
 from fcts.koreanbreak import count_break_korean
@@ -15,7 +14,7 @@ import random
 from time import sleep
 import numpy
 import openpyxl
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
 
 player_badge = [
     "",
@@ -914,7 +913,7 @@ class TestCommands(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/word_enlist/{file}.xlsx'
+        path = DATA_DIR / "word_enlist" / f"{file}.xlsx"
         result = []
         bool = True
 
@@ -981,7 +980,7 @@ class TestCommands(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/word_enlist/{file}.xlsx'
+        path = DATA_DIR / "word_enlist" / f"{file}.xlsx"
         result = []
         bool = True
 
@@ -1045,7 +1044,7 @@ class TestCommands(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/word_enlist/{file}.xlsx'
+        path = DATA_DIR / "word_enlist" / f"{file}.xlsx"
         result = []
         bool = True
 
@@ -1108,7 +1107,7 @@ class TestCommands(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/word_enlist/{file}.xlsx'
+        path = DATA_DIR / "word_enlist" / f"{file}.xlsx"
         result = []
         bool = True
 
@@ -1157,7 +1156,7 @@ class TestCommands(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/word_enlist/{file}.xlsx'
+        path = DATA_DIR / "word_enlist" / f"{file}.xlsx"
         result = []
         bool = True
 

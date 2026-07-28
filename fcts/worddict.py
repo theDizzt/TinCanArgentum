@@ -7,16 +7,19 @@ import random as r
 import fcts.leaderboard as l
 import fcts.sqlcontrol as q
 from fcts.koreanbreak import count_break_korean
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
+
+
+DB_PATH = DATA_DIR / "worddict.db"
 
 # 1. Connect DB
-conn = sqlite3.connect(root_dir + '/data/worddict.db')
+conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
 
 # 2.1. Init Setting
 def initSetting():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     sql = """CREATE TABLE IF NOT EXISTS korean(
@@ -51,7 +54,7 @@ def newWord(user: discord.Member = None,
             pl: str = "",
             mean: str = ""):
 
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     trim_word = word.replace(" ", "")
@@ -79,7 +82,7 @@ def newWordById(user: int = None,
                 pl: str = "",
                 mean: str = ""):
 
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     trim_word = word.replace(" ", "")
@@ -104,7 +107,7 @@ def newWordById(user: int = None,
 
 # 3.2.1.1. Xp Value Edit
 def wordModify(user: discord.Member = None, value: int = None, nw: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     trim_nw = nw.replace(" ", "")
     now = datetime.datetime.now() + datetime.timedelta(hours=9)
@@ -115,7 +118,7 @@ def wordModify(user: discord.Member = None, value: int = None, nw: str = ""):
     c.close()
 
 def plModify(user: discord.Member = None, value: int = None, pl: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     now = datetime.datetime.now() + datetime.timedelta(hours=9)
     now_time = now.strftime('%Y/%m/%d %H:%M:%S')
@@ -125,7 +128,7 @@ def plModify(user: discord.Member = None, value: int = None, pl: str = ""):
     c.close()
 
 def meanModify(user: discord.Member = None, value: int = None, mean: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     now = datetime.datetime.now() + datetime.timedelta(hours=9)
     now_time = now.strftime('%Y/%m/%d %H:%M:%S')
@@ -135,7 +138,7 @@ def meanModify(user: discord.Member = None, value: int = None, mean: str = ""):
     c.close()
 
 def categoryModify(user: discord.Member = None, opl: str = '*', npl: str = None):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     if npl is not None:
@@ -160,14 +163,14 @@ def categoryModify(user: discord.Member = None, opl: str = '*', npl: str = None)
 # 3.3.1. Read All
 def readAll(word: str = ""):
     trim_word = word.replace(" ", "")
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT * FROM korean WHERE word='{}';".format(trim_word))
     result = c.fetchone()
     return result
 
 def readAllById(value: int = None):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT * FROM korean WHERE id=?;", (value, ))
     result = c.fetchone()
@@ -175,7 +178,7 @@ def readAllById(value: int = None):
 
 def readInGame(word: str = ""):
     trim_word = word.replace(" ", "")
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT word, pl, mean FROM korean WHERE word='{}';".format(trim_word))
@@ -183,7 +186,7 @@ def readInGame(word: str = ""):
     return result
 
 def readWordAll():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word FROM korean;")
@@ -191,7 +194,7 @@ def readWordAll():
     return result
 
 def readAllByStart(start: str = "", length: int = 2, fixed: bool = False):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if fixed:
         c.execute(
@@ -205,7 +208,7 @@ def readAllByStart(start: str = "", length: int = 2, fixed: bool = False):
     return result
 
 def readAllByEnd(start: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word FROM korean WHERE word LIKE '%{}';".format(start))
@@ -213,7 +216,7 @@ def readAllByEnd(start: str = ""):
     return result
 
 def readAllByPOS(pos: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word FROM korean WHERE pl = '{}';".format(pos))
@@ -221,7 +224,7 @@ def readAllByPOS(pos: str = ""):
     return result
 
 def readAllRandom():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word FROM korean;")
@@ -229,7 +232,7 @@ def readAllRandom():
     return result
 
 def readAllWithPOS():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word, pl FROM korean;")
@@ -237,7 +240,7 @@ def readAllWithPOS():
     return result
 
 def readAllByPOSWithPOS(pos: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word, pl FROM korean WHERE pl = '{}';".format(pos))
@@ -245,7 +248,7 @@ def readAllByPOSWithPOS(pos: str = ""):
     return result
 
 def readPOSCount():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT rowid, pl, COUNT(*) FROM korean GROUP BY pl;")
@@ -254,7 +257,7 @@ def readPOSCount():
     return result
 
 def readAllPattern(pattern: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word, pl FROM korean WHERE word like '%{}%';".format(pattern))
@@ -262,7 +265,7 @@ def readAllPattern(pattern: str = ""):
     return result
 
 def readAllScore():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, word, score FROM korean ORDER BY score DESC, word;")
@@ -273,7 +276,7 @@ def searchSpecial(start, end, length=0):
     temp = []
 
     if length == 0:
-        conn = sqlite3.connect(root_dir + '/data/worddict.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute(
             "SELECT word FROM korean WHERE word like '{}';".format(start+"%"+end))
@@ -283,7 +286,7 @@ def searchSpecial(start, end, length=0):
             temp.append(t[0])
 
     elif length >= 2:
-        conn = sqlite3.connect(root_dir + '/data/worddict.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute(
             "SELECT word FROM korean WHERE word like '{}';".format(start + (length-2)*'_' + end))
@@ -296,7 +299,7 @@ def searchSpecial(start, end, length=0):
 
 def findID(word: str = ""):
     trim_word = word.replace(" ", "")
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id FROM korean WHERE word='{}';".format(trim_word))
     result = c.fetchone()[0]
@@ -304,7 +307,7 @@ def findID(word: str = ""):
     return result
 
 def scoreUpdateAll():
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id, word FROM korean;")
     result = c.fetchall()
@@ -323,7 +326,7 @@ def random_korean():
 
 def existsWord(word: str = "") -> bool:
     trim_word = word.replace(" ", "")
-    conn = sqlite3.connect(root_dir + '/data/worddict.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     c.execute("SELECT 1 FROM korean WHERE word = ? LIMIT 1;", (trim_word,))

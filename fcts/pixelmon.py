@@ -3,16 +3,19 @@ import discord
 from discord.ext import commands
 import sqlite3
 import datetime
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
+
+
+DB_PATH = DATA_DIR / "pokedex.db"
 
 # 1. Connect DB
-conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
 
 # 2.1. Init Setting
 def initSetting():
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     sql = """CREATE TABLE IF NOT EXISTS dex(
@@ -59,7 +62,7 @@ def initSetting():
 
 # 3.1. Add data
 def newDexData(data):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     INSERT_SQL = '''
@@ -76,7 +79,7 @@ def newDexData(data):
     conn.close()
 
 def newTmData(data):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     INSERT_SQL = '''
@@ -94,7 +97,7 @@ def newTmData(data):
 
 # Read Dex Data:
 def readDexList():
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT korean, dexnum, type1, type2 FROM dex;")
     result = c.fetchall()
@@ -102,7 +105,7 @@ def readDexList():
 
 def readDexListName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT korean, dexnum, type1, type2 FROM dex Where korean LIKE ?"
     c.execute(sql, (search,))
@@ -110,7 +113,7 @@ def readDexListName(name: str = ""):
     return result
 
 def readDexListDex(search: int = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT korean, dexnum, type1, type2 FROM dex Where dexnum = ?"
     c.execute(sql, (search, ))
@@ -118,7 +121,7 @@ def readDexListDex(search: int = ""):
     return result
 
 def readDexListNat(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT korean, dexnum, type1, type2 FROM dex Where natnum = ?"
     c.execute(sql, (search, ))
@@ -127,7 +130,7 @@ def readDexListNat(search: str = ""):
 
 def readDexListType(search: str = ""):
     if search.find(",") == -1:
-        conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         sql = "SELECT korean, dexnum, type1, type2 FROM dex Where type1 = ? OR type2 = ?"
         c.execute(sql, (search, search, ))
@@ -135,7 +138,7 @@ def readDexListType(search: str = ""):
         return result
     else:
         temp = search.split(',')
-        conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         sql = "SELECT korean, dexnum, type1, type2 FROM dex Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)"
         c.execute(sql, (temp[0], temp[1], temp[1], temp[0], ))
@@ -143,7 +146,7 @@ def readDexListType(search: str = ""):
         return result
     
 def readDexListAbility(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT korean, dexnum, type1, type2 FROM dex Where ability1 = ? OR ability2 = ? OR ability3 = ?"
     c.execute(sql, (search, search, search, ))
@@ -152,7 +155,7 @@ def readDexListAbility(search: str = ""):
 
 def readDexName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT * FROM dex Where korean LIKE ?"
     c.execute(sql, (search,))
@@ -160,7 +163,7 @@ def readDexName(name: str = ""):
     return result
 
 def readDexDex(search: int = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT * FROM dex Where dexnum = ?"
     c.execute(sql, (search, ))
@@ -168,7 +171,7 @@ def readDexDex(search: int = ""):
     return result
 
 def readDexNat(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT * FROM dex Where natnum = ?"
     c.execute(sql, (search, ))
@@ -177,7 +180,7 @@ def readDexNat(search: str = ""):
 
 def readDexType(search: str = ""):
     if search.find(",") == -1:
-        conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         sql = "SELECT * FROM dex Where type1 = ? OR type2 = ?"
         c.execute(sql, (search, search, ))
@@ -185,7 +188,7 @@ def readDexType(search: str = ""):
         return result
     else:
         temp = search.split(',')
-        conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         sql = "SELECT * FROM dex Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)"
         c.execute(sql, (temp[0], temp[1], temp[1], temp[0], ))
@@ -193,7 +196,7 @@ def readDexType(search: str = ""):
         return result
     
 def readDexAbility(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT * FROM dex Where ability1 = ? OR ability2 = ? OR ability3 = ?"
     c.execute(sql, (search, search, search, ))
@@ -202,7 +205,7 @@ def readDexAbility(search: str = ""):
 
 # Read TM Data:
 def readTmList():
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm;")
     result = c.fetchall()
@@ -210,7 +213,7 @@ def readTmList():
 
 def readTmName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where korean LIKE ?"
     c.execute(sql, (search, ))
@@ -218,7 +221,7 @@ def readTmName(name: str = ""):
     return result
 
 def readTmIndex(index: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where id = ?"
     c.execute(sql, (index, ))
@@ -226,7 +229,7 @@ def readTmIndex(index: int = 0):
     return result
 
 def readTmType(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where type = ?"
     c.execute(sql, (search, ))
@@ -234,7 +237,7 @@ def readTmType(search: str = ""):
     return result
 
 def readTmCategory(search: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/pokedex.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where category = ?"
     c.execute(sql, (search, ))

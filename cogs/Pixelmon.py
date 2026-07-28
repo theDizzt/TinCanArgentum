@@ -4,14 +4,13 @@ import fcts.sqlcontrol as q
 import fcts.pixelmon as px
 import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
-import os
 import requests
 import re
 import random
 from time import sleep
 import numpy
 import openpyxl
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
 from time import sleep
 
 
@@ -401,7 +400,7 @@ class Pixelmon(commands.Cog):
     @commands.hybrid_command(name='타운맵',
                              description="포켓몬 월드 지도를 불러옵니다.")
     async def townmap(self, ctx):
-        await ctx.send("## 타운맵",file=discord.File(root_dir + '/data/pixelmon/map.png'))
+        await ctx.send("## 타운맵", file=discord.File(DATA_DIR / "pixelmon" / "map.png"))
         
 
     # tm 리로드 [ID: 82]
@@ -411,7 +410,7 @@ class Pixelmon(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/pixelmon/tm.xlsx'
+        path = DATA_DIR / "pixelmon" / "tm.xlsx"
         result = []
         bool = True
 
@@ -459,7 +458,7 @@ class Pixelmon(commands.Cog):
         total = 0
         suc_count = 0
         fail_count = 0
-        path = f'{root_dir}/data/pixelmon/pixel.xlsx'
+        path = DATA_DIR / "pixelmon" / "pixel.xlsx"
         result = []
         bool = True
 

@@ -2,6 +2,10 @@
 from openpyxl import load_workbook, Workbook
 import random as r
 import functions.sqlcontrol as q
+from project_paths import CONFIG_DIR, PROJECT_ROOT
+
+
+USER_DB_EXPORT = PROJECT_ROOT / "userdb.xlsx"
 
 # 1. 기본 설정
 
@@ -17,19 +21,19 @@ c_storage = 7
 opt_arr = dict(id=1, discrim=2, nick=3, xp=4, money=5, skin=6, storage=7)
 
 # 1.2. 작업 시트 불러오기
-wb = load_workbook("userdb.xlsx")
+wb = load_workbook(USER_DB_EXPORT)
 ws = wb['main']
 wst = wb['storage']
 
 
 def loadFile():
-    wb = load_workbook("userdb.xlsx")
+    wb = load_workbook(USER_DB_EXPORT)
     ws = wb['main']
     wst = wb['storage']
 
 
 def saveFile():
-    wb.save("userdb.xlsx")
+    wb.save(USER_DB_EXPORT)
     wb.close()
 
 
@@ -54,7 +58,7 @@ arr_emblem = [[
 
 # 1.3.3 경험치 데이터
 def xpList():
-    file = open("./config/xp.txt", "r")
+    file = (CONFIG_DIR / "xp.txt").open()
     arr = []
     line = file.readline()
     arr.append(line.rstrip('\n'))

@@ -7,13 +7,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR, FONT_DIR, PROJECT_ROOT, RANKCARD_DIR
 
 
-ROOT = Path(root_dir)
-STORAGE_PATH = ROOT / "config" / "storage.json"
-QUEUE_ROOT = ROOT / "config" / "rankcard" / "upload"
-FONT_ROOT = ROOT / "font"
+ROOT = PROJECT_ROOT
+STORAGE_PATH = CONFIG_DIR / "storage.json"
+QUEUE_ROOT = RANKCARD_DIR / "upload"
+FONT_ROOT = FONT_DIR
 QUEUE_ID_PATTERN = re.compile(r"^t([1-9]\d*)$", re.IGNORECASE)
 
 

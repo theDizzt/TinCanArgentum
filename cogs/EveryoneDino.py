@@ -6,8 +6,7 @@ import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.drawing as dr
-from config.rootdir import root_dir
-import os
+from project_paths import DATA_DIR, FONT_DIR, RANKCARD_DIR
 import fcts.koreanbreak as kb
 import random as r
 from datetime import datetime, timedelta
@@ -52,11 +51,11 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         
         # 배경 이미지 불러오기
         background_image = Image.open(
-            f"{root_dir}/config/rankcard/goat.png"
+            RANKCARD_DIR / "goat.png"
         ).convert('RGBA')
 
         mask_image = Image.open(
-            f"{root_dir}/config/rankcard/goat_mask.png"
+            RANKCARD_DIR / "goat_mask.png"
         ).convert('RGBA')
 
         image = background_image.copy()
@@ -66,10 +65,10 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         now = datetime.now() + timedelta(hours=9)
         now_time = now.strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
 
-        font_name_path = f"{root_dir}/font/emblem.ttf"
-        font_title_path = f"{root_dir}/font/slay/name.ttf"
+        font_name_path = FONT_DIR / "emblem.ttf"
+        font_title_path = FONT_DIR / "slay" / "name.ttf"
         font_name = fit_font(draw, name, font_name_path, 22, 8, 236)
-        font_date = ImageFont.truetype(f"{root_dir}/font/slay/name.ttf", 14)
+        font_date = ImageFont.truetype(FONT_DIR / "slay" / "name.ttf", 14)
         font_display = fit_font(draw, dname, font_title_path, 14, 8, 236)
         font_title = ImageFont.truetype(font_title_path, 20)
 
@@ -134,7 +133,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         except Exception:
             avatar_image = Image.open(
-                root_dir + '/config/rankcard/noimage.jpg'
+                RANKCARD_DIR / "noimage.jpg"
             ).convert('RGBA')
 
         # 디스코드 프로필 사진 붙이기
@@ -508,16 +507,18 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             민찬=512098892674760705
             )
         
-        path = root_dir + "/data/kakao"
+        path = DATA_DIR / "kakao"
         temp = dict()
         filelist = []
 
-        datalist = os.listdir(path)
+        datalist = path.iterdir()
 
-        for name in datalist:
-            file = open(root_dir + "/data/kakao/" + name, "r", encoding='UTF8')
-            filelist += file.readlines()
-            os.remove(root_dir + "/data/kakao/" + name)
+        for file_path in datalist:
+            if not file_path.is_file():
+                continue
+            with file_path.open(encoding="UTF8") as file:
+                filelist += file.readlines()
+            file_path.unlink()
         
         for data in filelist:
             try:

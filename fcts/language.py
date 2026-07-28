@@ -1,10 +1,8 @@
 import json
-from pathlib import Path
 import discord
 from discord import app_commands
+from project_paths import LOCALES_DIR
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-LOCALES_DIR = BASE_DIR / "locales"
 
 def load_locale_file(lang: str) -> dict:
     path = LOCALES_DIR / f"{lang}.json"

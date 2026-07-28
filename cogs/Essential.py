@@ -1,5 +1,4 @@
 import discord
-import os
 from discord.ext import commands
 from discord import app_commands
 import fcts.i18n_runtime as i18n
@@ -8,15 +7,14 @@ import yaml
 import fcts.etcfunctions as etc
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from datetime import datetime
-from config.rootdir import root_dir
+from app_info import APP_VERSION, APP_VERSION_DATE
+from project_paths import CONFIG_DIR
 from config.settings import get_required_env
 
-with open(root_dir + '/config/help.yml',encoding='UTF-8') as f:
+with (CONFIG_DIR / "help.yml").open(encoding="UTF-8") as f:
     helps = yaml.load(f, Loader=yaml.FullLoader)
 
 prefix = get_required_env('BOT_PREFIX')
-Version = get_required_env('APP_VERSION')
-Update_Date = get_required_env('APP_VERSION_DATE')
 
 LANGUAGE_ALIASES = {
     "ko": "ko",
@@ -365,7 +363,12 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         embed = discord.Embed(
             title=i18n.t(ctx.author, "cmd.07.t001"),
-            description=i18n.t(ctx.author, "cmd.07.t002", ver=Version, date=Update_Date),
+            description=i18n.t(
+                ctx.author,
+                "cmd.07.t002",
+                ver=APP_VERSION,
+                date=APP_VERSION_DATE,
+            ),
             color=0xCEDEBD)
 
         embed.set_thumbnail(url=self.client.user.avatar.url)

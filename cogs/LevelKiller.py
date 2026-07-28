@@ -7,9 +7,9 @@ from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.lklab as lk
 import asyncio
 import json
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR
 
-with open(root_dir + '/config/levelkiller.json', 'r',encoding='UTF-8') as f:
+with (CONFIG_DIR / "levelkiller.json").open(encoding="UTF-8") as f:
     lk_data = json.load(f)
 
 

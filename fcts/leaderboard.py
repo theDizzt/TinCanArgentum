@@ -2,16 +2,19 @@
 import discord
 import sqlite3
 import datetime
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
+
+
+DB_PATH = DATA_DIR / "leaderboard.db"
 
 # Connect DB
-conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
 
 # Init Setting
 def initSetting():
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     sql = """CREATE TABLE IF NOT EXISTS mathgame(
@@ -74,7 +77,7 @@ def initSetting():
 def mathDataUpdate(user: discord.Member = None,
                    score: int = 0,
                    count: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -111,7 +114,7 @@ def mathDataUpdate(user: discord.Member = None,
 
 
 def mathDataReadScore(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, score, scoredate FROM mathgame WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -120,7 +123,7 @@ def mathDataReadScore(user: discord.Member = None):
 
 
 def mathDataReadCount(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, count, countdate FROM mathgame WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -129,7 +132,7 @@ def mathDataReadCount(user: discord.Member = None):
 
 
 def mathDataRanking(opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM mathgame;"
@@ -143,7 +146,7 @@ def mathDataRanking(opt: str = ""):
 
 
 def mathDataUserRanking(user: discord.Member = None, opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT score, scoredate, ranking FROM (SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM mathgame) WHERE id = ?;"
@@ -162,7 +165,7 @@ def mathDataForcedUpdate(user: int = None,
                          scoredate: str = "",
                          count: int = 0,
                          countdate: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
         INSERT_SQL = 'INSERT INTO mathgame (id, score, scoredate, count, countdate) VALUES (?,?,?,?,?);'
@@ -184,7 +187,7 @@ def rpsDataUpdate(user: discord.Member = None,
                   maxchain: int = 0,
                   win: int = 0,
                   tie: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -242,7 +245,7 @@ def rpsDataUpdate(user: discord.Member = None,
 
 
 def rpsDataReadScore(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, score, scoredate FROM rps WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -251,7 +254,7 @@ def rpsDataReadScore(user: discord.Member = None):
 
 
 def rpsDataReadCount(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, count, countdate FROM rps WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -260,7 +263,7 @@ def rpsDataReadCount(user: discord.Member = None):
 
 
 def rpsDataReadWin(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, win, windate FROM rps WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -269,7 +272,7 @@ def rpsDataReadWin(user: discord.Member = None):
 
 
 def rpsDataReadTie(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, tie, tiedate FROM rps WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -278,7 +281,7 @@ def rpsDataReadTie(user: discord.Member = None):
 
 
 def rpsDataRanking(opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM rps;"
@@ -304,7 +307,7 @@ def rpsDataRanking(opt: str = ""):
 
 
 def rpsDataUserRanking(user: discord.Member = None, opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT score, scoredate, ranking FROM (SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM rps) WHERE id = ?;"
@@ -340,7 +343,7 @@ def rpsDataForcedUpdate(user: int = None,
                         windate: str = "",
                         tie: int = 0,
                         tiedate: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
         INSERT_SQL = 'INSERT INTO rps (id, score, scoredate, count, countdate, maxchain, maxchaindate, win, windate, tie, tiedate) VALUES (?,?,?,?,?,?,?,?,?,?,?);'
@@ -359,7 +362,7 @@ def rpsDataForcedUpdate(user: int = None,
 
 #Word Chain
 def wcUpdateRegist(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -378,7 +381,7 @@ def wcUpdateRegist(user: discord.Member = None):
 
 
 def wcUpdateRegistById(user: int = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -400,7 +403,7 @@ def wcUpdateIndi(user: int = None,
                  score: int = 0,
                  count: int = 0,
                  winner: bool = False):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -443,7 +446,7 @@ def wcUpdateIndi(user: int = None,
 
 
 def wcUpdateBot(user: discord.Member = None, score: int = 0, count: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -471,7 +474,7 @@ def wcUpdateBot(user: discord.Member = None, score: int = 0, count: int = 0):
 
 
 def wcUpdateMara(user: discord.Member = None, opt: str = '', record: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -505,7 +508,7 @@ def wcUpdateMara(user: discord.Member = None, opt: str = '', record: int = 0):
 
 
 def wcRanking(opt: str = "", sub: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "regist":
         sql = "SELECT id, regist, RANK() OVER (ORDER BY regist DESC) AS ranking FROM wordchain;"
@@ -551,7 +554,7 @@ def wcRanking(opt: str = "", sub: str = ""):
 
 
 def wcUserRanking(user: discord.Member = None, opt: str = "", sub: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "regist":
         sql = "SELECT regist, ranking FROM (SELECT id, regist, RANK() OVER (ORDER BY regist DESC) AS ranking FROM wordchain) WHERE id = ?;"
@@ -604,7 +607,7 @@ def wcForcedUpdate(
     mh: int = 0,
     mf: int = 0,
 ):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
         INSERT_SQL = 'INSERT INTO wordchain (id, regist, indi_score, indi_count, indi_play, indi_win, bot_score, bot_count, mara_half, mara_full) VALUES (?,?,?,?,?,?,?,?,?,?);'
@@ -621,7 +624,7 @@ def wcForcedUpdate(
 
 
 def wcRead(user: discord.Member = None, opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "regist":
         sql = "SELECT regist FROM wordchain WHERE id = ?;"
@@ -637,7 +640,7 @@ def wcRead(user: discord.Member = None, opt: str = ""):
 
 
 def wcReadById(user: int = None, opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "regist":
         sql = "SELECT regist FROM wordchain WHERE id = ?;"
@@ -659,7 +662,7 @@ def wcReadById(user: int = None, opt: str = ""):
 
 #Yahtzee
 def ytUpdate(user: int = None, score: int = 0, winner: bool = False):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     try:
@@ -700,7 +703,7 @@ def ytUpdate(user: int = None, score: int = 0, winner: bool = False):
 
 
 def ytReadScore(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, score, scoredate FROM yahtzee WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -709,7 +712,7 @@ def ytReadScore(user: discord.Member = None):
 
 
 def ytReadPW(user: discord.Member = None):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     sql = "SELECT id, play, win FROM yahtzee WHERE id = ?"
     c.execute(sql, (user.id, ))
@@ -718,7 +721,7 @@ def ytReadPW(user: discord.Member = None):
 
 
 def ytRanking(opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM yahtzee;"
@@ -736,7 +739,7 @@ def ytRanking(opt: str = ""):
 
 
 def ytUserRanking(user: discord.Member = None, opt: str = ""):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if opt == "score":
         sql = "SELECT score, scoredate, ranking FROM (SELECT id, score, scoredate, RANK() OVER (ORDER BY score DESC) AS ranking FROM yahtzee) WHERE id = ?;"
@@ -761,7 +764,7 @@ def ytForcedUpdate(user: int = None,
                    scoredate: str = "",
                    play: int = 0,
                    win: int = 0):
-    conn = sqlite3.connect(root_dir + '/data/leaderboard.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
         INSERT_SQL = 'INSERT INTO yahtzee (id, score, scoredate, play, win) VALUES (?,?,?,?,?);'

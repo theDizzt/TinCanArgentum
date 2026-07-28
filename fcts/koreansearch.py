@@ -8,7 +8,6 @@ from fcts.koreanbreak import count_break_korean
 import fcts.worddict as wd
 import random
 
-from config.rootdir import root_dir
 
 from config.settings import get_required_env
 

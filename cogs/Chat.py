@@ -5,7 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from openai import OpenAI
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
 from config.settings import get_required_env
 import fcts.i18n_runtime as i18n
 
@@ -19,7 +19,7 @@ class Chat(commands.Cog):
         self.max_history = 6
         self.max_input_length = 1500
 
-        self.memory_db_path = root_dir + '/data/memory.db'
+        self.memory_db_path = DATA_DIR / "memory.db"
         self.init_memory_db()
 
         self.system_prompt = """

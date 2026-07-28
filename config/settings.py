@@ -1,11 +1,10 @@
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
+from project_paths import PROJECT_ROOT
 
 
-project_root = Path(__file__).resolve().parents[1]
-load_dotenv(project_root / ".env")
+load_dotenv(PROJECT_ROOT / ".env")
 
 
 def get_required_env(name: str) -> str:

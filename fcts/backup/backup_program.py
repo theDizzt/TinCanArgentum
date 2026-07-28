@@ -1,6 +1,9 @@
+from project_paths import DATA_DIR
+
+
 # 2.1.2 Read Data
 def dataRead(user_id):
-    file = open("./data/" + str(user_id) + ".txt", "r+")
+    file = (DATA_DIR / f"{user_id}.txt").open("r+")
     if file != None:
         return file.read()
     else:
@@ -9,7 +12,7 @@ def dataRead(user_id):
 
 
 def dataWrite(user_id, value):
-    file = open("./data/" + str(user_id) + ".txt", "w+")
+    file = (DATA_DIR / f"{user_id}.txt").open("w+")
     if file == None:
         file.write("0")
     file.write(value)
@@ -18,7 +21,7 @@ def dataWrite(user_id, value):
 # 2.2.6. Save Rankings
 def rankList():
 
-    path = "./data"
+    path = DATA_DIR
     file_list = os.listdir(path)
 
     rank_list = []
@@ -49,7 +52,7 @@ if message.content.startswith("88888"):
 
         print("파일 불어오는 중...")
 
-        path = "./data"
+        path = DATA_DIR
         file_list = os.listdir(path)
 
         user_list = []
@@ -81,7 +84,7 @@ if message.content.startswith("77777"):
 
         print("파일 불어오는 중...")
 
-        path = "./data"
+        path = DATA_DIR
         file_list = os.listdir(path)
 
         user_list = []
@@ -115,7 +118,7 @@ if message.content.startswith("77777"):
 
         print("파일 불어오는 중...")
 
-        path = "./data"
+        path = DATA_DIR
         file_list = os.listdir(path)
 
         user_list = []

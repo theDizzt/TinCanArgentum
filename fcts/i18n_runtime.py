@@ -1,9 +1,7 @@
 import json
-from pathlib import Path
 import fcts.sqlcontrol as q
+from project_paths import LOCALES_DIR
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-LOCALES_DIR = BASE_DIR / "locales"
 
 _locale_cache = {}
 

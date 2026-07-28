@@ -15,6 +15,7 @@
 import discord
 from discord.ext import commands
 import asyncio
+import sys
 
 # 0.2. Fuctions
 from fcts.keep_alive import keep_alive
@@ -23,12 +24,10 @@ import fcts.etcfunctions as etc
 import fcts.leaderboard as l
 import fcts.lklab as lk
 import fcts.tedne as ted
-from config.rootdir import root_dir
+from app_info import APP_VERSION, APP_VERSION_DATE
+from project_paths import PROJECT_ROOT, RANKCARD_DIR
 from fcts.language import JsonTranslator
 from config.settings import get_required_env
-
-# 0.2. Dir. Manager
-import os
 
 # 0.3. Dynamic Images + Buffer
 from PIL import Image, ImageDraw, ImageFont
@@ -53,9 +52,9 @@ from tqdm import tqdm
 # 1.1. Discord Bot
 token = get_required_env('DISCORD_BOT_TOKEN')
 prefix = get_required_env('BOT_PREFIX')
-Version = get_required_env('APP_VERSION')
-Update_Date = get_required_env('APP_VERSION_DATE')
-game_mes = f"{Version} | {Update_Date} | Type '{prefix}help' for help"
+game_mes = (
+    f"{APP_VERSION} | {APP_VERSION_DATE} | Type '{prefix}help' for help"
+)
 
 # 1.4. Event Variables
 xp_multi = 1.5
@@ -77,19 +76,41 @@ class MyBot(commands.Bot):
         # 번역기 등록
         await self.tree.set_translator(JsonTranslator())
 
-        # cog 로드 (기존 자동 로드 코드 대신 여기에 넣어도 됨)
-        cogs_path = 'cogs'
-        abs_cogs_path = os.path.join(
-            os.path.abspath(os.path.dirname(__file__)),
-            cogs_path
+        # main.py와 같은 최상위 폴더의 cogs를 순서대로 로드한다.
+        cogs_path = PROJECT_ROOT / "cogs"
+        cog_files = sorted(
+            (
+                path
+                for path in cogs_path.iterdir()
+                if path.is_file()
+                and path.suffix == ".py"
+                and not path.name.startswith("_")
+            ),
+            key=lambda path: path.name.casefold(),
         )
-
-        for c in tqdm(os.listdir(abs_cogs_path)):
-            if c.endswith(".py"):
-                await self.load_extension(f"cogs.{c.split('.')[0]}")
+        print(f"[STARTUP] Loading {len(cog_files)} cogs...", flush=True)
+        with tqdm(
+            total=len(cog_files),
+            desc="Loading cogs",
+            unit="cog",
+            file=sys.stdout,
+            ascii=False,
+            dynamic_ncols=True,
+            mininterval=0,
+            leave=True,
+            disable=False,
+        ) as progress:
+            progress.refresh()
+            for cog_path in cog_files:
+                progress.set_postfix_str(cog_path.stem, refresh=True)
+                await self.load_extension(f"cogs.{cog_path.stem}")
+                progress.update(1)
+                progress.refresh()
 
         # 슬래시 명령어 동기화
+        print("[STARTUP] Syncing application commands...", flush=True)
         await self.tree.sync()
+        print("[STARTUP] Command sync complete.", flush=True)
 
 intents = discord.Intents.all()
 client = MyBot(
@@ -102,7 +123,21 @@ client = MyBot(
     )
 
 # 한글 자동 분석 모듈
-okt = Okt()
+with tqdm(
+    total=1,
+    desc="Initializing Korean analyzer",
+    unit="step",
+    file=sys.stdout,
+    ascii=False,
+    dynamic_ncols=True,
+    mininterval=0,
+    leave=True,
+    disable=False,
+) as progress:
+    progress.refresh()
+    okt = Okt()
+    progress.update(1)
+    progress.refresh()
 server_id = [
     262525769023094785, 716980478992711720, 1114816224522678294,
     453906917719408642, 348750582200270848, 842746723067756554, 1252877905747513457 , 364240472060985357, 1482323335739342860, 1480230239043850401
@@ -180,13 +215,12 @@ async def on_message(message):
     """
     if etc.level_up(temp_lv, temp_xp + xp_gain):
 
-        background_image = Image.open(root_dir + "/config/rankcard/rankup.png").convert(
+        background_image = Image.open(RANKCARD_DIR / "rankup.png").convert(
             'RGBA')
         rank_image_1 = Image.open(
-            root_dir + "/config/rankcard/emblem/{}.png".format(temp_lv)).convert('RGBA')
+            RANKCARD_DIR / "emblem" / f"{temp_lv}.png").convert('RGBA')
         rank_image_2 = Image.open(
-            root_dir + "/config/rankcard/emblem/{}.png".format(temp_lv +
-                                                     1)).convert('RGBA')
+            RANKCARD_DIR / "emblem" / f"{temp_lv + 1}.png").convert('RGBA')
 
         rank_image_1 = rank_image_1.resize((60, 60))
         rank_image_2 = rank_image_2.resize((60, 60))

@@ -7,9 +7,9 @@ from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.tedne as ted
 import asyncio
 import json
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR
 
-with open(root_dir + '/config/tedne.json', 'r',encoding='UTF-8') as f:
+with (CONFIG_DIR / "tedne.json").open(encoding="UTF-8") as f:
     tedne_data = json.load(f)
 
 

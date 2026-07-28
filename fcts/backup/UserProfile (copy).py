@@ -4,6 +4,7 @@ import functions.sqlcontrol as q
 import functions.etcfunctions as etc
 from PIL import Image, ImageDraw, ImageFont
 import io
+from project_paths import FONT_DIR, RANKCARD_DIR
 
 # Black Text Skin
 bktext = [40, 52, 55]
@@ -138,12 +139,12 @@ class UserProfile(commands.Cog):
             skin_id = 1
 
         background_image = Image.open(
-            f"./config/rankcard/rankcard_skins/rankcard{skin_id}.png").convert(
-                'RGBA')
+            RANKCARD_DIR / "rankcard_skins" / f"rankcard{skin_id}.png").convert(
+            'RGBA')
         bar_cover_image = Image.open(
-            f"./config/rankcard/bar_skins/bar{skin_id}.png").convert('RGBA')
+            RANKCARD_DIR / "bar_skins" / f"bar{skin_id}.png").convert('RGBA')
         emblem_image = Image.open(
-            f"./config/rankcard/emblem/{lv}.png").convert('RGBA')
+            RANKCARD_DIR / "emblem" / f"{lv}.png").convert('RGBA')
 
         emblem_image = emblem_image.resize((72, 72))
         bar_cover_image = bar_cover_image.crop((0, 0, 368 * xp1 / xp2, 8))
@@ -162,12 +163,12 @@ class UserProfile(commands.Cog):
         text_xp = f"[XP] {xp1:,d} / {xp2:,d} ({100 * xp1 / xp2:.2f}%), [Total] {xp:,d}"
         emblem = etc.emblemName(lv)
 
-        font_name = ImageFont.truetype("./font/name.ttf", 20)
-        font_discrim = ImageFont.truetype("./font/name.ttf", 20)
-        font_dname = ImageFont.truetype("./font/xp.ttf", 16)
-        font_emblem = ImageFont.truetype("./font/emblem.ttf", 14)
-        font_xp = ImageFont.truetype("./font/xp.ttf", 14)
-        font_dname = ImageFont.truetype("./font/xp.ttf", 16)
+        font_name = ImageFont.truetype(FONT_DIR / "name.ttf", 20)
+        font_discrim = ImageFont.truetype(FONT_DIR / "name.ttf", 20)
+        font_dname = ImageFont.truetype(FONT_DIR / "xp.ttf", 16)
+        font_emblem = ImageFont.truetype(FONT_DIR / "emblem.ttf", 14)
+        font_xp = ImageFont.truetype(FONT_DIR / "xp.ttf", 14)
+        font_dname = ImageFont.truetype(FONT_DIR / "xp.ttf", 16)
 
         tw_name, th_name = draw.textbbox((0, 0), str(name), font=font_name)[:2]
         tw_discrim, th_discrim = draw.textbbox((0, 0),
@@ -233,7 +234,7 @@ class UserProfile(commands.Cog):
             avatar_image = Image.open(buffer_avatar).convert('RGBA')
 
         except:
-            avatar_image = Image.open('./config/rankcard/noimage.jpg')
+            avatar_image = Image.open(RANKCARD_DIR / "noimage.jpg")
 
         # resize it
         avatar_image = avatar_image.resize((96, 96))
@@ -267,7 +268,7 @@ class UserProfile(commands.Cog):
                 await ctx.reply("`(⩌Δ ⩌ ;)` 타입오류!\nType Error!\n")
 
         if lvl == "1":
-            icon = "./config/rankcard/emblem/1.png"
+            icon = RANKCARD_DIR / "emblem" / "1.png"
             emblem = "**{}**\nRequired XP: 0 | 0\nProgression: You already reached this level!".format(
                 etc.emblemName(1))
 
@@ -287,7 +288,7 @@ class UserProfile(commands.Cog):
                     ptxt = "You already reached this level!"
 
                 tlv = int(lv)
-                icon = "./config/rankcard/emblem/{}.png".format(lv)
+                icon = RANKCARD_DIR / "emblem" / f"{lv}.png"
                 emblem = "**{}**\nRequired XP: {:,d} | {:,d}\nProgression: {}".format(
                     etc.emblemName(tlv), inf0, inf1, ptxt)
 
@@ -491,13 +492,13 @@ class UserProfile(commands.Cog):
             xp2 = etc.need_exp(lv) - etc.need_exp(lv - 1)
 
         background_image = Image.open(
-            f"./config/rankcard/rankcard_skins/rankcard{skin_id}.png").convert(
-                'RGBA')
+            RANKCARD_DIR / "rankcard_skins" / f"rankcard{skin_id}.png").convert(
+            'RGBA')
         bar_cover_image = Image.open(
-            f"./config/rankcard/bar_skins/bar{skin_id}.png").convert('RGBA')
+            RANKCARD_DIR / "bar_skins" / f"bar{skin_id}.png").convert('RGBA')
         emblem_image = Image.open(
-            f"./config/rankcard/emblem/{lv}.png").convert('RGBA')
-        wm = Image.open("./config/rankcard/watermark.png").convert('RGBA')
+            RANKCARD_DIR / "emblem" / f"{lv}.png").convert('RGBA')
+        wm = Image.open(RANKCARD_DIR / "watermark.png").convert('RGBA')
 
         emblem_image = emblem_image.resize((72, 72))
         bar_cover_image = bar_cover_image.crop((0, 0, 368 * xp1 / xp2, 8))
@@ -516,12 +517,12 @@ class UserProfile(commands.Cog):
         text_xp = f"[XP] {xp1:,d} / {xp2:,d} ({100 * xp1 / xp2:.2f}%), [Total] {xp:,d}"
         emblem = etc.emblemName(lv)
 
-        font_name = ImageFont.truetype("./font/name.ttf", 20)
-        font_discrim = ImageFont.truetype("./font/name.ttf", 20)
-        font_dname = ImageFont.truetype("./font/xp.ttf", 16)
-        font_emblem = ImageFont.truetype("./font/emblem.ttf", 14)
-        font_xp = ImageFont.truetype("./font/xp.ttf", 14)
-        font_dname = ImageFont.truetype("./font/xp.ttf", 16)
+        font_name = ImageFont.truetype(FONT_DIR / "name.ttf", 20)
+        font_discrim = ImageFont.truetype(FONT_DIR / "name.ttf", 20)
+        font_dname = ImageFont.truetype(FONT_DIR / "xp.ttf", 16)
+        font_emblem = ImageFont.truetype(FONT_DIR / "emblem.ttf", 14)
+        font_xp = ImageFont.truetype(FONT_DIR / "xp.ttf", 14)
+        font_dname = ImageFont.truetype(FONT_DIR / "xp.ttf", 16)
 
         tw_name, th_name = draw.textbbox((0, 0), str(name), font=font_name)[:2]
         tw_discrim, th_discrim = draw.textbbox((0, 0),
@@ -587,7 +588,7 @@ class UserProfile(commands.Cog):
             avatar_image = Image.open(buffer_avatar).convert('RGBA')
 
         except:
-            avatar_image = Image.open('./config/rankcard/noimage.jpg')
+            avatar_image = Image.open(RANKCARD_DIR / "noimage.jpg")
 
         # resize it
         avatar_image = avatar_image.resize((96, 96))

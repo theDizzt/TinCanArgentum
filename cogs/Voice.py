@@ -7,9 +7,13 @@ import fcts.i18n_runtime as i18n
 from PIL import Image, ImageDraw, ImageFont
 import io
 import json
-from config.rootdir import root_dir
 from config.settings import get_required_env
+from project_paths import PROJECT_ROOT
 import requests
+
+
+TTS_PATH = PROJECT_ROOT / "tts.mp3"
+
 
 class KakaoTTS:
 	def __init__(self, text, API_KEY=None):
@@ -23,7 +27,7 @@ class KakaoTTS:
                 data=f"<speak><voice name='WOMAN_READ_CALM'>{text}</voice></speak>".encode('utf-8')
             )
 
-	def save(self, filename="tts.mp3"):
+	def save(self, filename=TTS_PATH):
 		with open(filename, "wb") as file:
 			file.write(self.resp.content)
 
@@ -87,8 +91,8 @@ class Voice(commands.Cog):
         voice = self.client.voice_clients[0]
         # 음성채널에 연결되어있다면
         tts = KakaoTTS(text)
-        tts.save('tts.mp3')
-        voice.play(discord.FFmpegPCMAudio(f'tts.mp3'))
+        tts.save(TTS_PATH)
+        voice.play(discord.FFmpegPCMAudio(str(TTS_PATH)))
 
     @tts.error
     async def tts_error(self, ctx, error):

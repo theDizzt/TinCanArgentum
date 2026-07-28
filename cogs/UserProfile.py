@@ -9,10 +9,68 @@ from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from PIL import Image, ImageDraw, ImageFont
 import io
 import json
-from config.rootdir import root_dir
+import random
+from project_paths import FONT_DIR, RANKCARD_DIR
+
+
+SKIN_214_COLOR_PRESETS = (
+    (255, 0, 0, 0),
+    (0, 255, 0, 0),
+    (0, 0, 255, 0),
+    (255, 255, 0, 0),
+    (255, 0, 255, 0),
+    (0, 255, 255, 0),
+    (255, 255, 255, 0),
+    (128, 128, 128, 0),
+    (192, 192, 192, 0),
+    (128, 0, 128, 0),
+    (128, 0, 0, 0),
+    (128, 128, 0, 0),
+    (0, 128, 0, 0),
+    (0, 128, 128, 0),
+    (0, 0, 128, 0),
+)
+
+
+def _tint_preserving_alpha(
+    source: Image.Image,
+    color: tuple[int, int, int, int],
+) -> Image.Image:
+    source = source.convert("RGBA")
+    visible_color = (*color[:3], 255)
+    tinted = Image.new("RGBA", source.size, visible_color)
+    tinted.putalpha(source.getchannel("A"))
+    return tinted
+
+
+def _apply_skin_214_effects(
+    background: Image.Image,
+    bar: Image.Image,
+) -> tuple[Image.Image, Image.Image, tuple[int, int, int, int]]:
+    selected_color = random.choice(SKIN_214_COLOR_PRESETS)
+    visible_color = (*selected_color[:3], 255)
+
+    image = background.copy().convert("RGBA")
+    tinted_bar = _tint_preserving_alpha(bar, selected_color)
+    special_directory = RANKCARD_DIR / "special"
+    with Image.open(special_directory / "image214a.png") as source_a:
+        image_a = _tint_preserving_alpha(source_a, selected_color)
+    with Image.open(special_directory / "image214b.png") as source_b:
+        image_b = _tint_preserving_alpha(source_b, selected_color)
+
+    max_x = max(0, image.width - image_a.width)
+    max_y = max(0, image.height - image_a.height)
+    random_position = (
+        random.randint(0, max_x),
+        random.randint(0, max_y),
+    )
+    image.alpha_composite(image_a, random_position)
+    image.alpha_composite(image_b, (7, 115))
+    return image, tinted_bar, visible_color
+
 
 # Black Text Skin
-with open(root_dir + '/font/font.json', 'r',encoding='UTF-8') as f:
+with (FONT_DIR / "font.json").open(encoding="UTF-8") as f:
     font_data = json.load(f)
 
 def fontsize(type, font):
@@ -236,24 +294,36 @@ class UserProfile(commands.Cog):
         else:
             normal_skin_id = int(skin_id)
             background_path = (
-                f"{root_dir}/config/rankcard/rankcard_skins/"
-                f"rankcard{normal_skin_id}.png"
+                RANKCARD_DIR
+                / "rankcard_skins"
+                / f"rankcard{normal_skin_id}.png"
             )
             bar_path = (
-                f"{root_dir}/config/rankcard/bar_skins/bar{normal_skin_id}.png"
+                RANKCARD_DIR / "bar_skins" / f"bar{normal_skin_id}.png"
             )
             font_option = font_data['profile'][f'skin{normal_skin_id}']
 
         background_image = Image.open(background_path).convert('RGBA')
         bar_cover_image = Image.open(bar_path).convert('RGBA')
         emblem_image = Image.open(
-            f"{root_dir}/config/rankcard/emblem/{lv}.png"
+            RANKCARD_DIR / "emblem" / f"{lv}.png"
         ).convert('RGBA')
+
+        name_outline_color = tuple(font_option['nametext-outline-color'])
+        xp_outline_color = tuple(font_option['xp-outline-color'])
+        if normal_skin_id == 214:
+            image, bar_cover_image, skin_214_color = _apply_skin_214_effects(
+                background_image,
+                bar_cover_image,
+            )
+            name_outline_color = skin_214_color
+            xp_outline_color = skin_214_color
+        else:
+            image = background_image.copy()
 
         emblem_image = emblem_image.resize((72, 72))
         bar_cover_image = bar_cover_image.crop((0, 0, 368 * xp1 / xp2, 8))
 
-        image = background_image.copy()
         rank = emblem_image.copy()
         bar = bar_cover_image.copy()
         draw = ImageDraw.Draw(image)
@@ -262,13 +332,13 @@ class UserProfile(commands.Cog):
         emblem = etc.emblemName(lv)
 
         font_name = ImageFont.truetype(
-            f"{root_dir}/font/{font_option['font']}/name.ttf",
+            FONT_DIR / font_option["font"] / "name.ttf",
             fontsize("name", font_option['font'])
         )
-        font_dname = ImageFont.truetype(f"{root_dir}/font/emblem.ttf", 16)
-        font_emblem = ImageFont.truetype(root_dir + "/font/emblem.ttf", 14)
+        font_dname = ImageFont.truetype(FONT_DIR / "emblem.ttf", 16)
+        font_emblem = ImageFont.truetype(FONT_DIR / "emblem.ttf", 14)
         font_xp = ImageFont.truetype(
-            f"{root_dir}/font/{font_option['font']}/xp.ttf",
+            FONT_DIR / font_option["font"] / "xp.ttf",
             fontsize("xp", font_option['font']) - 2
         )
 
@@ -296,21 +366,21 @@ class UserProfile(commands.Cog):
             fill=tuple(font_option['name-color']),
             font=font_name,
             stroke_width=font_option['nametext-outline-width'],
-            stroke_fill=tuple(font_option['nametext-outline-color'])
+            stroke_fill=name_outline_color
         )
         draw.text(
             (x5, y5), str(discrim),
             fill=tuple(font_option['discrim-color']),
             font=font_name,
             stroke_width=font_option['nametext-outline-width'],
-            stroke_fill=tuple(font_option['nametext-outline-color'])
+            stroke_fill=name_outline_color
         )
         draw.text(
             (x2, y2), dname,
             fill=tuple(font_option['discrim-color']),
             font=font_dname,
             stroke_width=font_option['nametext-outline-width'],
-            stroke_fill=tuple(font_option['nametext-outline-color'])
+            stroke_fill=name_outline_color
         )
         draw.text(
             (x3, y3), emblem,
@@ -324,14 +394,14 @@ class UserProfile(commands.Cog):
             fill=tuple(font_option['xp-color']),
             font=font_xp,
             stroke_width=font_option['xp-outline-width'],
-            stroke_fill=tuple(font_option['xp-outline-color'])
+            stroke_fill=xp_outline_color
         )
         draw.text(
             (x6, y6), money,
             fill=tuple(font_option['xp-color']),
             font=font_xp,
             stroke_width=font_option['xp-outline-width'],
-            stroke_fill=tuple(font_option['xp-outline-color'])
+            stroke_fill=xp_outline_color
         )
 
         try:
@@ -342,11 +412,11 @@ class UserProfile(commands.Cog):
             avatar_image = Image.open(buffer_avatar).convert('RGBA')
             if normal_skin_id == 140:
                 avatar_image = Image.open(
-                    root_dir + '/config/rankcard/image140.png'
+                    RANKCARD_DIR / "special" / "image140.png"
                 )
         except Exception:
             avatar_image = Image.open(
-                root_dir + '/config/rankcard/noimage.jpg'
+                RANKCARD_DIR / "noimage.jpg"
             )
 
         avatar_image = avatar_image.resize((96, 96))
@@ -357,7 +427,7 @@ class UserProfile(commands.Cog):
 
         if preview:
             wm = Image.open(
-                root_dir + "/config/rankcard/watermark.png"
+                RANKCARD_DIR / "watermark.png"
             ).convert('RGBA')
             image.paste(wm, (0, 0), mask=wm)
 
@@ -427,9 +497,9 @@ class UserProfile(commands.Cog):
         if lvl == "1":
             emblem = i18n.t(ctx.author, "cmd.12.t002", ename=etc.emblemName(1))
             emblem_image = Image.open(
-                    f"{root_dir}/config/rankcard/emblem/1.png").convert('RGBA')
+                    RANKCARD_DIR / "emblem" / "1.png").convert('RGBA')
             emblem_image = emblem_image.resize((128, 128))
-            wm = Image.open(root_dir + "/config/rankcard/watermark.png").convert('RGBA')
+            wm = Image.open(RANKCARD_DIR / "watermark.png").convert('RGBA')
             wm = wm.resize((96, 54))
 
             #duplicate image
@@ -460,13 +530,13 @@ class UserProfile(commands.Cog):
                     ptxt = i18n.t(ctx.author, "cmd.12.t003")
 
                 tlv = int(lv)
-                icon = root_dir + "/config/rankcard/emblem/{}.png".format(lv)
+                icon = RANKCARD_DIR / "emblem" / f"{lv}.png"
                 emblem = i18n.t(ctx.author, "cmd.12.t004", ename=etc.emblemName(tlv), info0=inf0, info1=inf1, ptxt=ptxt)
                 
                 emblem_image = Image.open(
-                    f"{root_dir}/config/rankcard/emblem/{lv}.png").convert('RGBA')
+                    RANKCARD_DIR / "emblem" / f"{lv}.png").convert('RGBA')
                 emblem_image = emblem_image.resize((128, 128))
-                wm = Image.open(root_dir + "/config/rankcard/watermark.png").convert('RGBA')
+                wm = Image.open(RANKCARD_DIR / "watermark.png").convert('RGBA')
                 wm = wm.resize((96, 54))
 
                 #duplicate image

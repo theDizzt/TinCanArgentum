@@ -7,7 +7,7 @@ from typing import Any
 
 import discord
 
-from config.rootdir import root_dir
+from project_paths import DATA_DIR
 
 
 MENTION_PATTERN = re.compile(r"^<@!?(\d+)>$")
@@ -19,7 +19,7 @@ class UserResolutionError(ValueError):
 
 
 def _registered_users() -> list[tuple[int, str, int]]:
-    with closing(sqlite3.connect(f"{root_dir}/data/user.db")) as connection:
+    with closing(sqlite3.connect(DATA_DIR / "user.db")) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT id, nick, discrim FROM main")
         rows = cursor.fetchall()
@@ -37,7 +37,7 @@ def registered_user_tag(user_id: int | str) -> str:
         return str(user_id)
 
     try:
-        with closing(sqlite3.connect(f"{root_dir}/data/user.db")) as connection:
+        with closing(sqlite3.connect(DATA_DIR / "user.db")) as connection:
             cursor = connection.cursor()
             cursor.execute(
                 "SELECT nick, discrim FROM main WHERE id = ?",

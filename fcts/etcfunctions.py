@@ -1,6 +1,5 @@
-import os
 import discord
-from config.rootdir import root_dir
+from project_paths import CONFIG_DIR, DATA_DIR
 import datetime
 from fcts.skin_catalog import storage_rows
 from fcts.user_resolver import resolve_user_id
@@ -327,7 +326,7 @@ emblem_icon = [
 
 # 1.3.3 경험치 데이터
 def xpList():
-    file = open(root_dir + "/config/xp.txt", "r")
+    file = (CONFIG_DIR / "xp.txt").open()
     arr = []
     line = file.readline()
     arr.append(line.rstrip('\n'))
@@ -425,26 +424,19 @@ def storageLineRead(option:str = None):
 
 # 2.3. voice
 def voiceRead(user: discord.Member = None):
-    file = open(root_dir + "/data/voice/" + str(user.id) + ".txt", "r+")
-    if file != None:
-        return int(file.read())
-    else:
-        pass
-    file.close()
+    path = DATA_DIR / "voice" / f"{user.id}.txt"
+    return int(path.read_text())
 
 
 def voiceWrite(user: discord.Member = None, value: int = None):
-    file = open(root_dir + "/data/voice/" + str(user.id) + ".txt", "w+")
-    if file == None:
-        pass
-    file.write(str(value))
-    file.close()
+    path = DATA_DIR / "voice" / f"{user.id}.txt"
+    path.write_text(str(value))
 
 
 def voiceDelete(user: discord.Member = None):
-    file = root_dir + "/data/voice/" + str(user.id) + ".txt"
-    if os.path.isfile(file):
-        os.remove(file)
+    file = DATA_DIR / "voice" / f"{user.id}.txt"
+    if file.is_file():
+        file.unlink()
 
 
 # 2.4.3. Number Font

@@ -140,7 +140,7 @@ if errorlevel 1 (
 )
 
 echo Starting TinCanArgentum...
-"%PYTHON_EXE%" %PYTHON_ARGS% main.py
+"%PYTHON_EXE%" %PYTHON_ARGS% -u main.py
 set "BOT_EXIT_CODE=%ERRORLEVEL%"
 
 if not "%BOT_EXIT_CODE%"=="0" (

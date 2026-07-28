@@ -1,12 +1,16 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from random import Random
-from config.rootdir import root_dir
+from project_paths import DATA_DIR, PROJECT_ROOT
 import random
 from games.poke2vec import calculate_similarity_vector, calculate_ranks
 
 class PokemantleEngine:
-    def __init__(self, data_dir="data", seed=20260419):
+    def __init__(self, data_dir=DATA_DIR, seed=20260419):
+        data_path = Path(data_dir)
+        if not data_path.is_absolute():
+            data_path = PROJECT_ROOT / data_path
         self.alias_map = {
             "은비": "Rayquaza",
             "최은비": "Rayquaza",
@@ -83,9 +87,12 @@ class PokemantleEngine:
         
         self.random = Random(seed)
 
-        self.pokedex = pd.read_csv(f"{root_dir}/data/pokedex.csv").replace({np.nan: None})
-        self.name_map = pd.read_csv(f"{root_dir}/data/name_map.csv")
-        self.old_secret = pd.read_csv(f"{root_dir}/data/old_secret.csv", index_col="puzzle_number")
+        self.pokedex = pd.read_csv(data_path / "pokedex.csv").replace({np.nan: None})
+        self.name_map = pd.read_csv(data_path / "name_map.csv")
+        self.old_secret = pd.read_csv(
+            data_path / "old_secret.csv",
+            index_col="puzzle_number",
+        )
 
         self.pokemon_size = len(self.pokedex.index)
         self.old_secret_size = len(self.old_secret.index)

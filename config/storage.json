@@ -2108,5 +2108,45 @@
     "keyword": "ans",
     "creater": 712929332892401695,
     "date": "2026-07-25"
+  },
+  "skin212": {
+    "id": "212",
+    "name": "ANS 13: Legacy Galaxy",
+    "desc": "Unlock this skin by entering secret code 'orbital strike' (because it got deleted due to change my idea).",
+    "unlock_type": "code",
+    "unlock_val": "orbital strike",
+    "keyword": "ans",
+    "creater": 262517377575550977,
+    "date": "2026-08-01"
+  },
+  "skin213": {
+    "id": "213",
+    "name": "Hidden 20: Psychodelic Artist",
+    "desc": "The rankcard skin you created has been officially registered!!",
+    "unlock_type": "none",
+    "unlock_val": "none",
+    "keyword": "hidden",
+    "creater": 262517377575550977,
+    "date": "2026-08-01"
+  },
+  "skin214": {
+    "id": "214",
+    "name": "Hidden 21: DVD Screensaver",
+    "desc": "Spending 12 hours AFK in the voice channel on the test server.",
+    "unlock_type": "none",
+    "unlock_val": "none",
+    "keyword": "hidden",
+    "creater": 262517377575550977,
+    "date": "2026-08-01"
+  },
+  "skin215": {
+    "id": "215",
+    "name": "Precision LAB 01: I'M conTROLL'n MY POINTER!!!",
+    "desc": "Become the #1 speedrunner on the Precision Laboratory server.",
+    "unlock_type": "none",
+    "unlock_val": "none",
+    "keyword": "pl",
+    "creater": 262517377575550977,
+    "date": "2026-08-01"
   }
 }
