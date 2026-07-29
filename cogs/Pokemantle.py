@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from games.pokemantle_engine import PokemantleEngine
 import asyncio
 import fcts.etcfunctions as etc
 import fcts.sqlcontrol as q
@@ -19,6 +18,10 @@ class PokemantleListView(discord.ui.View):
         self.title = title or i18n.t(user, "cmd.47.list.title")
         self.description = description or i18n.t(user, "cmd.47.list.desc")
         self.empty_text = empty_text or i18n.t(user, "cmd.47.list.empty")
+
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
 
     async def send(self, ctx):
         self.message = await ctx.send(i18n.t(self.user, "cmd.47.list.loading"), view=self)
@@ -112,9 +115,25 @@ class PokemantleListView(discord.ui.View):
 class Pokemantle(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.engine = PokemantleEngine()
+        self.engine = None
+        self._engine_lock = asyncio.Lock()
         self.active_games = set()  # 채널 중복 실행 방지
         self.used_answers = set() # 중복 정답 방지
+
+    async def ensure_engine(self):
+        if self.engine is not None:
+            return self.engine
+        async with self._engine_lock:
+            if self.engine is None:
+                from games.pokemantle_engine import PokemantleEngine
+
+                self.engine = await asyncio.to_thread(PokemantleEngine)
+        return self.engine
+
+    def cog_unload(self):
+        self.engine = None
+        self.active_games.clear()
+        self.used_answers.clear()
 
     def display_name(self, name: str) -> str:
         return self.engine.en_to_ko.get(name.strip().lower(), name)
@@ -141,6 +160,9 @@ class Pokemantle(commands.Cog):
             await ctx.reply(i18n.t(ctx.author, "cmd.47.server_only"))
             return
 
+        async with ctx.typing():
+            await self.ensure_engine()
+
         channel_id = ctx.channel.id
 
         if channel_id in self.active_games:
@@ -165,7 +187,7 @@ class Pokemantle(commands.Cog):
 
         await ctx.reply(i18n.t(ctx.author, "cmd.47.start"))
 
-        print(self.display_name(self.engine.pokedex.iloc[answer_index]["name"]))
+        print(self.display_name(self.engine.name_at(answer_index)))
 
         def check(message: discord.Message):
             return (
@@ -197,7 +219,7 @@ class Pokemantle(commands.Cog):
                     "포기", "gg", "give up", "放棄", "放弃"
                 ]:
                     index = answer_index
-                    answer = self.display_name(self.engine.pokedex.iloc[index]["name"])
+                    answer = self.display_name(self.engine.name_at(index))
                     await ctx.send(i18n.t(ctx.author, "cmd.47.give_up", answer=answer))
                     full_rank_data = self.build_full_rank_data(answer_index)
                     view = PokemantleListView(

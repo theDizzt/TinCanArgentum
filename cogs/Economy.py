@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from discord import app_commands
 import fcts.i18n_runtime as i18n
@@ -132,7 +133,15 @@ class Economy(commands.Cog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
-            input_word = await self.client.wait_for("message", check=check)
+            try:
+                input_word = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t002"))
+                return
             check = input_word.content
             if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(
@@ -155,7 +164,15 @@ class Economy(commands.Cog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
-            input_word = await self.client.wait_for("message", check=check)
+            try:
+                input_word = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t002"))
+                return
             check = input_word.content
             if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(
@@ -186,7 +203,15 @@ class Economy(commands.Cog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
-            input_word = await self.client.wait_for("message", check=check)
+            try:
+                input_word = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.reply(i18n.t(ctx.author, "cmd.23.t002"))
+                return
             check = input_word.content
             if check.lower() in ['cancel', '취소', 'キャンセル', '取消']:
                 await ctx.reply(

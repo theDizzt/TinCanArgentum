@@ -8,10 +8,6 @@ from project_paths import DATA_DIR
 
 DB_PATH = DATA_DIR / "tedne.db"
 
-# 1. Connect DB
-conn = sqlite3.connect(DB_PATH)
-c = conn.cursor()
-
 # 2. Sub Functions
 
 

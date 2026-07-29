@@ -4,10 +4,9 @@ import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.leaderboard as l
 import fcts.i18n_runtime as i18n
-import numpy
+import random
 import datetime
 import asyncio
-from time import sleep
 
 player_badge = [
     "<:player1:1150445104692215989>", "<:player2:1150445106646745258>",
@@ -46,7 +45,15 @@ class NumberAttack(commands.Cog):
                 def check(m):
                         return m.author == ctx.author and m.channel == ctx.channel
 
-                input_word = await self.client.wait_for("message", check=check)
+                try:
+                    input_word = await self.client.wait_for(
+                        "message",
+                        check=check,
+                        timeout=300,
+                    )
+                except asyncio.TimeoutError:
+                    await ctx.send(i18n.t(ctx.author, "cmd.46.cancelled"))
+                    return
                 check = input_word.content
 
                 if check.lower() in ('start', '시작', '開始', '开始'):
@@ -79,12 +86,12 @@ class NumberAttack(commands.Cog):
                 end = False
 
                 await ctx.send(i18n.t(ctx.author, "cmd.46.starting"))
-                sleep(5)
+                await asyncio.sleep(5)
 
                 start_time = datetime.datetime.now().timestamp()
 
                 while round < 10:
-                    numpy.random.shuffle(player)
+                    random.shuffle(player)
                     round += 1
                     number = 1
                     index = 0
@@ -116,8 +123,15 @@ class NumberAttack(commands.Cog):
                         def check(m):
                             return m.author.id == player[index]['id'] and m.channel == ctx.channel
 
-                        input_word = await self.client.wait_for("message",
-                                                                    check=check)
+                        try:
+                            input_word = await self.client.wait_for(
+                                "message",
+                                check=check,
+                                timeout=60,
+                            )
+                        except asyncio.TimeoutError:
+                            await ctx.send(i18n.t(ctx.author, "cmd.46.cancelled"))
+                            return
                         if input_word.content == str(number):
                             await input_word.add_reaction("✅")
                             break

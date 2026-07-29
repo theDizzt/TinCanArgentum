@@ -57,6 +57,10 @@ class PaginationView(discord.ui.View):
     sep: int = 5
     user = None
 
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
+
     async def send(self, ctx):
         self.message = await ctx.send(
             i18n.t(ctx.author, "reply.complete", name=q.readTag(ctx.author)),
@@ -239,7 +243,7 @@ class TEDNE(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 ted.newAchieve(ctx.author)
             except:
                 None
-            pagination_view = PaginationView(timeout=None)
+            pagination_view = PaginationView(timeout=300)
             pagination_view.data = list(tedne_data['achievements'].values())
             pagination_view.user = ctx.author
             pagination_view.current_page = value

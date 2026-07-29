@@ -114,16 +114,18 @@ def replace_sound_char(char):
 # 웹 크롤링으로 단어 검색
 def searchWord(query):
     url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={query}&advanced=y'
-    r = requests.get(url, verify=False)
-    result = int(midReturn(r.text, '<total>', '</total>'))
+    with requests.get(url, verify=False, timeout=10) as response:
+        response.raise_for_status()
+        response_text = response.text
+    result = int(midReturn(response_text, '<total>', '</total>'))
 
     if result != 0:
-        word = midReturn(r.text, '<word>', '</word>')
+        word = midReturn(response_text, '<word>', '</word>')
         word = re.sub('[^A-Za-z0-9가-힣]', '', word)
-        pos = midReturn(r.text, '<pos>', '</pos>')
+        pos = midReturn(response_text, '<pos>', '</pos>')
         if pos == "":
             pos = "명사"
-        mean = midReturn(r.text, '<definition>', '</definition >')
+        mean = midReturn(response_text, '<definition>', '</definition >')
         return [word, pos, mean]
     else:
         return None
@@ -131,8 +133,9 @@ def searchWord(query):
 
 def searchEn(query):
     url = f'https://api.dictionaryapi.dev/api/v2/entries/en/{query}'
-    r = requests.get(url, verify=False)
-    j = r.json()
+    with requests.get(url, verify=False, timeout=10) as response:
+        response.raise_for_status()
+        j = response.json()
     print(j[0])
 
     try:
@@ -152,11 +155,13 @@ def startWord(query, history, page=1, length=2, fixed_length=0):
     ans = []
     alter = replace_sound_char(query)
     url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={query}&num=100&start={page}'
-    r = requests.get(url, verify=False)
-    max_page = int(midReturn(r.text, '<total>', '</total>')) // 100
+    with requests.get(url, verify=False, timeout=10) as response:
+        response.raise_for_status()
+        response_text = response.text
+    max_page = int(midReturn(response_text, '<total>', '</total>')) // 100
 
     #단어 목록을 불러오기
-    words = midReturn_all(r.text, '<item>', '</item>')
+    words = midReturn_all(response_text, '<item>', '</item>')
     for w in words:
         word = midReturn(w, '<word>', '</word>')
         word = re.sub('[^A-Za-z0-9가-힣]', '', word)
@@ -180,11 +185,13 @@ def startWord(query, history, page=1, length=2, fixed_length=0):
 
     if alter is not None:
         url = f'https://opendict.korean.go.kr/api/search?key={apikey}&target_type=search&req_type=xml&q={alter}&num=100&start={page}'
-        r = requests.get(url, verify=False)
-        max_page = int(midReturn(r.text, '<total>', '</total>')) // 100
+        with requests.get(url, verify=False, timeout=10) as response:
+            response.raise_for_status()
+            response_text = response.text
+        max_page = int(midReturn(response_text, '<total>', '</total>')) // 100
 
         #단어 목록을 불러오기
-        words = midReturn_all(r.text, '<item>', '</item>')
+        words = midReturn_all(response_text, '<item>', '</item>')
         for w in words:
             word = midReturn(w, '<word>', '</word>')
             word = re.sub('[^A-Za-z0-9가-힣]', '', word)

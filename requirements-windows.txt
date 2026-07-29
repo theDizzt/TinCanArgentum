@@ -7,13 +7,11 @@ korean-lunar-calendar==0.4.0
 numpy==1.26.3
 openai==2.30.0
 openpyxl==3.1.2
-pandas==2.3.3
 Pillow==10.2.0
 pydantic==2.12.5
 PyNaCl==1.5.0
 python-dotenv==1.0.1
 PyYAML==6.0.1
 requests==2.25.1
-scikit-learn==1.7.2
 tqdm==4.66.1
 tzdata==2026.1

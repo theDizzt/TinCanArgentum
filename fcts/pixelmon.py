@@ -3,15 +3,11 @@ import discord
 from discord.ext import commands
 import sqlite3
 import datetime
+from contextlib import closing
 from project_paths import DATA_DIR
 
 
 DB_PATH = DATA_DIR / "pokedex.db"
-
-# 1. Connect DB
-conn = sqlite3.connect(DB_PATH)
-c = conn.cursor()
-
 
 # 2.1. Init Setting
 def initSetting():
@@ -96,153 +92,121 @@ def newTmData(data):
     conn.close()
 
 # Read Dex Data:
+def _fetchall(sql, parameters=()):
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql, parameters)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
 def readDexList():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT korean, dexnum, type1, type2 FROM dex;")
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT korean, dexnum, type1, type2 FROM dex;")
 
 def readDexListName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT korean, dexnum, type1, type2 FROM dex Where korean LIKE ?"
-    c.execute(sql, (search,))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT korean, dexnum, type1, type2 FROM dex Where korean LIKE ?",
+        (search,),
+    )
 
 def readDexListDex(search: int = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT korean, dexnum, type1, type2 FROM dex Where dexnum = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT korean, dexnum, type1, type2 FROM dex Where dexnum = ?",
+        (search,),
+    )
 
 def readDexListNat(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT korean, dexnum, type1, type2 FROM dex Where natnum = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT korean, dexnum, type1, type2 FROM dex Where natnum = ?",
+        (search,),
+    )
 
 def readDexListType(search: str = ""):
     if search.find(",") == -1:
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        sql = "SELECT korean, dexnum, type1, type2 FROM dex Where type1 = ? OR type2 = ?"
-        c.execute(sql, (search, search, ))
-        result = c.fetchall()
-        return result
-    else:
-        temp = search.split(',')
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        sql = "SELECT korean, dexnum, type1, type2 FROM dex Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)"
-        c.execute(sql, (temp[0], temp[1], temp[1], temp[0], ))
-        result = c.fetchall()
-        return result
+        return _fetchall(
+            "SELECT korean, dexnum, type1, type2 FROM dex "
+            "Where type1 = ? OR type2 = ?",
+            (search, search),
+        )
+    temp = search.split(',')
+    return _fetchall(
+        "SELECT korean, dexnum, type1, type2 FROM dex "
+        "Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)",
+        (temp[0], temp[1], temp[1], temp[0]),
+    )
     
 def readDexListAbility(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT korean, dexnum, type1, type2 FROM dex Where ability1 = ? OR ability2 = ? OR ability3 = ?"
-    c.execute(sql, (search, search, search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT korean, dexnum, type1, type2 FROM dex "
+        "Where ability1 = ? OR ability2 = ? OR ability3 = ?",
+        (search, search, search),
+    )
 
 def readDexName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT * FROM dex Where korean LIKE ?"
-    c.execute(sql, (search,))
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT * FROM dex Where korean LIKE ?", (search,))
 
 def readDexDex(search: int = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT * FROM dex Where dexnum = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT * FROM dex Where dexnum = ?", (search,))
 
 def readDexNat(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT * FROM dex Where natnum = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT * FROM dex Where natnum = ?", (search,))
 
 def readDexType(search: str = ""):
     if search.find(",") == -1:
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        sql = "SELECT * FROM dex Where type1 = ? OR type2 = ?"
-        c.execute(sql, (search, search, ))
-        result = c.fetchall()
-        return result
-    else:
-        temp = search.split(',')
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        sql = "SELECT * FROM dex Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)"
-        c.execute(sql, (temp[0], temp[1], temp[1], temp[0], ))
-        result = c.fetchall()
-        return result
+        return _fetchall(
+            "SELECT * FROM dex Where type1 = ? OR type2 = ?",
+            (search, search),
+        )
+    temp = search.split(',')
+    return _fetchall(
+        "SELECT * FROM dex "
+        "Where (type1 = ? AND type2 = ?) OR (type1 = ? AND type2 = ?)",
+        (temp[0], temp[1], temp[1], temp[0]),
+    )
     
 def readDexAbility(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT * FROM dex Where ability1 = ? OR ability2 = ? OR ability3 = ?"
-    c.execute(sql, (search, search, search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT * FROM dex Where ability1 = ? OR ability2 = ? OR ability3 = ?",
+        (search, search, search),
+    )
 
 # Read TM Data:
 def readTmList():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm;")
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm;"
+    )
 
 def readTmName(name: str = ""):
     search = "%" + name + "%"
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where korean LIKE ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT id, korean, type, category, power, accuracy, pp, desc "
+        "FROM tm Where korean LIKE ?",
+        (search,),
+    )
 
 def readTmIndex(index: int = 0):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where id = ?"
-    c.execute(sql, (index, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT id, korean, type, category, power, accuracy, pp, desc "
+        "FROM tm Where id = ?",
+        (index,),
+    )
 
 def readTmType(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where type = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT id, korean, type, category, power, accuracy, pp, desc "
+        "FROM tm Where type = ?",
+        (search,),
+    )
 
 def readTmCategory(search: str = ""):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id, korean, type, category, power, accuracy, pp, desc FROM tm Where category = ?"
-    c.execute(sql, (search, ))
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT id, korean, type, category, power, accuracy, pp, desc "
+        "FROM tm Where category = ?",
+        (search,),
+    )
 
 
 # Icons

@@ -7,11 +7,6 @@ from project_paths import DATA_DIR
 
 DB_PATH = DATA_DIR / "leaderboard.db"
 
-# Connect DB
-conn = sqlite3.connect(DB_PATH)
-c = conn.cursor()
-
-
 # Init Setting
 def initSetting():
     conn = sqlite3.connect(DB_PATH)

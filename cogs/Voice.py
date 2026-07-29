@@ -1,35 +1,38 @@
+import asyncio
 import discord
-import nacl
+import logging
+import tempfile
+from pathlib import Path
 from discord.ext import commands
-import fcts.sqlcontrol as q
-import fcts.etcfunctions as etc
 import fcts.i18n_runtime as i18n
-from PIL import Image, ImageDraw, ImageFont
-import io
-import json
 from config.settings import get_required_env
-from project_paths import PROJECT_ROOT
-import requests
 
 
-TTS_PATH = PROJECT_ROOT / "tts.mp3"
+logger = logging.getLogger(__name__)
 
 
 class KakaoTTS:
-	def __init__(self, text, API_KEY=None):
-		API_KEY = API_KEY or get_required_env('KAKAO_REST_API_KEY')
-		self.resp = requests.post(
-               url="https://kakaoi-newtone-openapi.kakao.com/v1/synthesize",
-               headers={
-                    "Content-Type": "application/xml",
-                    "Authorization": f"KakaoAK {API_KEY}"
-                },
-                data=f"<speak><voice name='WOMAN_READ_CALM'>{text}</voice></speak>".encode('utf-8')
-            )
+    def __init__(self, text, api_key=None):
+        self.text = text
+        self.api_key = api_key or get_required_env("KAKAO_REST_API_KEY")
 
-	def save(self, filename=TTS_PATH):
-		with open(filename, "wb") as file:
-			file.write(self.resp.content)
+    def synthesize(self) -> bytes:
+        import requests
+
+        with requests.post(
+            url="https://kakaoi-newtone-openapi.kakao.com/v1/synthesize",
+            headers={
+                "Content-Type": "application/xml",
+                "Authorization": f"KakaoAK {self.api_key}",
+            },
+            data=(
+                f"<speak><voice name='WOMAN_READ_CALM'>"
+                f"{self.text}</voice></speak>"
+            ).encode("utf-8"),
+            timeout=20,
+        ) as response:
+            response.raise_for_status()
+            return response.content
 
 
 class Voice(commands.Cog):
@@ -89,10 +92,31 @@ class Voice(commands.Cog):
     async def tts(self, ctx, *, text):
         print(text)
         voice = self.client.voice_clients[0]
-        # 음성채널에 연결되어있다면
-        tts = KakaoTTS(text)
-        tts.save(TTS_PATH)
-        voice.play(discord.FFmpegPCMAudio(str(TTS_PATH)))
+        audio = await asyncio.to_thread(KakaoTTS(text).synthesize)
+        with tempfile.NamedTemporaryFile(
+            prefix="tincan-tts-",
+            suffix=".mp3",
+            delete=False,
+        ) as temporary:
+            temporary.write(audio)
+            temporary_path = Path(temporary.name)
+
+        def cleanup(error):
+            temporary_path.unlink(missing_ok=True)
+            if error is not None:
+                logger.error(
+                    "TTS playback failed",
+                    exc_info=(type(error), error, error.__traceback__),
+                )
+
+        try:
+            voice.play(
+                discord.FFmpegPCMAudio(str(temporary_path)),
+                after=cleanup,
+            )
+        except Exception:
+            temporary_path.unlink(missing_ok=True)
+            raise
 
     @tts.error
     async def tts_error(self, ctx, error):

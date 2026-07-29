@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.pixelmon as px
@@ -7,17 +8,28 @@ import fcts.i18n_runtime as i18n
 import requests
 import re
 import random
-from time import sleep
-import numpy
-import openpyxl
 from project_paths import DATA_DIR
-from time import sleep
+
+
+def _read_workbook_rows(path):
+    from openpyxl import load_workbook
+
+    book = load_workbook(path, read_only=True, data_only=True)
+    try:
+        sheet = book.worksheets[0]
+        return [list(row) for row in sheet.iter_rows(values_only=True)]
+    finally:
+        book.close()
 
 
 class PaginationDexView(discord.ui.View):
     current_page: int = 1
     sep: int = 18
     user = None
+
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
 
     async def send(self, ctx):
         self.message = await ctx.send(
@@ -143,6 +155,10 @@ class PaginationStatView(discord.ui.View):
     sep: int = 1
     user = None
     stats = [50, 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0, 1.0,1.0,1.0,1.0,1.0,"노력"]
+
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
     
 
     async def send(self, ctx):
@@ -271,6 +287,10 @@ class PaginationTMView(discord.ui.View):
     current_page: int = 1
     sep: int = 5
     user = None
+
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
 
     async def send(self, ctx):
         self.message = await ctx.send(
@@ -418,17 +438,10 @@ class Pixelmon(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] tm.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] tm.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                line = []
-                for data in row:
-                    line.append(data.value)
-
+            result = await asyncio.to_thread(_read_workbook_rows, path)
+            for line in result:
                 print(line)
-                result.append(line)
 
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file="tm.xlsx"))
@@ -466,17 +479,10 @@ class Pixelmon(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] pixel.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] pixel.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                line = []
-                for data in row:
-                    line.append(data.value)
-
+            result = await asyncio.to_thread(_read_workbook_rows, path)
+            for line in result:
                 print(line)
-                result.append(line)
 
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file="pixel.xlsx"))
@@ -526,35 +532,35 @@ class Pixelmon(commands.Cog):
         if option == "목록":
 
             if category == "이름":
-                pagination_view = PaginationDexView(timeout=None)
+                pagination_view = PaginationDexView(timeout=300)
                 pagination_view.data = px.readDexListName(search)
                 pagination_view.user = ctx.author
                 pagination_view.current_page = page
                 await pagination_view.send(ctx)
 
             elif category == "지역번호":
-                pagination_view = PaginationDexView(timeout=None)
+                pagination_view = PaginationDexView(timeout=300)
                 pagination_view.data = px.readDexListDex(int(search))
                 pagination_view.user = ctx.author
                 pagination_view.current_page = page
                 await pagination_view.send(ctx)
 
             elif category == "전국번호":
-                pagination_view = PaginationDexView(timeout=None)
+                pagination_view = PaginationDexView(timeout=300)
                 pagination_view.data = px.readDexListNat(str(int(search)))
                 pagination_view.user = ctx.author
                 pagination_view.current_page = page
                 await pagination_view.send(ctx)
 
             elif category == "타입":
-                pagination_view = PaginationDexView(timeout=None)
+                pagination_view = PaginationDexView(timeout=300)
                 pagination_view.data = px.readDexListType(search)
                 pagination_view.user = ctx.author
                 pagination_view.current_page = page
                 await pagination_view.send(ctx)
 
             elif category == "특성":
-                pagination_view = PaginationDexView(timeout=None)
+                pagination_view = PaginationDexView(timeout=300)
                 pagination_view.data = px.readDexListAbility(search)
                 pagination_view.user = ctx.author
                 pagination_view.current_page = page
@@ -562,7 +568,7 @@ class Pixelmon(commands.Cog):
 
             else:
                 if search == "*":
-                    pagination_view = PaginationDexView(timeout=None)
+                    pagination_view = PaginationDexView(timeout=300)
                     pagination_view.data = px.readDexList()
                     pagination_view.user = ctx.author
                     pagination_view.current_page = page
@@ -584,7 +590,7 @@ class Pixelmon(commands.Cog):
             if bool:
 
                 if category == "이름":
-                    pagination_view = PaginationStatView(timeout=None)
+                    pagination_view = PaginationStatView(timeout=300)
                     pagination_view.data = px.readDexName(search)
                     pagination_view.user = ctx.author
                     pagination_view.stats = lv + iv + ev + nv
@@ -592,7 +598,7 @@ class Pixelmon(commands.Cog):
                     await pagination_view.send(ctx)
 
                 elif category == "지역번호":
-                    pagination_view = PaginationStatView(timeout=None)
+                    pagination_view = PaginationStatView(timeout=300)
                     pagination_view.data = px.readDexDex(int(search))
                     pagination_view.user = ctx.author
                     pagination_view.stats = lv + iv + ev + nv
@@ -600,7 +606,7 @@ class Pixelmon(commands.Cog):
                     await pagination_view.send(ctx)
 
                 elif category == "전국번호":
-                    pagination_view = PaginationStatView(timeout=None)
+                    pagination_view = PaginationStatView(timeout=300)
                     pagination_view.data = px.readDexNat(str(int(search)))
                     pagination_view.user = ctx.author
                     pagination_view.stats = lv + iv + ev + nv
@@ -608,7 +614,7 @@ class Pixelmon(commands.Cog):
                     await pagination_view.send(ctx)
 
                 elif category == "타입":
-                    pagination_view = PaginationStatView(timeout=None)
+                    pagination_view = PaginationStatView(timeout=300)
                     pagination_view.data = px.readDexType(search)
                     pagination_view.user = ctx.author
                     pagination_view.stats = lv + iv + ev + nv
@@ -616,7 +622,7 @@ class Pixelmon(commands.Cog):
                     await pagination_view.send(ctx)
 
                 elif category == "특성":
-                    pagination_view = PaginationStatView(timeout=None)
+                    pagination_view = PaginationStatView(timeout=300)
                     pagination_view.data = px.readDexAbility(search)
                     pagination_view.user = ctx.author
                     pagination_view.stats = lv + iv + ev + nv
@@ -640,35 +646,35 @@ class Pixelmon(commands.Cog):
                     page: int = 1):
 
         if option == "목록":
-            pagination_view = PaginationTMView(timeout=None)
+            pagination_view = PaginationTMView(timeout=300)
             pagination_view.data = px.readTmList()
             pagination_view.user = ctx.author
             pagination_view.current_page = page
             await pagination_view.send(ctx)
 
         elif option == "이름":
-            pagination_view = PaginationTMView(timeout=None)
+            pagination_view = PaginationTMView(timeout=300)
             pagination_view.data = px.readTmName(keyword)
             pagination_view.user = ctx.author
             pagination_view.current_page = page
             await pagination_view.send(ctx)
 
         elif option == "번호":
-            pagination_view = PaginationTMView(timeout=None)
+            pagination_view = PaginationTMView(timeout=300)
             pagination_view.data = px.readTmIndex(int(keyword))
             pagination_view.user = ctx.author
             pagination_view.current_page = page
             await pagination_view.send(ctx)
         
         elif option == "타입":
-            pagination_view = PaginationTMView(timeout=None)
+            pagination_view = PaginationTMView(timeout=300)
             pagination_view.data = px.readTmType(keyword)
             pagination_view.user = ctx.author
             pagination_view.current_page = page
             await pagination_view.send(ctx)
 
         elif option == "분류":
-            pagination_view = PaginationTMView(timeout=None)
+            pagination_view = PaginationTMView(timeout=300)
             pagination_view.data = px.readTmCategory(keyword)
             pagination_view.user = ctx.author
             pagination_view.current_page = page

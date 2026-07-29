@@ -12,6 +12,7 @@ import random as r
 from datetime import datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 import io
+import asyncio
 
 #SERVER id
 server_id = [
@@ -35,6 +36,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
+        self.image_semaphore = asyncio.Semaphore(2)
 
     # [id: 30] 오늘의 인물 카드 제작
     async def goat_image(self, *, user: discord.Member, title: str) -> io.BytesIO:
@@ -174,12 +176,15 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             ))
             return
 
-        buffer_output = await self.goat_image(user=user, title=title)
-
-        await ctx.reply(
-            i18n.t(ctx.author, "cmd.30.result", user_id=user.id),
-            file=discord.File(buffer_output, 'myimage.png')
-        )
+        async with self.image_semaphore:
+            buffer_output = await self.goat_image(user=user, title=title)
+        try:
+            await ctx.reply(
+                i18n.t(ctx.author, "cmd.30.result", user_id=user.id),
+                file=discord.File(buffer_output, 'myimage.png')
+            )
+        finally:
+            buffer_output.close()
 
         try:
             q.ensureStorage(user)

@@ -11,11 +11,25 @@
 
 ####### 0. Modules #######
 
+# 0.0. Runtime logging (configure before third-party imports)
+import sys
+import os
+from fcts.runtime_logging import (
+    close_runtime_logging,
+    configure_runtime_logging,
+    install_asyncio_exception_handler,
+    install_exception_hooks,
+    mark_runtime_start,
+)
+
+runtime_logger = configure_runtime_logging()
+install_exception_hooks(runtime_logger)
+mark_runtime_start(runtime_logger)
+
 # 0.1. Discord.py
 import discord
 from discord.ext import commands
 import asyncio
-import sys
 
 # 0.2. Fuctions
 from fcts.keep_alive import keep_alive
@@ -138,6 +152,7 @@ with tqdm(
     okt = Okt()
     progress.update(1)
     progress.refresh()
+okt_lock = asyncio.Lock()
 server_id = [
     262525769023094785, 716980478992711720, 1114816224522678294,
     453906917719408642, 348750582200270848, 842746723067756554, 1252877905747513457 , 364240472060985357, 1482323335739342860, 1480230239043850401
@@ -149,6 +164,21 @@ server_id = [
 @client.event
 async def on_ready():
     print("New log in as {0.user}".format(client))
+    runtime_logger.info(
+        "Discord client ready | user=%s | guilds=%s",
+        client.user,
+        len(client.guilds),
+    )
+
+
+@client.event
+async def on_disconnect():
+    runtime_logger.warning("Discord client disconnected")
+
+
+@client.event
+async def on_resumed():
+    runtime_logger.info("Discord session resumed")
 
 
 # 3.3. Voice Channel Event
@@ -279,7 +309,8 @@ async def on_message(message):
     
     #단어 자동 학습 | and message.guild.id in server_id
     if message.author.id != 691455977270149171:
-        nouns = okt.nouns(message.content)
+        async with okt_lock:
+            nouns = await asyncio.to_thread(okt.nouns, message.content)
         if not nouns:
             pass
             # print("추출된 명사가 없습니다.")
@@ -288,7 +319,7 @@ async def on_message(message):
             # print(f"총 {len(nouns)}개의 명사를 찾았습니다.")
             for word in nouns:
                 if not wd.existsWord(word):
-                    result = ks.searchWord(word)
+                    result = await asyncio.to_thread(ks.searchWord, word)
                     # print(message.author, " ", result)
                     if result is not None:
                         wd.newWord(message.author, str(result[0]), str(result[1]), str(result[2]))
@@ -390,8 +421,38 @@ async def sync(ctx):
     await ctx.reply("`⸜(*◉ ᴗ ◉)⸝` Synced commands to the current server!")
 
 async def main():
+    install_asyncio_exception_handler(asyncio.get_running_loop(), runtime_logger)
     async with client:
         await client.start(token)
 
-keep_alive()
-asyncio.run(main())
+
+def run_bot() -> int:
+    runtime_logger.info(
+        "Bot process starting | version=%s | version_date=%s | pid=%s",
+        APP_VERSION,
+        APP_VERSION_DATE,
+        os.getpid(),
+    )
+    exit_code = 0
+    try:
+        keep_alive()
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        exit_code = 130
+        runtime_logger.info("Bot stopped by keyboard interrupt")
+    except BaseException:
+        import traceback
+
+        exit_code = 1
+        runtime_logger.critical("Bot terminated unexpectedly", exc_info=True)
+        traceback.print_exc()
+    else:
+        runtime_logger.info("Bot stopped normally")
+    finally:
+        runtime_logger.info("Bot process exiting | exit_code=%s", exit_code)
+        close_runtime_logging()
+    return exit_code
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_bot())

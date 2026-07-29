@@ -1,12 +1,12 @@
 #Module
 import discord
+import asyncio
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.leaderboard as l
 import fcts.i18n_runtime as i18n
 import random
-from time import sleep
 
 player_badge = [
     "<:player1:1150445104692215989>", "<:player2:1150445106646745258>",
@@ -96,6 +96,27 @@ class GameScreen(discord.ui.View):
                              description='준비중',
                              emoji=discord.PartialEmoji.from_str(emoji[13]))
     ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.dice = [0, 0, 0, 0, 0]
+        self.reroll = []
+        self.round = 1
+        self.seq = 0
+        self.chance = 0
+        self.move = 1
+        self.action = -1
+        self.end = False
+        self.player = []
+        self.betting = 0
+
+    async def on_timeout(self):
+        if not self.end and self.betting:
+            for player in self.player:
+                q.moneyAddById(player["id"], self.betting)
+        self.end = True
+        self.player.clear()
+        self.reroll.clear()
 
     def playerList(self):
         result = []
@@ -688,7 +709,15 @@ class Yatchu(commands.Cog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
-            input_word = await self.client.wait_for("message", check=check)
+            try:
+                input_word = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.send(i18n.t(ctx.author, "cmd.41.cancelled"))
+                return
             check = input_word.content
 
             if check.lower() in ('시작', 'start', '開始', '开始'):
@@ -728,7 +757,15 @@ class Yatchu(commands.Cog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
-            input_value = await self.client.wait_for("message", check=check)
+            try:
+                input_value = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.send(i18n.t(ctx.author, "cmd.41.cancelled"))
+                return
             check = input_value.content
 
             if check.lower() in ('취소', 'cancel', 'キャンセル', '取消'):
@@ -750,7 +787,7 @@ class Yatchu(commands.Cog):
                     await ctx.send(i18n.t(ctx.author, "cmd.41.bet.number"))
 
         if gamestart:
-            game_view = GameScreen(timeout=None)
+            game_view = GameScreen(timeout=900)
             game_view.player = player
             game_view.betting = betting
             game_view.rollDice(0)

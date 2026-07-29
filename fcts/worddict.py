@@ -12,11 +12,6 @@ from project_paths import DATA_DIR
 
 DB_PATH = DATA_DIR / "worddict.db"
 
-# 1. Connect DB
-conn = sqlite3.connect(DB_PATH)
-c = conn.cursor()
-
-
 # 2.1. Init Setting
 def initSetting():
     conn = sqlite3.connect(DB_PATH)
@@ -116,6 +111,7 @@ def wordModify(user: discord.Member = None, value: int = None, nw: str = ""):
               (trim_nw, user.id, now_time, count_break_korean(trim_nw), value))
     conn.commit()
     c.close()
+    conn.close()
 
 def plModify(user: discord.Member = None, value: int = None, pl: str = ""):
     conn = sqlite3.connect(DB_PATH)
@@ -126,6 +122,7 @@ def plModify(user: discord.Member = None, value: int = None, pl: str = ""):
               (pl, user.id, now_time, value))
     conn.commit()
     c.close()
+    conn.close()
 
 def meanModify(user: discord.Member = None, value: int = None, mean: str = ""):
     conn = sqlite3.connect(DB_PATH)
@@ -136,6 +133,7 @@ def meanModify(user: discord.Member = None, value: int = None, mean: str = ""):
               (mean, user.id, now_time, value))
     conn.commit()
     c.close()
+    conn.close()
 
 def categoryModify(user: discord.Member = None, opl: str = '*', npl: str = None):
     conn = sqlite3.connect(DB_PATH)
@@ -159,6 +157,7 @@ def categoryModify(user: discord.Member = None, opl: str = '*', npl: str = None)
             print(1)
 
     c.close()
+    conn.close()
 
 # 3.3.1. Read All
 def readAll(word: str = ""):
@@ -167,6 +166,7 @@ def readAll(word: str = ""):
     c = conn.cursor()
     c.execute("SELECT * FROM korean WHERE word='{}';".format(trim_word))
     result = c.fetchone()
+    conn.close()
     return result
 
 def readAllById(value: int = None):
@@ -174,6 +174,7 @@ def readAllById(value: int = None):
     c = conn.cursor()
     c.execute("SELECT * FROM korean WHERE id=?;", (value, ))
     result = c.fetchone()
+    conn.close()
     return result
 
 def readInGame(word: str = ""):
@@ -183,6 +184,7 @@ def readInGame(word: str = ""):
     c.execute(
         "SELECT word, pl, mean FROM korean WHERE word='{}';".format(trim_word))
     result = c.fetchone()
+    conn.close()
     return result
 
 def readWordAll():
@@ -191,6 +193,7 @@ def readWordAll():
     c.execute(
         "SELECT id, word FROM korean;")
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllByStart(start: str = "", length: int = 2, fixed: bool = False):
@@ -205,6 +208,7 @@ def readAllByStart(start: str = "", length: int = 2, fixed: bool = False):
             "SELECT id, word FROM korean WHERE word LIKE '{}';".format(start + (length-1)*'_' + '%'))
         result = c.fetchall()
 
+    conn.close()
     return result
 
 def readAllByEnd(start: str = ""):
@@ -213,6 +217,7 @@ def readAllByEnd(start: str = ""):
     c.execute(
         "SELECT id, word FROM korean WHERE word LIKE '%{}';".format(start))
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllByPOS(pos: str = ""):
@@ -221,6 +226,7 @@ def readAllByPOS(pos: str = ""):
     c.execute(
         "SELECT id, word FROM korean WHERE pl = '{}';".format(pos))
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllRandom():
@@ -229,6 +235,7 @@ def readAllRandom():
     c.execute(
         "SELECT id, word FROM korean;")
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllWithPOS():
@@ -237,6 +244,7 @@ def readAllWithPOS():
     c.execute(
         "SELECT id, word, pl FROM korean;")
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllByPOSWithPOS(pos: str = ""):
@@ -245,6 +253,7 @@ def readAllByPOSWithPOS(pos: str = ""):
     c.execute(
         "SELECT id, word, pl FROM korean WHERE pl = '{}';".format(pos))
     result = c.fetchall()
+    conn.close()
     return result
 
 def readPOSCount():
@@ -254,6 +263,7 @@ def readPOSCount():
         "SELECT rowid, pl, COUNT(*) FROM korean GROUP BY pl;")
     result = c.fetchall()
     print(result)
+    conn.close()
     return result
 
 def readAllPattern(pattern: str = ""):
@@ -262,6 +272,7 @@ def readAllPattern(pattern: str = ""):
     c.execute(
         "SELECT id, word, pl FROM korean WHERE word like '%{}%';".format(pattern))
     result = c.fetchall()
+    conn.close()
     return result
 
 def readAllScore():
@@ -270,6 +281,7 @@ def readAllScore():
     c.execute(
         "SELECT id, word, score FROM korean ORDER BY score DESC, word;")
     result = c.fetchall()
+    conn.close()
     return result
 
 def searchSpecial(start, end, length=0):
@@ -284,6 +296,7 @@ def searchSpecial(start, end, length=0):
 
         for t in result:
             temp.append(t[0])
+        conn.close()
 
     elif length >= 2:
         conn = sqlite3.connect(DB_PATH)
@@ -294,6 +307,7 @@ def searchSpecial(start, end, length=0):
 
         for t in result:
             temp.append(t[0])
+        conn.close()
 
     return temp
 
@@ -303,7 +317,7 @@ def findID(word: str = ""):
     c = conn.cursor()
     c.execute("SELECT id FROM korean WHERE word='{}';".format(trim_word))
     result = c.fetchone()[0]
-    
+    conn.close()
     return result
 
 def scoreUpdateAll():
@@ -317,6 +331,7 @@ def scoreUpdateAll():
         conn.commit()
         print(temp[0], '-', count_break_korean(temp[1]))
 
+    conn.close()
     return None
 
 def random_korean():

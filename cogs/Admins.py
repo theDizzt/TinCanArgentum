@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from discord import app_commands
 import fcts.i18n_runtime as i18n
@@ -19,6 +20,20 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
+
+    async def wait_for_admin_input(self, ctx):
+        def check(message):
+            return message.author == ctx.author and message.channel == ctx.channel
+
+        try:
+            return await self.client.wait_for(
+                "message",
+                check=check,
+                timeout=300,
+            )
+        except asyncio.TimeoutError:
+            await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
+            return None
 
     # LKedit [ID: 86]
     @commands.command()
@@ -160,10 +175,9 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             if option in ["mathgame", "사칙연산"]:
                 await ctx.reply(i18n.t(ctx.author, "cmd.94.format.math"))
 
-                def check(m):
-                    return m.author == ctx.author and m.channel == ctx.channel
-
-                input_word = await self.client.wait_for("message", check=check)
+                input_word = await self.wait_for_admin_input(ctx)
+                if input_word is None:
+                    return
                 check = input_word.content
                 if check in ["cancel", "취소"]:
                     await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
@@ -181,10 +195,9 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             elif option in ["rps", "가위바위보"]:
                 await ctx.reply(i18n.t(ctx.author, "cmd.94.format.rps"))
 
-                def check(m):
-                    return m.author == ctx.author and m.channel == ctx.channel
-
-                input_word = await self.client.wait_for("message", check=check)
+                input_word = await self.wait_for_admin_input(ctx)
+                if input_word is None:
+                    return
                 check = input_word.content
                 if check in ["cancel", "취소"]:
                     await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
@@ -205,10 +218,9 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             elif option in ["wordchain", "끝말잇기"]:
                 await ctx.reply(i18n.t(ctx.author, "cmd.94.format.wordchain"))
 
-                def check(m):
-                    return m.author == ctx.author and m.channel == ctx.channel
-
-                input_word = await self.client.wait_for("message", check=check)
+                input_word = await self.wait_for_admin_input(ctx)
+                if input_word is None:
+                    return
                 check = input_word.content
                 if check in ["cancel", "취소"]:
                     await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
@@ -228,10 +240,9 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             elif option in ["yahtzee", "야추다이스"]:
                 await ctx.reply(i18n.t(ctx.author, "cmd.94.format.yahtzee"))
 
-                def check(m):
-                    return m.author == ctx.author and m.channel == ctx.channel
-
-                input_word = await self.client.wait_for("message", check=check)
+                input_word = await self.wait_for_admin_input(ctx)
+                if input_word is None:
+                    return
                 check = input_word.content
                 if check in ["cancel", "취소"]:
                     await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))

@@ -127,7 +127,7 @@ if /i "%~1"=="--check" (
     exit /b 0
 )
 
-"%PYTHON_EXE%" %PYTHON_ARGS% -c "import discord, dotenv, flask, flask_compress, gevent, konlpy, korean_lunar_calendar, numpy, openai, openpyxl, pandas, PIL, pydantic, nacl, yaml, requests, sklearn, tqdm" >nul 2>&1
+"%PYTHON_EXE%" %PYTHON_ARGS% -c "import discord, dotenv, flask, flask_compress, gevent, konlpy, korean_lunar_calendar, numpy, openai, openpyxl, PIL, pydantic, nacl, yaml, requests, tqdm" >nul 2>&1
 if errorlevel 1 (
     echo Installing required packages...
     "%PYTHON_EXE%" %PYTHON_ARGS% -m pip install -r requirements-windows.txt

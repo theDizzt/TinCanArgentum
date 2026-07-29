@@ -11,10 +11,19 @@ import fcts.worddict as wd
 import fcts.koreansearch as ks
 import datetime
 import random
-from time import sleep
-import numpy
-import openpyxl
+import asyncio
 from project_paths import DATA_DIR
+
+
+def _read_workbook_rows(path):
+    from openpyxl import load_workbook
+
+    book = load_workbook(path, read_only=True, data_only=True)
+    try:
+        sheet = book.worksheets[0]
+        return list(sheet.iter_rows(values_only=True))
+    finally:
+        book.close()
 
 player_badge = [
     "",
@@ -350,7 +359,7 @@ def shufflePlayer(player, i):
     result.append(player[i])
     print(result)
     player.pop(i)
-    numpy.random.shuffle(player)
+    random.shuffle(player)
     result = result + player
     print(result)
     return result
@@ -502,7 +511,7 @@ class TestCommands(commands.Cog):
     @commands.hybrid_command(name='사전', description="우리말샘(국립국어원)에 실린 단어 뜻을 검색합니다!")
     async def word_search(self, ctx, *, word: str = ''):
         if word != '':
-            result = ks.searchWord(word)
+            result = await asyncio.to_thread(ks.searchWord, word)
             if result is not None:
                 wd.newWord(ctx.author, str(result[0]), str(result[1]),
                            str(result[2]))
@@ -524,7 +533,7 @@ class TestCommands(commands.Cog):
     @commands.hybrid_command(name='dict', description="단어 뜻을 검색합니다!")
     async def en_search(self, ctx, word: str = ''):
         if word != '':
-            result = ks.searchEn(word)
+            result = await asyncio.to_thread(ks.searchEn, word)
             if result is not None:
                 await ctx.reply(f'## {result[0]}\n[{result[1]}] {result[2]}')
             else:
@@ -552,7 +561,7 @@ class TestCommands(commands.Cog):
             
             embed.add_field(
                 name=f"**검색**",
-                value="단어를 검색합니다. 키워드 서식에 따라 조건 검색도 가능합니다.\n`<키워드>` 키워드가 일치하는 단어의 정보를 불러옵니다.\n`<글자>-` 해당 글자로 시작하는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`-<글자>` 해당 글자로 끝나는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`~<품사>` 해당 품사에 해당하는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`id:<색인번호>` 해당 색인번호를 가진 단어의 정보를 불러옵니다.\%`<패턴>` 패턴을 만족하는 단어의 정보를 불러옵니다.\n`*` 랜덤으로 10개의 단어를 골라 목록으로 보여줍니다.",
+                value="단어를 검색합니다. 키워드 서식에 따라 조건 검색도 가능합니다.\n`<키워드>` 키워드가 일치하는 단어의 정보를 불러옵니다.\n`<글자>-` 해당 글자로 시작하는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`-<글자>` 해당 글자로 끝나는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`~<품사>` 해당 품사에 해당하는 단어들을 랜덤으로 골라 목록으로 보여줍니다.\n`id:<색인번호>` 해당 색인번호를 가진 단어의 정보를 불러옵니다.\n`%<패턴>` 패턴을 만족하는 단어의 정보를 불러옵니다.\n`*` 랜덤으로 10개의 단어를 골라 목록으로 보여줍니다.",
                 inline=False)
             
             embed.add_field(
@@ -919,12 +928,11 @@ class TestCommands(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] {file}.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] {file}.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                result.append([row[0].value, row[1].value, row[2].value])
+            rows = await asyncio.to_thread(_read_workbook_rows, path)
+            for row in rows:
+                result.append(list(row[:3]))
+            del rows
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
@@ -940,7 +948,10 @@ class TestCommands(commands.Cog):
                     index = wd.readAll(data[0])[0]
                     if data[2] == "우리말샘":
                         try:
-                            mean = ks.searchWord(data[0])[2]
+                            search_result = await asyncio.to_thread(
+                                ks.searchWord, data[0]
+                            )
+                            mean = search_result[2]
                             wd.plModify(ctx.author, int(index), data[1])
                             wd.meanModify(ctx.author, int(index), mean)
                         except: #mean이 none 일 경우
@@ -986,12 +997,11 @@ class TestCommands(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] {file}.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] {file}.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                result.append([row[0].value, row[1].value, row[2].value])
+            rows = await asyncio.to_thread(_read_workbook_rows, path)
+            for row in rows:
+                result.append(list(row[:3]))
+            del rows
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
@@ -1006,7 +1016,10 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = ks.searchWord(data[0])[2]
+                            search_result = await asyncio.to_thread(
+                                ks.searchWord, data[0]
+                            )
+                            mean = search_result[2]
                             wd.newWordById(uid, data[0], data[1], mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1050,12 +1063,11 @@ class TestCommands(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] {file}.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] {file}.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                result.append([row[0].value, row[1].value, row[2].value])
+            rows = await asyncio.to_thread(_read_workbook_rows, path)
+            for row in rows:
+                result.append(list(row[:3]))
+            del rows
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
@@ -1070,8 +1082,11 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = ks.searchWord(data[0])[2]
-                            pos = ks.searchWord(data[0])[1]
+                            search_result = await asyncio.to_thread(
+                                ks.searchWord, data[0]
+                            )
+                            mean = search_result[2]
+                            pos = search_result[1]
                             wd.newWordById(uid, data[0], pos, mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1113,12 +1128,11 @@ class TestCommands(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] {file}.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] {file}.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                result.append([row[0].value, row[1].value, row[2].value])
+            rows = await asyncio.to_thread(_read_workbook_rows, path)
+            for row in rows:
+                result.append(list(row[:3]))
+            del rows
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
@@ -1133,7 +1147,10 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = ks.searchWord(data[0])[2]
+                            search_result = await asyncio.to_thread(
+                                ks.searchWord, data[0]
+                            )
+                            mean = search_result[2]
                             wd.newWordById(uid, data[0], data[1], mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1162,12 +1179,11 @@ class TestCommands(commands.Cog):
 
         try:
             await ctx.send(f"[1/3] {file}.xlsx 파일을 찾고있습니다!")
-            book = openpyxl.load_workbook(path)
-            sheet = book.worksheets[0]
-
             await ctx.send(f"[2/3] {file}.xlsx 파일을 읽고있습니다!")
-            for row in sheet.rows:
-                result.append([row[0].value, row[1].value, row[2].value])
+            rows = await asyncio.to_thread(_read_workbook_rows, path)
+            for row in rows:
+                result.append(list(row[:3]))
+            del rows
         except:
             await ctx.send(i18n.t(ctx.author, "common.file_error", file=f"{file}.xlsx"))
             bool = False
@@ -1182,8 +1198,11 @@ class TestCommands(commands.Cog):
                 try:
                     if data[2] == "우리말샘":
                         try:
-                            mean = ks.searchWord(data[0])[2]
-                            pos = ks.searchWord(data[0])[1]
+                            search_result = await asyncio.to_thread(
+                                ks.searchWord, data[0]
+                            )
+                            mean = search_result[2]
+                            pos = search_result[1]
                             wd.newWordById(uid, data[0], pos, mean)
                         except: #mean이 none 일 경우
                             mean = f"{data[1]} 관련 단어."
@@ -1297,7 +1316,7 @@ class TestCommands(commands.Cog):
                                 '`(⩌ʌ ⩌;)` 유효하지 않은 참가자 입니다... 다시 시도해 보세요...')
 
                 if gamestart and option == '일반':
-                    numpy.random.shuffle(player)
+                    random.shuffle(player)
                     chain = 1
                     history = []
                     sample = sampleText()
@@ -1308,7 +1327,7 @@ class TestCommands(commands.Cog):
                     shCheck = False
 
                     color_arr = [1, 2, 3, 4, 5 ,6, 7, 8]
-                    numpy.random.shuffle(color_arr)
+                    random.shuffle(color_arr)
 
                     for i in range(len(player)):
                         player[i]['color'] = color_arr[i]
@@ -1328,7 +1347,7 @@ class TestCommands(commands.Cog):
                     await ctx.send(
                         f"**잠시후 게임이 시작됩니다!**\n종목: 끝말잇기 (**`{sample}`** 중 한 글자가 랜덤으로 배치 됩니다.)"
                     )
-                    sleep(5)
+                    await asyncio.sleep(5)
                     start_time = datetime.datetime.now().timestamp()
 
                     while True:
@@ -1381,13 +1400,17 @@ class TestCommands(commands.Cog):
                                         if len(result) != 0:
                                             input_word = await ctx.send(random.choice(result))
                                         else:
-                                            result = ks.startWord(start, history)
+                                            result = await asyncio.to_thread(
+                                                ks.startWord, start, history
+                                            )
                                             if result is not None:
                                                 input_word = await ctx.send(result[0])
                                             else:
                                                 input_word = await ctx.send("q")
                                     else:
-                                        result = ks.startWord(start, history)
+                                        result = await asyncio.to_thread(
+                                            ks.startWord, start, history
+                                        )
                                         if result is not None:
                                             input_word = await ctx.send(result[0])
                                         else:
@@ -1424,7 +1447,9 @@ class TestCommands(commands.Cog):
                                         result = wd.readInGame(check)
 
                                         if result is None:
-                                            result = ks.searchWord(check)
+                                            result = await asyncio.to_thread(
+                                                ks.searchWord, check
+                                            )
 
                                         if result is not None:
                                             start = check[-1]
@@ -1617,7 +1642,7 @@ class TestCommands(commands.Cog):
                             break
 
                 elif gamestart and option == '쿵쿵따':
-                    numpy.random.shuffle(player)
+                    random.shuffle(player)
                     chain = 1
                     history = []
                     sample = sampleText()
@@ -1628,7 +1653,7 @@ class TestCommands(commands.Cog):
                     shCheck = False
 
                     color_arr = [1, 2, 3, 4, 5 ,6, 7, 8]
-                    numpy.random.shuffle(color_arr)
+                    random.shuffle(color_arr)
 
                     for i in range(len(player)):
                         player[i]['color'] = color_arr[i]
@@ -1648,7 +1673,7 @@ class TestCommands(commands.Cog):
                     await ctx.send(
                         f"**잠시후 게임이 시작됩니다!**\n종목: 끝말잇기 (**`{sample}`** 중 한 글자가 랜덤으로 배치 됩니다.)"
                     )
-                    sleep(5)
+                    await asyncio.sleep(5)
                     start_time = datetime.datetime.now().timestamp()
 
                     while True:
@@ -1701,13 +1726,23 @@ class TestCommands(commands.Cog):
                                         if len(result) != 0:
                                             input_word = await ctx.send(random.choice(result))
                                         else:
-                                            result = ks.startWord(start, history, fixed_length=length)
+                                            result = await asyncio.to_thread(
+                                                ks.startWord,
+                                                start,
+                                                history,
+                                                fixed_length=length,
+                                            )
                                             if result is not None:
                                                 input_word = await ctx.send(result[0])
                                             else:
                                                 input_word = await ctx.send("q")
                                     else:
-                                        result = ks.startWord(start, history, fixed_length=length)
+                                        result = await asyncio.to_thread(
+                                            ks.startWord,
+                                            start,
+                                            history,
+                                            fixed_length=length,
+                                        )
                                         if result is not None:
                                             input_word = await ctx.send(result[0])
                                         else:
@@ -1744,7 +1779,9 @@ class TestCommands(commands.Cog):
                                         result = wd.readInGame(check)
 
                                         if result is None:
-                                            result = ks.searchWord(check)
+                                            result = await asyncio.to_thread(
+                                                ks.searchWord, check
+                                            )
 
                                         if result is not None:
                                             start = check[-1]

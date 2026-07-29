@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
@@ -577,9 +578,22 @@ class Leaderboard(commands.Cog):
     async def leaderboard(self, ctx):
         view = DropdownView()
         msg = await ctx.reply("## :scroll: Leaderboard", view=view)
-        await self.client.wait_for("interaction",
-                                   check=lambda x: x.user == ctx.author)
-        await msg.delete()
+        try:
+            await self.client.wait_for(
+                "interaction",
+                check=lambda interaction: (
+                    interaction.user == ctx.author
+                    and interaction.message is not None
+                    and interaction.message.id == msg.id
+                ),
+                timeout=view.timeout,
+            )
+        except asyncio.TimeoutError:
+            await msg.edit(view=None)
+        else:
+            await msg.delete()
+        finally:
+            view.stop()
 
     @leaderboard.error
     async def discrim_error(self, ctx, error):

@@ -1,12 +1,12 @@
+import asyncio
 import os
 import re
 import sqlite3
+from collections import OrderedDict
 import discord
 from discord import app_commands
 from discord.ext import commands
-from openai import OpenAI
 from project_paths import DATA_DIR
-from config.settings import get_required_env
 import fcts.i18n_runtime as i18n
 
 # 채팅봇 세팅
@@ -14,9 +14,11 @@ class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.client = OpenAI(api_key=get_required_env('OPENAI_API_KEY'))
-        self.histories = {}
+        self.client = None
+        self._client_lock = asyncio.Lock()
+        self.histories = OrderedDict()
         self.max_history = 6
+        self.max_history_users = 256
         self.max_input_length = 1500
 
         self.memory_db_path = DATA_DIR / "memory.db"
@@ -82,6 +84,23 @@ Avoid:
 
 Keep responses natural, human-like, and lightly expressive.
 """
+
+    async def get_client(self):
+        if self.client is not None:
+            return self.client
+        async with self._client_lock:
+            if self.client is None:
+                from config.settings import get_required_env
+                from openai import OpenAI
+
+                api_key = get_required_env("OPENAI_API_KEY")
+                self.client = await asyncio.to_thread(OpenAI, api_key=api_key)
+        return self.client
+
+    def cog_unload(self):
+        if self.client is not None:
+            self.client.close()
+            self.client = None
 
     # 기억 저장
     def init_memory_db(self):
@@ -317,6 +336,8 @@ Keep responses natural, human-like, and lightly expressive.
     # 프롬프트 및 기억 저장
     def build_input(self, user_id: str, user_message: str):
         history = self.histories.get(user_id, [])[-self.max_history:]
+        if user_id in self.histories:
+            self.histories.move_to_end(user_id)
         memory_text = self.format_memory_for_prompt(user_id)
         affinity_text = self.format_affinity_for_prompt(user_id)
 
@@ -359,6 +380,7 @@ Keep responses natural, human-like, and lightly expressive.
     def save_history(self, user_id: str, user_text: str, bot_text: str):
         if user_id not in self.histories:
             self.histories[user_id] = []
+        self.histories.move_to_end(user_id)
 
         self.histories[user_id].append({
             "role": "user",
@@ -371,6 +393,9 @@ Keep responses natural, human-like, and lightly expressive.
 
         if len(self.histories[user_id]) > self.max_history * 2:
             self.histories[user_id] = self.histories[user_id][-(self.max_history * 2):]
+
+        while len(self.histories) > self.max_history_users:
+            self.histories.popitem(last=False)
 
     async def send_long_message(self, ctx, text: str):
         if len(text) <= 1900:
@@ -408,9 +433,11 @@ Keep responses natural, human-like, and lightly expressive.
 
         async with ctx.typing():
             try:
-                response = self.client.responses.create(
+                client = await self.get_client()
+                response = await asyncio.to_thread(
+                    client.responses.create,
                     model="gpt-5-mini",
-                    input=self.build_input(user_id, user_message)
+                    input=self.build_input(user_id, user_message),
                 )
 
                 reply_text = (response.output_text or "").strip()

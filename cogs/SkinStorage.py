@@ -19,6 +19,11 @@ class PaginationView(discord.ui.View):
         self.alldata = []
         self.message = None
 
+    async def on_timeout(self):
+        self.data.clear()
+        self.alldata.clear()
+        self.message = None
+
     async def send(self, ctx):
         self.current_page = max(1, min(self.current_page, self.max_page()))
         self.update_buttons()

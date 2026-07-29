@@ -10,9 +10,32 @@ from project_paths import DATA_DIR
 
 DB_PATH = DATA_DIR / "user.db"
 
-# 1. Connect DB
-conn = sqlite3.connect(DB_PATH)
-c = conn.cursor()
+
+def _execute(sql, parameters=()):
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql, parameters)
+        conn.commit()
+        cursor.close()
+
+
+def _fetchone(sql, parameters=()):
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql, parameters)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
+
+
+def _fetchall(sql, parameters=()):
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql, parameters)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
 
 # 2. Sub Functions
 
@@ -173,45 +196,25 @@ def newAccountById(user: int = None, name: str = None):
 
 # 3.2.1.1. Xp Value Edit
 def xpModify(user: discord.Member = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET xp = ? WHERE id = ?", (amount, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET xp = ? WHERE id = ?", (amount, user.id))
 
 
 def xpModifyById(user: int = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET xp = ? WHERE id = ?", (amount, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET xp = ? WHERE id = ?", (amount, user))
 
 
 # 3.2.1.2. Xp Add
 def xpAdd(user: discord.Member = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET xp = xp + ? WHERE id = ?", (amount, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET xp = xp + ? WHERE id = ?", (amount, user.id))
 
 
 def xpAddById(user: int = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET xp = xp + ? WHERE id = ?", (amount, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET xp = xp + ? WHERE id = ?", (amount, user))
 
 
 # 3.2.1.3. Xp Add All
 def xpAddAll(amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET xp = xp + ?", (amount, ))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET xp = xp + ?", (amount,))
 
 
 # 3.2.2. Money Modifier
@@ -219,46 +222,28 @@ def xpAddAll(amount: int = None):
 
 # 3.2.2.1. Money Value Edit
 def moneyModify(user: discord.Member = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET money = ? WHERE id = ?", (amount, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET money = ? WHERE id = ?", (amount, user.id))
 
 
 def moneyModifyById(user: int = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET money = ? WHERE id = ?", (amount, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET money = ? WHERE id = ?", (amount, user))
 
 
 # 3.2.2.2. Money Add
 def moneyAdd(user: discord.Member = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET money = money + ? WHERE id = ?",
-              (amount, user.id))
-    conn.commit()
-    c.close()
+    _execute(
+        "UPDATE main SET money = money + ? WHERE id = ?",
+        (amount, user.id),
+    )
 
 
 def moneyAddById(user: int = None, amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET money = money + ? WHERE id = ?", (amount, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET money = money + ? WHERE id = ?", (amount, user))
 
 
 # 3.2.1.3. Xp Add All
 def moneyAddAll(amount: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET money = money + ?", (amount, ))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET money = money + ?", (amount,))
 
 
 # 3.2.3. Tag Modifier
@@ -267,166 +252,88 @@ def moneyAddAll(amount: int = None):
 # 3.2.3.1. Nickname Edit
 def nickModify(user: discord.Member = None, name: str = None):
     if tagIsOkay(name, int(readDiscrim(user))):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user.id))
-        conn.commit()
-        c.close()
+        _execute("UPDATE main SET nick = ? WHERE id = ?", (name, user.id))
 
 
 def nickModifyById(user: int = None, name: str = None):
     if tagIsOkay(name, int(readDiscrimById(user))):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("UPDATE main SET nick = ? WHERE id = ?", (name, user))
-        conn.commit()
-        c.close()
+        _execute("UPDATE main SET nick = ? WHERE id = ?", (name, user))
 
 
 # 3.2.3.2. Discrim Edit
 def discrimModify(user: discord.Member = None, value: int = None):
     if tagIsOkay(readNick(user), value):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user.id))
-        conn.commit()
-        c.close()
+        _execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user.id))
 
 
 def discrimModifyById(user: int = None, value: int = None):
     if tagIsOkay(readNickById(user), value):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user))
-        conn.commit()
-        c.close()
+        _execute("UPDATE main SET discrim = ? WHERE id = ?", (value, user))
 
 
 # 3.2.4. Skin Value Edit
 def skinModify(user: discord.Member = None, value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET skin = ? WHERE id = ?", (value, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET skin = ? WHERE id = ?", (value, user.id))
 
 
 def skinModifyById(user: int = None, value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET skin = ? WHERE id = ?", (value, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET skin = ? WHERE id = ?", (value, user))
 
 
 # 3.2.5. Start Date Value Edit
 def startDateModify(user: discord.Member = None, value: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET startdate = ? WHERE id = ?", (value, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET startdate = ? WHERE id = ?", (value, user.id))
 
 
 def startDateModifyById(user: int = None, value: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET startdate = ? WHERE id = ?", (value, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET startdate = ? WHERE id = ?", (value, user))
 
 # 3.2.6. Daily Edit
     
 def dailyAdd(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET daily = daily + 1 WHERE id = ?", (user.id, ))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET daily = daily + 1 WHERE id = ?", (user.id,))
 
 def dailyAddById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET daily = daily + 1 WHERE id = ?", (user, ))
-    conn.commit()
-    c.close() 
+    _execute("UPDATE main SET daily = daily + 1 WHERE id = ?", (user,))
     
 def dailyModify(user: discord.Member = None, value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET daily = ? WHERE id = ?", (value, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET daily = ? WHERE id = ?", (value, user.id))
 
 def dailyModifyById(user: int = None, value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET daily = ? WHERE id = ?", (value, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET daily = ? WHERE id = ?", (value, user))
 
 def dailyDateModify(user: discord.Member = None, value: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET dailydate = ? WHERE id = ?", (value, user.id))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET dailydate = ? WHERE id = ?", (value, user.id))
 
 def dailyDateModifyById(user: int = None, value: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE main SET dailydate = ? WHERE id = ?", (value, user))
-    conn.commit()
-    c.close()
+    _execute("UPDATE main SET dailydate = ? WHERE id = ?", (value, user))
 
 # 3.3. Read data
 
 # 3.3.1. Read All
 def readAll(user: discord.Member):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('SELECT * FROM main WHERE id=?;', (user.id))
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT * FROM main WHERE id = ?;", (user.id,))
 
 
 # 3.3.2. Read Name
 
 # 3.3.2.1. Name only
 def readNick(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT nick FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return str(result)
+    return str(_fetchone("SELECT nick FROM main WHERE id = ?", (user.id,))[0])
 
 
 def readNickById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT nick FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return str(result)
+    return str(_fetchone("SELECT nick FROM main WHERE id = ?", (user,))[0])
 
 
 # 3.3.2.2. Discrim only
 def readDiscrim(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT discrim FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
+    result = _fetchone("SELECT discrim FROM main WHERE id = ?", (user.id,))[0]
     return str(result).zfill(4)
 
 
 def readDiscrimById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT discrim FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
+    result = _fetchone("SELECT discrim FROM main WHERE id = ?", (user,))[0]
     return str(result).zfill(4)
 
 
@@ -441,13 +348,11 @@ def readTag(user: discord.Member = None):
 
 
 def readTagById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT nick, discrim FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    temp = c.fetchone()
-    result = str(temp[0]) + "#" + str(temp[1]).zfill(4)
-    return result
+    result = _fetchone(
+        "SELECT nick, discrim FROM main WHERE id = ?",
+        (user,),
+    )
+    return str(result[0]) + "#" + str(result[1]).zfill(4)
 
 
 # 3.3.3. Read Xp
@@ -461,12 +366,7 @@ def readXp(user: discord.Member = None):
 
 
 def readXpById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT xp FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT xp FROM main WHERE id = ?", (user,))[0]
 
 
 # 3.3.4. Read Money
@@ -480,12 +380,7 @@ def readMoney(user: discord.Member = None):
 
 
 def readMoneyById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT money FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT money FROM main WHERE id = ?", (user,))[0]
 
 
 # 3.3.5. Read Skin
@@ -499,65 +394,30 @@ def readSkin(user: discord.Member = None):
 
 
 def readSkinById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT skin FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT skin FROM main WHERE id = ?", (user,))[0]
 
 
 # 3.3.6. Read StartDate
 def readStartDate(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT startdate FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT startdate FROM main WHERE id = ?", (user.id,))[0]
 
 
 def readStartDateById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT startdate FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT startdate FROM main WHERE id = ?", (user,))[0]
 
 # 3.3.7. Read Daily
 def readDaily(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT daily FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT daily FROM main WHERE id = ?", (user.id,))[0]
 
 
 def readDailyById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT daily FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT daily FROM main WHERE id = ?", (user,))[0]
 
 def readDailyDate(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT dailydate FROM main WHERE id = ?"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT dailydate FROM main WHERE id = ?", (user.id,))[0]
 
 def readDailyDateById(user: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT dailydate FROM main WHERE id = ?"
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone("SELECT dailydate FROM main WHERE id = ?", (user,))[0]
 
 
 # 3.4. List & Ranking
@@ -565,51 +425,39 @@ def readDailyDateById(user: int = None):
 
 # 3.4.1. User List
 def userList():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT * FROM main"
-    c.execute(sql)
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT * FROM main")
 
 
 # 3.4.2. User id List
 def idList():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id FROM main"
-    c.execute(sql)
-    result = c.fetchall()
-    return result
+    return _fetchall("SELECT id FROM main")
+
+
+def userCount():
+    return _fetchone("SELECT COUNT(*) FROM main;")[0]
 
 
 # 3.4.3. XP Ranking
 def xpRanking():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT *, RANK() OVER (ORDER BY xp DESC) ranking FROM main;"
-    c.execute(sql)
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT *, RANK() OVER (ORDER BY xp DESC) ranking FROM main;"
+    )
 
 
 def xpMyRanking(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id, xp, ranking FROM (SELECT id, xp, RANK() OVER (ORDER BY xp DESC) AS ranking FROM main) WHERE id = ?;"
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[2]
-    return result
+    return _fetchone(
+        "SELECT id, xp, ranking FROM "
+        "(SELECT id, xp, RANK() OVER (ORDER BY xp DESC) AS ranking FROM main) "
+        "WHERE id = ?;",
+        (user.id,),
+    )[2]
 
 
 # 3.4.4. Money Ranking
 def moneyRanking():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT *, RANK() OVER (ORDER BY money DESC) ranking FROM main;"
-    c.execute(sql)
-    result = c.fetchall()
-    return result
+    return _fetchall(
+        "SELECT *, RANK() OVER (ORDER BY money DESC) ranking FROM main;"
+    )
 
 
 # 3.5. Skin Data
@@ -674,40 +522,28 @@ def newStorageById(user: int = None):
 def storageModify(user: discord.Member = None,
                   id: int = None,
                   value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE storage SET {} = ? WHERE id = ?".format("id" + str(id)),
-              (value, user.id))
-    conn.commit()
-    c.close()
+    _execute(
+        "UPDATE storage SET {} = ? WHERE id = ?".format("id" + str(id)),
+        (value, user.id),
+    )
 
 
 def storageModifyById(user: int = None, id: int = None, value: int = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("UPDATE storage SET {} = ? WHERE id = ?".format("id" + str(id)),
-              (value, user))
-    conn.commit()
-    c.close()
+    _execute(
+        "UPDATE storage SET {} = ? WHERE id = ?".format("id" + str(id)),
+        (value, user),
+    )
 
 
 # 3.5.3. Read Storage
 def readStorage(user: discord.Member = None, id: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
     sql = "SELECT {} FROM storage WHERE id = ?;".format("id" + str(id))
-    c.execute(sql, (user.id, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone(sql, (user.id,))[0]
 
 
 def readStorageById(user: int = None, id: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
     sql = "SELECT {} FROM storage WHERE id = ?;".format("id" + str(id))
-    c.execute(sql, (user, ))
-    result = c.fetchone()[0]
-    return result
+    return _fetchone(sql, (user,))[0]
 
 
 # 3.5.4. User Storage List
@@ -743,12 +579,10 @@ def tagToUid(tag: str = None):
 # 3.6.2. Duplicate Check
 def tagIsOkay(name: str = "", discrim: int = 0):
     print(name,'#',discrim)
-
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = "SELECT id FROM main WHERE nick = ? AND discrim = ?"
-    c.execute(sql, (name, discrim, ))
-    result = c.fetchall()
+    result = _fetchall(
+        "SELECT id FROM main WHERE nick = ? AND discrim = ?",
+        (name, discrim),
+    )
 
     print(result)
 
@@ -779,50 +613,20 @@ def add_language_column():
 
 # 3.7.1. 언어 설정 불러오기
 def readLanguage(user: discord.Member = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-
-    c.execute("SELECT language FROM main WHERE id = ?", (user.id,))
-    result = c.fetchone()
-
-    c.close()
-    conn.close()
-
+    result = _fetchone("SELECT language FROM main WHERE id = ?", (user.id,))
     if result is None or result[0] is None:
         return "ko"
     return result[0]
 
 def readLanguageById(user: int):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-
-    c.execute("SELECT language FROM main WHERE id = ?", (user,))
-    result = c.fetchone()
-
-    c.close()
-    conn.close()
-
+    result = _fetchone("SELECT language FROM main WHERE id = ?", (user,))
     if result is None or result[0] is None:
         return "ko"
     return result[0]
 
 # 3.7.2. 언어 설정 수정
 def modifyLanguage(user: discord.Member = None, language: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-
-    c.execute("UPDATE main SET language = ? WHERE id = ?", (language, user.id))
-    conn.commit()
-
-    c.close()
-    conn.close()
+    _execute("UPDATE main SET language = ? WHERE id = ?", (language, user.id))
 
 def modifyLanguageById(user: int, language: str = None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-
-    c.execute("UPDATE main SET language = ? WHERE id = ?", (language, user))
-    conn.commit()
-
-    c.close()
-    conn.close()
+    _execute("UPDATE main SET language = ? WHERE id = ?", (language, user))

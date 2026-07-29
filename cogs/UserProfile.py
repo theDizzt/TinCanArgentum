@@ -8,6 +8,7 @@ import fcts.skin_catalog as catalog
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from PIL import Image, ImageDraw, ImageFont
 import io
+import asyncio
 import json
 import random
 from project_paths import FONT_DIR, RANKCARD_DIR
@@ -67,6 +68,35 @@ def _apply_skin_214_effects(
     image.alpha_composite(image_a, random_position)
     image.alpha_composite(image_b, (7, 115))
     return image, tinted_bar, visible_color
+
+
+async def _load_avatar_image(
+    user: discord.Member,
+    normal_skin_id: int | None,
+) -> Image.Image:
+    try:
+        buffer_avatar = io.BytesIO()
+        try:
+            await user.display_avatar.save(buffer_avatar)
+            buffer_avatar.seek(0)
+            with Image.open(buffer_avatar) as source:
+                avatar_image = source.convert("RGBA")
+        finally:
+            buffer_avatar.close()
+
+        if normal_skin_id == 140:
+            avatar_image.close()
+            with Image.open(
+                RANKCARD_DIR / "special" / "image140.png"
+            ) as source:
+                avatar_image = source.convert("RGBA")
+    except Exception:
+        with Image.open(RANKCARD_DIR / "noimage.jpg") as source:
+            avatar_image = source.convert("RGBA")
+
+    resized_avatar = avatar_image.resize((96, 96), Image.Resampling.LANCZOS)
+    avatar_image.close()
+    return resized_avatar
 
 
 # Black Text Skin
@@ -131,6 +161,10 @@ class PaginationView(discord.ui.View):
         self.user = kwargs.get("user")
         self.current_page = kwargs.get("page", 1)
         self.myrank = kwargs.get("myrank")
+
+    async def on_timeout(self):
+        self.data.clear()
+        self.message = None
 
     @property
     def total_pages(self) -> int:
@@ -254,9 +288,24 @@ class UserProfile(commands.Cog):
 
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.render_semaphore = asyncio.Semaphore(2)
 
     # [id: 11, 20] rankcard generator
     async def rankcard_image(
+        self,
+        *,
+        user: discord.Member,
+        skin_id: int | str,
+        preview: bool,
+    ) -> io.BytesIO:
+        async with self.render_semaphore:
+            return await self._rankcard_image(
+                user=user,
+                skin_id=skin_id,
+                preview=preview,
+            )
+
+    async def _rankcard_image(
         self,
         *,
         user: discord.Member,
@@ -326,6 +375,22 @@ class UserProfile(commands.Cog):
 
         rank = emblem_image.copy()
         bar = bar_cover_image.copy()
+
+        avatar_image = await _load_avatar_image(user, normal_skin_id)
+        if normal_skin_id == 202:
+            try:
+                image.alpha_composite(avatar_image, (8, 8))
+            finally:
+                avatar_image.close()
+            with Image.open(
+                RANKCARD_DIR / "special" / "image202.png"
+            ) as source:
+                image_202_overlay = source.convert("RGBA")
+            try:
+                image.alpha_composite(image_202_overlay, (0, 0))
+            finally:
+                image_202_overlay.close()
+
         draw = ImageDraw.Draw(image)
 
         text_xp = f"{xp1:,d} / {xp2:,d} | {100 * xp1 / xp2:.2f}% | {xp:,d}"
@@ -404,24 +469,11 @@ class UserProfile(commands.Cog):
             stroke_fill=xp_outline_color
         )
 
-        try:
-            avatar_asset = user.display_avatar
-            buffer_avatar = io.BytesIO()
-            await avatar_asset.save(buffer_avatar)
-            buffer_avatar.seek(0)
-            avatar_image = Image.open(buffer_avatar).convert('RGBA')
-            if normal_skin_id == 140:
-                avatar_image = Image.open(
-                    RANKCARD_DIR / "special" / "image140.png"
-                )
-        except Exception:
-            avatar_image = Image.open(
-                RANKCARD_DIR / "noimage.jpg"
-            )
-
-        avatar_image = avatar_image.resize((96, 96))
-
-        image.paste(avatar_image, (8, 8), mask=avatar_image)
+        if normal_skin_id != 202:
+            try:
+                image.paste(avatar_image, (8, 8), mask=avatar_image)
+            finally:
+                avatar_image.close()
         image.paste(rank, (104, 40), mask=rank)
         image.paste(bar, (8, 116), mask=bar)
 
@@ -460,10 +512,13 @@ class UserProfile(commands.Cog):
 
         buffer_output = await self.rankcard_image(user=user, skin_id=skin_id, preview=False)
 
-        await ctx.reply(
-            i18n.t(ctx.author, "cmd.11.t001", username=q.readTag(user)),
-            file=discord.File(buffer_output, 'myimage.png')
-        )
+        try:
+            await ctx.reply(
+                i18n.t(ctx.author, "cmd.11.t001", username=q.readTag(user)),
+                file=discord.File(buffer_output, 'myimage.png')
+            )
+        finally:
+            buffer_output.close()
 
     @profile.error
     async def profile_error(self, ctx, error):
@@ -576,10 +631,11 @@ class UserProfile(commands.Cog):
     async def myrank(self, ctx, server="global"):
         if server in ["global", "전역"]:
             rank = q.xpMyRanking(ctx.author)
-            lv = etc.level(q.readXp(ctx.author))
+            xp = q.readXp(ctx.author)
+            lv = etc.level(xp)
             await ctx.reply(
-                i18n.t(ctx.author, "cmd.13.t001", user=q.readTag(ctx.author), rank=etc.numFont(rank), total=len(q.xpRanking()), icon=etc.lvicon(lv), lv=lv,
-                        xp=q.readXp(ctx.author))
+                i18n.t(ctx.author, "cmd.13.t001", user=q.readTag(ctx.author), rank=etc.numFont(rank), total=q.userCount(), icon=etc.lvicon(lv), lv=lv,
+                        xp=xp)
             )
 
     @myrank.error
@@ -599,7 +655,7 @@ class UserProfile(commands.Cog):
     )
     #@discord.app_commands.describe(server="Select server (default: global)",page="Page number")
     async def ranking(self, ctx, page: int = 1):
-        pagination_view = PaginationView(timeout=None)
+        pagination_view = PaginationView(timeout=300)
         pagination_view.data = q.xpRanking()
         pagination_view.user = ctx.author
         pagination_view.current_page = page
@@ -646,15 +702,18 @@ class UserProfile(commands.Cog):
             )
             return
 
-        await ctx.reply(
-            i18n.t(
-                ctx.author,
-                "cmd.20.complete",
-                name=q.readTag(ctx.author),
-                skin_id=normalized_id,
-            ),
-            file=discord.File(buffer_output, 'myimage.png')
-        )
+        try:
+            await ctx.reply(
+                i18n.t(
+                    ctx.author,
+                    "cmd.20.complete",
+                    name=q.readTag(ctx.author),
+                    skin_id=normalized_id,
+                ),
+                file=discord.File(buffer_output, 'myimage.png')
+            )
+        finally:
+            buffer_output.close()
 
     @preview.error
     async def preview_error(self, ctx, error):

@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import asyncio
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.etcfunctions as etc
@@ -7,8 +8,6 @@ import fcts.i18n_runtime as i18n
 import datetime
 import random
 import math
-from time import sleep
-import asyncio
 
 
 def generateProblem(type):
@@ -295,7 +294,7 @@ class GamePrime(commands.Cog):
                     return 0
 
         await ctx.reply(i18n.t(ctx.author, "cmd.40.start", name=q.readTag(ctx.author)))
-        sleep(3)
+        await asyncio.sleep(3)
         while True:
             count += 1
             computer = random.choice(range(3))
@@ -307,7 +306,15 @@ class GamePrime(commands.Cog):
                 return m.author == ctx.author and m.channel == ctx.channel and rspValue(
                     m.content) != -1
 
-            input_word = await self.client.wait_for("message", check=check)
+            try:
+                input_word = await self.client.wait_for(
+                    "message",
+                    check=check,
+                    timeout=300,
+                )
+            except asyncio.TimeoutError:
+                await ctx.reply(i18n.t(ctx.author, "cmd.47.timeout"))
+                break
             check = input_word.content
             user = rspValue(check)
             result = rspResult(computer, user)
@@ -454,7 +461,7 @@ class GamePrime(commands.Cog):
         end = False
         t = 0
         await ctx.reply(i18n.t(ctx.author, "cmd.44.start", name=q.readTag(ctx.author)))
-        sleep(3)
+        await asyncio.sleep(3)
 
         while True:
             count += 1

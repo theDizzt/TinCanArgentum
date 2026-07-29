@@ -148,10 +148,25 @@ def create_rage_image(text, font_path):
     return image
 
 
+def render_png(render_function, *args) -> io.BytesIO:
+    image = render_function(*args)
+    buffer = io.BytesIO()
+    try:
+        image.save(buffer, format="PNG")
+        buffer.seek(0)
+        return buffer
+    except Exception:
+        buffer.close()
+        raise
+    finally:
+        image.close()
+
+
 class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
     def __init__(self, client: commands.Bot):  # 생성자 작성
         self.client = client
+        self.image_semaphore = asyncio.Semaphore(4)
 
     # Random [ID: 31]
     @commands.cooldown(rate=1, per=3, type=commands.BucketType.user)
@@ -179,27 +194,28 @@ class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         font_path = random.choice(font_paths)
         preset_index = option if 0 <= option < len(GRADIENT_PRESETS) else random.randrange(len(GRADIENT_PRESETS))
-        image = create_lucky_number_image(
-            lucky_num,
-            font_path,
-            GRADIENT_PRESETS[preset_index],
-        )
+        async with self.image_semaphore:
+            buffer_output = await asyncio.to_thread(
+                render_png,
+                create_lucky_number_image,
+                lucky_num,
+                font_path,
+                GRADIENT_PRESETS[preset_index],
+            )
 
-        #sending image
-        buffer_output = io.BytesIO()
-        image.save(buffer_output, format='PNG')
-        buffer_output.seek(0)
+        try:
+            if rand == 222 and lucky_num == 22:
+                q.ensureStorage(ctx.author)
+                if q.readStorage(ctx.author, 22) == 0:
+                    q.storageModify(ctx.author, 22, 1)
+                    await ctx.send(file=discord.File(CONFIG_DIR / "easter" / "22222.jpg"))
 
-        if rand == 222 and lucky_num == 22:
-            q.ensureStorage(ctx.author)
-            if q.readStorage(ctx.author, 22) == 0:
-                q.storageModify(ctx.author, 22, 1)
-                await ctx.send(file=discord.File(CONFIG_DIR / "easter" / "22222.jpg"))
-
-        await ctx.reply(
-            i18n.t(ctx.author, "cmd.31.result"),
-            file=discord.File(buffer_output, 'lucky-number.png'),
-        )
+            await ctx.reply(
+                i18n.t(ctx.author, "cmd.31.result"),
+                file=discord.File(buffer_output, 'lucky-number.png'),
+            )
+        finally:
+            buffer_output.close()
 
     @dice.error
     async def dice_error(self, ctx, error):
@@ -247,15 +263,20 @@ class Miscellaneous(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply(i18n.t(ctx.author, "cmd.36.font_error"))
             return
 
-        image = create_rage_image(text, font_paths[0])
-        buffer_output = io.BytesIO()
-        image.save(buffer_output, format='PNG')
-        buffer_output.seek(0)
-
-        await ctx.reply(
-            target,
-            file=discord.File(buffer_output, "rage.png"),
-        )
+        async with self.image_semaphore:
+            buffer_output = await asyncio.to_thread(
+                render_png,
+                create_rage_image,
+                text,
+                font_paths[0],
+            )
+        try:
+            await ctx.reply(
+                target,
+                file=discord.File(buffer_output, "rage.png"),
+            )
+        finally:
+            buffer_output.close()
 
     @rage.error
     async def rage_error(self, ctx, error):

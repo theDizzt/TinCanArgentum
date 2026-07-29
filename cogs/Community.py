@@ -369,20 +369,23 @@ async def _download_image(
             if content_length is not None and content_length > MAX_IMAGE_BYTES:
                 raise ValueError(f"{field_name} 이미지는 8 MiB 이하여야 합니다.")
 
-            chunks = []
+            buffer = io.BytesIO()
             total = 0
             async for chunk in response.content.iter_chunked(64 * 1024):
                 total += len(chunk)
                 if total > MAX_IMAGE_BYTES:
+                    buffer.close()
                     raise ValueError(f"{field_name} 이미지는 8 MiB 이하여야 합니다.")
-                chunks.append(chunk)
+                buffer.write(chunk)
 
         try:
-            with Image.open(io.BytesIO(b"".join(chunks))) as image:
-                if image.width * image.height > MAX_IMAGE_PIXELS:
-                    raise ValueError(f"{field_name} 이미지의 해상도가 너무 큽니다.")
-                image.load()
-                converted = image.convert("RGBA")
+            buffer.seek(0)
+            with buffer:
+                with Image.open(buffer) as image:
+                    if image.width * image.height > MAX_IMAGE_PIXELS:
+                        raise ValueError(f"{field_name} 이미지의 해상도가 너무 큽니다.")
+                    image.load()
+                    converted = image.convert("RGBA")
         except (
             Image.DecompressionBombError,
             UnidentifiedImageError,
@@ -735,6 +738,10 @@ class QueuePaginationView(OwnerOnlyView):
         self.per_page = 5
         self.message = None
 
+    async def on_timeout(self):
+        self.skins.clear()
+        self.message = None
+
     @property
     def total_pages(self) -> int:
         return max(1, (len(self.skins) - 1) // self.per_page + 1)
@@ -824,6 +831,7 @@ class Community(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.workshop_lock = asyncio.Lock()
+        self.image_semaphore = asyncio.Semaphore(2)
 
     # Queue [ID: 15]
     @commands.hybrid_command(
@@ -982,41 +990,70 @@ class Community(commands.Cog):
         self,
         draft: WorkshopDraft,
     ) -> tuple[Image.Image, Image.Image]:
+        rankcard = None
+        bar = None
         existing_directory = (
             catalog.queue_skin_dir(draft.queue_id) if draft.editing else None
         )
-        async with aiohttp.ClientSession(timeout=REQUEST_TIMEOUT) as session:
-            if draft.rankcard_url:
-                rankcard = await _download_image(
-                    session,
-                    draft.rankcard_url,
-                    "랭크카드",
+        try:
+            async with aiohttp.ClientSession(timeout=REQUEST_TIMEOUT) as session:
+                if draft.rankcard_url:
+                    rankcard = await _download_image(
+                        session,
+                        draft.rankcard_url,
+                        "랭크카드",
+                    )
+                elif existing_directory is not None:
+                    with Image.open(
+                        existing_directory / "rankcard.png"
+                    ) as source:
+                        rankcard = source.convert("RGBA")
+                else:
+                    raise ValueError("랭크카드 이미지 주소는 필수입니다.")
+
+                if draft.bar_url:
+                    bar = await _download_image(session, draft.bar_url, "경험치 바")
+                elif existing_directory is not None:
+                    with Image.open(existing_directory / "bar.png") as source:
+                        bar = source.convert("RGBA")
+                else:
+                    raise ValueError("경험치 바 이미지 주소는 필수입니다.")
+
+                resized_rankcard = rankcard.resize(
+                    (384, 144),
+                    Image.Resampling.LANCZOS,
                 )
-            elif existing_directory is not None:
-                rankcard = Image.open(existing_directory / "rankcard.png").convert("RGBA")
-            else:
-                raise ValueError("랭크카드 이미지 주소는 필수입니다.")
+                rankcard.close()
+                rankcard = resized_rankcard
+                resized_bar = bar.resize((368, 8), Image.Resampling.LANCZOS)
+                bar.close()
+                bar = resized_bar
 
-            if draft.bar_url:
-                bar = await _download_image(session, draft.bar_url, "경험치 바")
-            elif existing_directory is not None:
-                bar = Image.open(existing_directory / "bar.png").convert("RGBA")
-            else:
-                raise ValueError("경험치 바 이미지 주소는 필수입니다.")
+                if draft.bar_background_url:
+                    background = await _download_image(
+                        session,
+                        draft.bar_background_url,
+                        "경험치 바 배경",
+                    )
+                    try:
+                        resized_background = background.resize(
+                            (368, 8),
+                            Image.Resampling.LANCZOS,
+                        )
+                    finally:
+                        background.close()
+                    try:
+                        rankcard.alpha_composite(resized_background, (8, 116))
+                    finally:
+                        resized_background.close()
 
-            rankcard = rankcard.resize((384, 144), Image.Resampling.LANCZOS)
-            bar = bar.resize((368, 8), Image.Resampling.LANCZOS)
-
-            if draft.bar_background_url:
-                background = await _download_image(
-                    session,
-                    draft.bar_background_url,
-                    "경험치 바 배경",
-                )
-                background = background.resize((368, 8), Image.Resampling.LANCZOS)
-                rankcard.alpha_composite(background, (8, 116))
-
-        return rankcard, bar
+            return rankcard, bar
+        except Exception:
+            if rankcard is not None:
+                rankcard.close()
+            if bar is not None:
+                bar.close()
+            raise
 
     @staticmethod
     def _serialize_skin_data(skin_data: dict) -> str:
@@ -1054,6 +1091,9 @@ class Community(commands.Cog):
         interaction: discord.Interaction,
         draft: WorkshopDraft,
     ):
+        rankcard = None
+        bar = None
+        await self.image_semaphore.acquire()
         try:
             if draft.editing:
                 current = catalog.load_queue_skin(draft.queue_id)
@@ -1142,14 +1182,17 @@ class Community(commands.Cog):
                 skin_id=queue_id,
                 preview=True,
             )
-            await interaction.followup.send(
-                i18n.t(
-                    interaction.user,
-                    "cmd.16.saved",
-                    skin_id=queue_id,
-                ),
-                file=discord.File(preview, filename=f"{queue_id}-preview.png"),
-            )
+            try:
+                await interaction.followup.send(
+                    i18n.t(
+                        interaction.user,
+                        "cmd.16.saved",
+                        skin_id=queue_id,
+                    ),
+                    file=discord.File(preview, filename=f"{queue_id}-preview.png"),
+                )
+            finally:
+                preview.close()
         except (
             aiohttp.ClientError,
             asyncio.TimeoutError,
@@ -1161,6 +1204,12 @@ class Community(commands.Cog):
                 i18n.t(interaction.user, "cmd.16.save_error", error=str(error)),
                 ephemeral=True,
             )
+        finally:
+            if rankcard is not None:
+                rankcard.close()
+            if bar is not None:
+                bar.close()
+            self.image_semaphore.release()
 
 
 async def setup(client):

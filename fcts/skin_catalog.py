@@ -4,6 +4,7 @@ import json
 import re
 import shlex
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -43,7 +44,11 @@ def _normalize_storage_skin(value: dict[str, Any]) -> dict[str, Any]:
     return skin
 
 
-def load_storage() -> list[dict[str, Any]]:
+@lru_cache(maxsize=2)
+def _load_storage_cached(
+    modified_ns: int,
+    file_size: int,
+) -> tuple[dict[str, Any], ...]:
     with STORAGE_PATH.open("r", encoding="utf-8") as file:
         raw = json.load(file)
 
@@ -58,7 +63,13 @@ def load_storage() -> list[dict[str, Any]]:
         skin["_key"] = key
         skins.append(skin)
 
-    return sorted(skins, key=lambda skin: _skin_number(skin["id"]))
+    return tuple(sorted(skins, key=lambda skin: _skin_number(skin["id"])))
+
+
+def load_storage() -> list[dict[str, Any]]:
+    stat = STORAGE_PATH.stat()
+    # Return a fresh outer list so pagination code can safely sort or filter it.
+    return list(_load_storage_cached(stat.st_mtime_ns, stat.st_size))
 
 
 def storage_rows(option: str | None = None) -> list[list[str]]:
