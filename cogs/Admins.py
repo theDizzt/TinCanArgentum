@@ -6,6 +6,7 @@ import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.lklab as lk
+import fcts.skin_catalog as catalog
 import yaml
 import fcts.etcfunctions as etc
 from project_paths import CONFIG_DIR
@@ -273,29 +274,52 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
                      user: str = None,
                      skin: int = None,
                      lock: int = 1):
-        if ctx.author.id in admin_login:
-            try:
-                user_id = etc.extractUid(user)
-            except ValueError:
-                await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
-                return
-            Rank = etc.storageLineRead('all')
-            user_name = q.readTagById(user_id)
+        if ctx.author.id not in admin_login:
+            await ctx.reply(i18n.t(ctx.author, "cmd.admin.reject"))
+            return
 
-            if lock == 1:
-                if not q.readStorageById(user_id, skin):
-                    q.storageModifyById(user_id, skin, 1)
-                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t001", u=user_name, skin=Rank[skin - 1][0]))
-                else:
-                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t002", u=user_name, skin=Rank[skin - 1][0]))
-            elif lock == 0:
-                if q.readStorageById(user_id, skin):
-                    q.storageModifyById(user_id, skin, 0)
-                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t003", u=user_name, skin=Rank[skin - 1][0]))
-                else:
-                    await ctx.reply(i18n.t(ctx.author, "cmd.95.t004", u=user_name, skin=Rank[skin - 1][0]))
+        try:
+            user_id = etc.extractUid(user)
+            user_name = q.readTagById(user_id)
+        except (TypeError, ValueError, IndexError):
+            await ctx.reply(i18n.t(ctx.author, "common.invalid_user"))
+            return
+
+        if lock not in (0, 1) or skin is None:
+            await ctx.reply(i18n.t(ctx.author, "cmd.95.t005"))
+            return
+
+        skin_data = next(
+            (
+                item
+                for item in catalog.load_storage()
+                if int(item["id"]) == skin
+            ),
+            None,
+        )
+        if skin_data is None:
+            await ctx.reply(i18n.t(ctx.author, "cmd.95.t005"))
+            return
+
+        q.ensureStorageById(user_id)
+        is_unlocked = bool(q.readStorageById(user_id, skin))
+        skin_label = skin_data["id"]
+
+        if lock == 1:
+            if not is_unlocked:
+                q.storageModifyById(user_id, skin, 1)
+                key = "cmd.95.t001"
             else:
-                await ctx.reply(i18n.t(ctx.author, "cmd.95.t005"))
+                key = "cmd.95.t002"
+        elif is_unlocked:
+            q.storageModifyById(user_id, skin, 0)
+            key = "cmd.95.t003"
+        else:
+            key = "cmd.95.t004"
+
+        await ctx.reply(
+            i18n.t(ctx.author, key, u=user_name, skin=skin_label)
+        )
 
     # Ultimate [ID: 96]
     @commands.command(aliases=["유저편집"])

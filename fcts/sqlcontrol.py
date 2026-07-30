@@ -566,6 +566,19 @@ def ensureStorage(user: discord.Member = None):
     return result
 
 
+def ensureStorageById(user: int):
+    result = _fetchone("SELECT * FROM storage WHERE id = ?;", (user,))
+    if result is None:
+        _execute(
+            "INSERT INTO storage (id, id1) VALUES (?, ?);",
+            (user, 1),
+        )
+        result = _fetchone("SELECT * FROM storage WHERE id = ?;", (user,))
+    if result is None:
+        raise RuntimeError(f"Failed to initialize storage for user {user}")
+    return result
+
+
 # 3.6. Etc
 
 # 3.6.1. Full Tag to UID

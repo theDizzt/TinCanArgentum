@@ -6,7 +6,7 @@ import fcts.sqlcontrol as q
 import fcts.etcfunctions as etc
 import fcts.skin_catalog as catalog
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 import io
 import asyncio
 import json
@@ -87,7 +87,7 @@ async def _load_avatar_image(
         if normal_skin_id == 140:
             avatar_image.close()
             with Image.open(
-                RANKCARD_DIR / "special" / "image140.png"
+                RANKCARD_DIR / "special" / "image140a.png"
             ) as source:
                 avatar_image = source.convert("RGBA")
     except Exception:
@@ -102,6 +102,247 @@ async def _load_avatar_image(
 # Black Text Skin
 with (FONT_DIR / "font.json").open(encoding="UTF-8") as f:
     font_data = json.load(f)
+
+
+SUPPORTED_GRADIENT_DIRECTIONS = {
+    "vertical",
+    "horizontal",
+    "diagonal-down",
+    "diagonal-up",
+}
+
+
+def _rgba_color(value) -> tuple[int, int, int, int]:
+    """Validate and normalize one JSON RGBA color."""
+    if (
+        not isinstance(value, (list, tuple))
+        or len(value) != 4
+        or not all(isinstance(component, (int, float)) for component in value)
+    ):
+        raise ValueError("A color must be an [R, G, B, A] array.")
+
+    color = tuple(int(component) for component in value)
+    if any(component < 0 or component > 255 for component in color):
+        raise ValueError("RGBA components must be between 0 and 255.")
+    return color
+
+
+def _parse_text_color(value):
+    """Accept the legacy RGBA form or two-or-more RGBA gradient stops."""
+    try:
+        return _rgba_color(value), None
+    except ValueError:
+        pass
+
+    if not isinstance(value, (list, tuple)) or len(value) < 2:
+        raise ValueError(
+            "A gradient must contain at least two [R, G, B, A] colors."
+        )
+    return None, tuple(_rgba_color(stop) for stop in value)
+
+
+def _parse_text_shadow(value):
+    """Parse [offset_x, offset_y, blur, R, G, B, A] or disabled/null."""
+    if value is None:
+        return None
+    if (
+        not isinstance(value, (list, tuple))
+        or len(value) != 7
+        or not all(isinstance(component, (int, float)) for component in value)
+    ):
+        raise ValueError(
+            "A shadow must be [X, Y, blur, R, G, B, A] or null."
+        )
+
+    offset_x, offset_y, blur, *rgba = value
+    if not -10 <= offset_x <= 10 or not -10 <= offset_y <= 10:
+        raise ValueError("Shadow offsets must be between -10 and 10.")
+    if not 0 <= blur <= 10:
+        raise ValueError("Shadow blur must be between 0 and 10.")
+    return float(offset_x), float(offset_y), float(blur), _rgba_color(rgba)
+
+
+def _interpolate_gradient_color(colors, progress):
+    """Interpolate across any number of evenly spaced gradient colors."""
+    scaled = max(0.0, min(1.0, progress)) * (len(colors) - 1)
+    start_index = min(int(scaled), len(colors) - 2)
+    local_progress = scaled - start_index
+    start = colors[start_index]
+    end = colors[start_index + 1]
+    return tuple(
+        round(first + (second - first) * local_progress)
+        for first, second in zip(start, end)
+    )
+
+
+def _create_text_gradient(size, colors, direction):
+    """Create a card-sized RGBA gradient used through a text mask."""
+    normalized_direction = str(direction or "vertical").strip().casefold()
+    if normalized_direction not in SUPPORTED_GRADIENT_DIRECTIONS:
+        normalized_direction = "vertical"
+
+    width, height = size
+    width_scale = max(1, width - 1)
+    height_scale = max(1, height - 1)
+
+    # The common vertical/horizontal cases only need a one-pixel strip,
+    # avoiding a full Python pixel loop for every text field.
+    if normalized_direction in {"vertical", "horizontal"}:
+        length = height if normalized_direction == "vertical" else width
+        scale = max(1, length - 1)
+        strip_colors = [
+            _interpolate_gradient_color(colors, index / scale)
+            for index in range(length)
+        ]
+        strip_size = (
+            (1, height)
+            if normalized_direction == "vertical"
+            else (width, 1)
+        )
+        strip = Image.new("RGBA", strip_size)
+        try:
+            strip.putdata(strip_colors)
+            return strip.resize(size, Image.Resampling.NEAREST)
+        finally:
+            strip.close()
+
+    pixels = []
+    for y in range(height):
+        y_progress = y / height_scale
+        for x in range(width):
+            x_progress = x / width_scale
+            if normalized_direction == "diagonal-down":
+                progress = (x_progress + y_progress) / 2
+            elif normalized_direction == "diagonal-up":
+                progress = (x_progress + (1 - y_progress)) / 2
+            pixels.append(_interpolate_gradient_color(colors, progress))
+
+    gradient = Image.new("RGBA", size)
+    gradient.putdata(pixels)
+    return gradient
+
+
+def _draw_text_shadow(
+    image,
+    position,
+    text,
+    *,
+    shadow,
+    font,
+    stroke_width,
+):
+    """Draw an optional blurred shadow underneath the configured text."""
+    parsed_shadow = _parse_text_shadow(shadow)
+    if parsed_shadow is None:
+        return
+
+    offset_x, offset_y, blur, shadow_color = parsed_shadow
+    shadow_position = (
+        position[0] + offset_x,
+        position[1] + offset_y,
+    )
+    mask = Image.new("L", image.size, 0)
+    blurred_mask = None
+    shadow_layer = None
+    alpha_layer = None
+    try:
+        ImageDraw.Draw(mask).text(
+            shadow_position,
+            text,
+            fill=255,
+            font=font,
+            stroke_width=stroke_width,
+            stroke_fill=255,
+        )
+        if blur:
+            blurred_mask = mask.filter(ImageFilter.GaussianBlur(blur))
+            active_mask = blurred_mask
+        else:
+            active_mask = mask
+
+        shadow_layer = Image.new(
+            "RGBA",
+            image.size,
+            (*shadow_color[:3], 0),
+        )
+        alpha_layer = Image.new("L", image.size, shadow_color[3])
+        shadow_layer.putalpha(ImageChops.multiply(active_mask, alpha_layer))
+        image.alpha_composite(shadow_layer)
+    finally:
+        mask.close()
+        if blurred_mask is not None:
+            blurred_mask.close()
+        if shadow_layer is not None:
+            shadow_layer.close()
+        if alpha_layer is not None:
+            alpha_layer.close()
+
+
+def draw_configured_text(
+    image,
+    draw,
+    position,
+    text,
+    *,
+    color,
+    direction="vertical",
+    shadow=None,
+    font,
+    stroke_width=0,
+    stroke_fill=(0, 0, 0, 255),
+):
+    """Draw legacy solid text or gradient text from the same color setting."""
+    # Shadows are composited first so the existing outline and glyph remain
+    # crisp above them. A missing/null setting has zero visual effect.
+    _draw_text_shadow(
+        image,
+        position,
+        text,
+        shadow=shadow,
+        font=font,
+        stroke_width=stroke_width,
+    )
+    solid_color, gradient_colors = _parse_text_color(color)
+    if solid_color is not None:
+        # Keep the original ImageDraw path unchanged for all existing skins.
+        draw.text(
+            position,
+            text,
+            fill=solid_color,
+            font=font,
+            stroke_width=stroke_width,
+            stroke_fill=stroke_fill,
+        )
+        return
+
+    # Draw the configured outline first, then replace only the glyph fill
+    # through a mask. This keeps the outline a predictable solid color.
+    draw.text(
+        position,
+        text,
+        fill=gradient_colors[0],
+        font=font,
+        stroke_width=stroke_width,
+        stroke_fill=stroke_fill,
+    )
+    mask = Image.new("L", image.size, 0)
+    gradient = None
+    try:
+        ImageDraw.Draw(mask).text(position, text, fill=255, font=font)
+        gradient = _create_text_gradient(
+            image.size,
+            gradient_colors,
+            direction,
+        )
+        gradient.putalpha(
+            ImageChops.multiply(gradient.getchannel("A"), mask)
+        )
+        image.alpha_composite(gradient)
+    finally:
+        mask.close()
+        if gradient is not None:
+            gradient.close()
+
 
 def fontsize(type, font):
     if type == "name":
@@ -377,19 +618,26 @@ class UserProfile(commands.Cog):
         bar = bar_cover_image.copy()
 
         avatar_image = await _load_avatar_image(user, normal_skin_id)
-        if normal_skin_id == 202:
+        special_overlay_path = (
+            RANKCARD_DIR / "special" / f"image{normal_skin_id}.png"
+            if normal_skin_id is not None
+            else None
+        )
+        has_special_overlay = (
+            special_overlay_path is not None
+            and special_overlay_path.is_file()
+        )
+        if has_special_overlay:
             try:
                 image.alpha_composite(avatar_image, (8, 8))
             finally:
                 avatar_image.close()
-            with Image.open(
-                RANKCARD_DIR / "special" / "image202.png"
-            ) as source:
-                image_202_overlay = source.convert("RGBA")
+            with Image.open(special_overlay_path) as source:
+                special_overlay = source.convert("RGBA")
             try:
-                image.alpha_composite(image_202_overlay, (0, 0))
+                image.alpha_composite(special_overlay, (0, 0))
             finally:
-                image_202_overlay.close()
+                special_overlay.close()
 
         draw = ImageDraw.Draw(image)
 
@@ -426,23 +674,40 @@ class UserProfile(commands.Cog):
         x6 = 384 - 8 - draw.textlength(money, font=font_xp)
         y6 = 80
 
-        draw.text(
-            (x1, y1), str(name),
-            fill=tuple(font_option['name-color']),
+        # A single RGBA array uses the legacy solid renderer. A list of RGBA
+        # arrays enables the optional gradient format documented in font.json.
+        draw_configured_text(
+            image,
+            draw,
+            (x1, y1),
+            str(name),
+            color=font_option['name-color'],
+            direction=font_option.get('name-color-direction', 'vertical'),
+            shadow=font_option.get('nametext-shadow'),
             font=font_name,
             stroke_width=font_option['nametext-outline-width'],
             stroke_fill=name_outline_color
         )
-        draw.text(
-            (x5, y5), str(discrim),
-            fill=tuple(font_option['discrim-color']),
+        draw_configured_text(
+            image,
+            draw,
+            (x5, y5),
+            str(discrim),
+            color=font_option['discrim-color'],
+            direction=font_option.get('discrim-color-direction', 'vertical'),
+            shadow=font_option.get('nametext-shadow'),
             font=font_name,
             stroke_width=font_option['nametext-outline-width'],
             stroke_fill=name_outline_color
         )
-        draw.text(
-            (x2, y2), dname,
-            fill=tuple(font_option['discrim-color']),
+        draw_configured_text(
+            image,
+            draw,
+            (x2, y2),
+            dname,
+            color=font_option['discrim-color'],
+            direction=font_option.get('discrim-color-direction', 'vertical'),
+            shadow=font_option.get('nametext-shadow'),
             font=font_dname,
             stroke_width=font_option['nametext-outline-width'],
             stroke_fill=name_outline_color
@@ -454,22 +719,32 @@ class UserProfile(commands.Cog):
             stroke_width=1,
             stroke_fill=(0, 0, 0, 255)
         )
-        draw.text(
-            (x4, y4), text_xp,
-            fill=tuple(font_option['xp-color']),
+        draw_configured_text(
+            image,
+            draw,
+            (x4, y4),
+            text_xp,
+            color=font_option['xp-color'],
+            direction=font_option.get('xp-color-direction', 'vertical'),
+            shadow=font_option.get('xp-shadow'),
             font=font_xp,
             stroke_width=font_option['xp-outline-width'],
             stroke_fill=xp_outline_color
         )
-        draw.text(
-            (x6, y6), money,
-            fill=tuple(font_option['xp-color']),
+        draw_configured_text(
+            image,
+            draw,
+            (x6, y6),
+            money,
+            color=font_option['xp-color'],
+            direction=font_option.get('xp-color-direction', 'vertical'),
+            shadow=font_option.get('xp-shadow'),
             font=font_xp,
             stroke_width=font_option['xp-outline-width'],
             stroke_fill=xp_outline_color
         )
 
-        if normal_skin_id != 202:
+        if not has_special_overlay:
             try:
                 image.paste(avatar_image, (8, 8), mask=avatar_image)
             finally:

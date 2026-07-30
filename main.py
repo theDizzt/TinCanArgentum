@@ -152,7 +152,6 @@ with tqdm(
     okt = Okt()
     progress.update(1)
     progress.refresh()
-okt_lock = asyncio.Lock()
 server_id = [
     262525769023094785, 716980478992711720, 1114816224522678294,
     453906917719408642, 348750582200270848, 842746723067756554, 1252877905747513457 , 364240472060985357, 1482323335739342860, 1480230239043850401
@@ -309,8 +308,10 @@ async def on_message(message):
     
     #단어 자동 학습 | and message.guild.id in server_id
     if message.author.id != 691455977270149171:
-        async with okt_lock:
-            nouns = await asyncio.to_thread(okt.nouns, message.content)
+        # JPype/KoNLPy must run on the JVM-owning thread. Moving Okt.nouns to
+        # asyncio's worker pool can terminate the Windows process with an
+        # access violation.
+        nouns = okt.nouns(message.content)
         if not nouns:
             pass
             # print("추출된 명사가 없습니다.")
