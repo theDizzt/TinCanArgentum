@@ -13,6 +13,7 @@ import datetime
 import random
 import asyncio
 from project_paths import DATA_DIR
+from fcts.user_resolver import UserResolutionError, resolve_discord_user
 
 
 def _read_workbook_rows(path):
@@ -24,6 +25,26 @@ def _read_workbook_rows(path):
         return list(sheet.iter_rows(values_only=True))
     finally:
         book.close()
+
+
+async def _prepare_wordchain_participant(ctx, reference=None):
+    """Resolve a participant and create missing game dependencies safely."""
+    user = await resolve_discord_user(ctx, reference)
+    if getattr(user, "bot", False):
+        raise UserResolutionError("Bots cannot participate in word chain games.")
+
+    user_id = int(user.id)
+    if not q.accountExistsById(user_id):
+        q.newAccountById(user_id, user.name)
+    if not q.storageExistsById(user_id):
+        q.newStorageById(user_id)
+
+    stats = l.wcReadById(user_id, "stats")
+    if stats is None:
+        l.wcUpdateRegistById(user_id)
+        stats = l.wcReadById(user_id, "stats")
+
+    return user, stats
 
 player_badge = [
     "",
@@ -363,6 +384,364 @@ def shufflePlayer(player, i):
     result = result + player
     print(result)
     return result
+
+
+TEAM_ALIASES = {
+    "1팀": 1,
+    "팀1": 1,
+    "team1": 1,
+    "team 1": 1,
+    "2팀": 2,
+    "팀2": 2,
+    "team2": 2,
+    "team 2": 2,
+}
+TEAM_RANK_POINTS = (10, 7, 5, 3, 2, 1, 0, -1)
+
+
+def _parse_team_selection(value):
+    """Split ``user reference + team`` while allowing a team-only owner choice."""
+    text = str(value or "").strip()
+    lowered = text.casefold()
+    if lowered in TEAM_ALIASES:
+        return None, TEAM_ALIASES[lowered]
+
+    for alias, team_number in sorted(
+        TEAM_ALIASES.items(), key=lambda item: len(item[0]), reverse=True
+    ):
+        suffix = f" {alias}"
+        if lowered.endswith(suffix):
+            return text[:-len(suffix)].strip(), team_number
+    return text, None
+
+
+def _balance_wordchain_teams(players):
+    """Keep manual choices and randomly fill every remaining team slot."""
+    team_size = len(players) // 2
+    team1 = [player for player in players if player.get("team") == 1]
+    team2 = [player for player in players if player.get("team") == 2]
+    undecided = [player for player in players if player.get("team") not in (1, 2)]
+
+    if len(team1) > team_size or len(team2) > team_size:
+        raise ValueError("한 팀에 선택된 참가자가 너무 많습니다.")
+
+    random.shuffle(undecided)
+    while len(team1) < team_size:
+        player = undecided.pop()
+        player["team"] = 1
+        team1.append(player)
+    while len(team2) < team_size:
+        player = undecided.pop()
+        player["team"] = 2
+        team2.append(player)
+
+    return team1, team2
+
+
+def _team_round_order(team1, team2):
+    """Shuffle within teams, then alternate Team 1 and Team 2 players."""
+    first = list(team1)
+    second = list(team2)
+    random.shuffle(first)
+    random.shuffle(second)
+    return [player for pair in zip(first, second) for player in pair]
+
+
+def _team_roster_text(players, team_number=None):
+    lines = []
+    for player in players:
+        if team_number is not None and player.get("team") != team_number:
+            continue
+        lv = etc.level(q.readXpById(player["id"]))
+        team_label = f"{player['team']}팀" if player.get("team") else "자동 배정"
+        lines.append(
+            f"`{team_label}` {player_badge[player['color']]} "
+            f"{scoreFont(player['score'], 4, player['color'])} "
+            f"{lifeUI(player['life'], 3)} {etc.lvicon(lv)}"
+            f"{q.readTagById(player['id'])}"
+        )
+    return "\n".join(lines)
+
+
+def _apply_wordchain_achievements(player, rank, chain):
+    user_id = player["id"]
+    if l.wcReadById(user_id, "win") >= 84 and q.readStorageById(user_id, 81) == 0:
+        q.storageModifyById(user_id, 81, 1)
+    if chain > 421 and q.readStorageById(user_id, 83) == 0:
+        q.storageModifyById(user_id, 83, 1)
+    if l.wcReadById(user_id, "regist") >= 1446 and q.readStorageById(user_id, 84) == 0:
+        q.storageModifyById(user_id, 84, 1)
+    if player["score"] >= 1000 and q.readStorageById(user_id, 150) == 0:
+        q.storageModifyById(user_id, 150, 1)
+    if rank == 0 and player["life"] == 3 and q.readStorageById(user_id, 148) == 0:
+        q.storageModifyById(user_id, 148, 1)
+    elif rank == 0 and player["life"] == 0 and q.readStorageById(user_id, 149) == 0:
+        q.storageModifyById(user_id, 149, 1)
+
+
+async def _run_team_wordchain(client, ctx, players, option):
+    """Run a team game using the same word and penalty rules as solo mode."""
+    team1 = [player for player in players if player["team"] == 1]
+    team2 = [player for player in players if player["team"] == 2]
+    chain = 1
+    history = []
+    sample = sampleText()
+    start = random.choice(sample)
+    bonus = wd.random_korean()
+    length = random.randint(2, 5)
+    round_number = 0
+    eliminated = None
+
+    colors = list(range(1, 9))
+    random.shuffle(colors)
+    for player, color_number in zip(players, colors):
+        player["color"] = color_number
+
+    await ctx.send(
+        f"**잠시 후 팀전이 시작됩니다!**\n"
+        f"종목: 끝말잇기 {option}\n{_team_roster_text(players)}"
+    )
+    await asyncio.sleep(5)
+    start_time = datetime.datetime.now().timestamp()
+
+    while eliminated is None:
+        round_number += 1
+        turn_order = _team_round_order(team1, team2)
+        await ctx.send(f"## {round_number} 라운드\n팀별 플레이 순서를 다시 섞었습니다.")
+
+        for turn_index, current in enumerate(turn_order):
+            uid = current["id"]
+            ulv = etc.level(q.readXpById(uid))
+            turn_failed = False
+
+            if isOneKill(start):
+                penalty = int(current["score"] * 0.42)
+                current["score"] -= penalty
+                current["life"] -= 1
+                start = random.choice(sample)
+                await ctx.send(
+                    f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -{penalty}점** '
+                    "한방 단어 공격을 받았습니다..."
+                )
+                turn_failed = True
+
+            while current["life"] > 0 and not turn_failed:
+                start_alter = replace_sound_char(start) or ""
+                start_label = f"{start}({start_alter})" if start_alter else start
+                rule_label = (
+                    f"`보너스 글자` {bonus}"
+                    if option == "일반"
+                    else f"`제한 길이` {length}글자"
+                )
+                await ctx.send(
+                    f":chains:{scoreFont(chain, 3, 0)} | `Team {current['team']}` "
+                    f"{player_badge[current['color']]}{etc.lvicon(ulv)}"
+                    f"{q.readTagById(uid)} | {scoreFont(current['score'], 4, current['color'])} "
+                    f"| {lifeUI(current['life'], 3)} <@{uid}>\n"
+                    f"## {start_label}\n{rule_label}\n"
+                    "(으)로 시작하는 단어를 입력하세요! ('q' 입력시 포기)"
+                )
+
+                if uid == 691455977270149171:
+                    if sample == "●▅▇█▇▆▅▄▇":
+                        start = random.choice("가나다라마바사아자차카타파하")
+                        start_alter = replace_sound_char(start) or ""
+                    dice = random.randint(1, 2) if detectZwong(turn_index, turn_order) else random.randint(1, 7)
+                    killer_length = length if option == "쿵쿵따" else 0
+                    result = []
+                    if dice == 1:
+                        result = searchKiller(start, killer_length)
+                        if start_alter:
+                            result += searchKiller(start_alter, killer_length)
+                    if result:
+                        input_message = await ctx.send(random.choice(result))
+                    else:
+                        api_result = await asyncio.to_thread(
+                            ks.startWord,
+                            start,
+                            history,
+                            fixed_length=killer_length,
+                        )
+                        input_message = await ctx.send(api_result[0] if api_result else "q")
+                else:
+                    def message_check(message):
+                        return message.author.id == uid and message.channel == ctx.channel
+
+                    input_message = await client.wait_for("message", check=message_check)
+
+                word = input_message.content.strip()
+                if word == "q":
+                    penalty = int(current["score"] * 0.33)
+                    current["score"] -= penalty
+                    current["life"] -= 1
+                    start = random.choice(sample)
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -{penalty}점** '
+                        "방어에 실패하였습니다..."
+                    )
+                    turn_failed = True
+                    continue
+
+                valid_start = bool(word) and (
+                    word[0] == start
+                    or word[0] == start_alter
+                    or sample == "●▅▇█▇▆▅▄▇"
+                )
+                if not valid_start:
+                    current["life"] -= 1
+                    current["score"] -= 30
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -30점** '
+                        f"**`{start}`**(으)로 시작하는 단어를 입력해 주세요..."
+                    )
+                    continue
+                if word in history:
+                    current["life"] -= 1
+                    current["score"] -= 50
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -50점** '
+                        "이미 사용한 단어입니다..."
+                    )
+                    turn_failed = True
+                    continue
+                if option == "일반" and len(word) < 2:
+                    current["life"] -= 1
+                    current["score"] -= 30
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -30점** '
+                        "적어도 2글자 이상이어야 합니다..."
+                    )
+                    turn_failed = True
+                    continue
+                if option == "쿵쿵따" and len(word) != length:
+                    current["life"] -= 1
+                    current["score"] -= 30
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -30점** '
+                        f"{length}글자 단어만 가능합니다..."
+                    )
+                    turn_failed = True
+                    continue
+
+                result = wd.readInGame(word)
+                if result is None:
+                    result = await asyncio.to_thread(ks.searchWord, word)
+                if result is None:
+                    current["life"] -= 1
+                    current["score"] -= 30
+                    await ctx.send(
+                        f'`(⩌ʌ ⩌;)` <@{uid}> **-1 목숨 | -30점** '
+                        "없는 단어입니다..."
+                    )
+                    turn_failed = True
+                    continue
+
+                start = word[-1]
+                history.append(word)
+                gain = count_break_korean(word)
+                if option == "일반" and bonus in word:
+                    gain += 2 ** word.count(bonus)
+                    bonus = wd.random_korean()
+                current["score"] += scoreBoost(gain, current["life"])
+                wd.newWordById(uid, str(result[0]), str(result[1]), str(result[2]))
+                index = wd.findID(word)
+                embed = discord.Embed(
+                    title=f"{result[0]} `id: {index}`",
+                    description=f"[{result[1]}] {result[2]}",
+                    color=color[current["color"]],
+                )
+                embed.add_field(
+                    name="**1팀 점수**",
+                    value=_team_roster_text(players, 1),
+                    inline=False,
+                )
+                embed.add_field(
+                    name="**2팀 점수**",
+                    value=_team_roster_text(players, 2),
+                    inline=False,
+                )
+                embed.set_footer(text=f"{q.readTagById(uid)} | CHAIN: {chain}")
+                await ctx.send(embed=embed)
+                chain += 1
+                break
+
+            if current["life"] <= 0:
+                eliminated = current
+                await ctx.send(
+                    f'`(⩌ʌ ⩌;)` **{q.readTagById(uid)}** 님이 탈락하여 게임이 종료됩니다.'
+                )
+                break
+
+            if turn_failed:
+                bonus = wd.random_korean()
+                if option == "쿵쿵따":
+                    length = random.randint(2, 5)
+
+    elapsed = datetime.datetime.now().timestamp() - start_time
+    elapsed_cs = int(elapsed * 100)
+    for player in players:
+        if player["life"] == 3:
+            player["score"] = int(player["score"] * 2.4)
+        player["score"] = max(0, player["score"])
+
+    # Discrete rank points require a tie-break; shuffle first so recruitment
+    # order does not consistently benefit players with an equal score.
+    ranking = list(players)
+    random.shuffle(ranking)
+    ranking.sort(key=lambda player: -player["score"])
+    team_rank_points = {1: 0, 2: 0}
+    for rank, player in enumerate(ranking):
+        player["rank_point"] = TEAM_RANK_POINTS[rank]
+        team_rank_points[player["team"]] += player["rank_point"]
+
+    team_scores = {
+        1: sum(player["score"] for player in players if player["team"] == 1),
+        2: sum(player["score"] for player in players if player["team"] == 2),
+    }
+    if team_rank_points[1] == team_rank_points[2]:
+        winner_team = None
+        result_title = "무승부"
+    else:
+        winner_team = max(team_rank_points, key=team_rank_points.get)
+        result_title = f"{winner_team}팀 승리"
+
+    embed = discord.Embed(
+        title=f"팀전 결과 - {result_title}",
+        description=(
+            f"CHAIN: {chain - 1}\n"
+            f"TIME: {elapsed_cs // 6000}분 {(elapsed_cs % 6000) // 100:02d}초 {elapsed_cs % 100:02d}\n\n"
+            f"1팀: 승점 {team_rank_points[1]}점 | 합산 {team_scores[1]}점\n"
+            f"2팀: 승점 {team_rank_points[2]}점 | 합산 {team_scores[2]}점"
+        ),
+        color=0xBCE29E,
+    )
+
+    for rank, player in enumerate(ranking):
+        team_score = team_scores[player["team"]]
+        reward_multiplier = 1.3 if winner_team == player["team"] else 1.0
+        xp_gain = int((team_score * 1.8 + chain * 5) * reward_multiplier)
+        money_gain = int((team_score * 1.2 + chain * 3) * reward_multiplier)
+        q.xpAddById(player["id"], xp_gain)
+        q.moneyAddById(player["id"], money_gain)
+        is_winner = winner_team == player["team"]
+        l.wcUpdateIndi(player["id"], player["score"], chain - 1, is_winner)
+        _apply_wordchain_achievements(player, rank, chain)
+        bonus_label = " | 승리 보너스 130%" if is_winner else ""
+        embed.add_field(
+            name=(
+                f"{rank + 1}위 · {player['team']}팀 · "
+                f"{q.readTagById(player['id'])}"
+            ),
+            value=(
+                f"개인 {player['score']}점 | 승점 {player['rank_point']:+d}점 | "
+                f"+{xp_gain}XP, +${money_gain:,}{bonus_label}"
+            ),
+            inline=False,
+        )
+
+    embed.set_footer(text="Discord Bot by Dizzt")
+    await ctx.send("## 게임 끝", embed=embed)
+
 
 # 단어목록 뷰어 UI
 
@@ -1228,15 +1607,9 @@ class TestCommands(commands.Cog):
                 gamestart = False
                 not_include = []
                 player = []
-                player.append({"id": ctx.author.id, "score": 0, "life": 3, "color": 0})
-                not_include.append(ctx.author.id)
-
-                # 리더보드 Null 오류 해결 코드 ('25. 3. 14. N1256)
-                try:
-                    l.wcReadById(ctx.author.id, "stats")
-                except:
-                    l.wcUpdateRegist(ctx.author)
-                    l.wcForcedUpdate(ctx.author.id, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                owner, _ = await _prepare_wordchain_participant(ctx)
+                player.append({"id": owner.id, "score": 0, "life": 3, "color": 0})
+                not_include.append(owner.id)
 
                 while True:
                     embed = discord.Embed(title='참가자 목록',
@@ -1281,37 +1654,18 @@ class TestCommands(commands.Cog):
                                 await ctx.send(
                                     '`(⩌ʌ ⩌;)` 인원이 너무 많습니다... 최대 8명 까지 참가가 가능합니다!')                            
                             else:
-                                if q.tagToUid(check) is not None:
-                                    id = q.tagToUid(check)
-                                    if id in not_include:
-                                        await ctx.send(
-                                        '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
-                                    else:
-
-                                        # 리더보드 Null 오류 해결 코드 ('25. 3. 14. N1256)
-                                        try:
-                                            l.wcReadById(id, "stats")
-                                        except:
-                                            l.wcUpdateRegistById(id)
-                                            l.wcForcedUpdate(id, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-                                        
-                                        name = q.readTagById(id)
-                                        player.append({"id": id, "score": 0, "life": 3, "color": 0})
-                                        not_include.append(id)
-                                        await ctx.send(
-                                            f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
+                                invited, _ = await _prepare_wordchain_participant(ctx, check)
+                                id = invited.id
+                                if id in not_include:
+                                    await ctx.send(
+                                    '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
                                 else:
-                                    id = int(etc.extractUid(check))
-                                    if id in not_include:
-                                        await ctx.send(
-                                        '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
-                                    else:
-                                        name = q.readTagById(id)
-                                        player.append({"id": id, "score": 0, "life": 3, "color": 0})
-                                        not_include.append(id)
-                                        await ctx.send(
-                                            f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
-                        except:
+                                    name = q.readTagById(id)
+                                    player.append({"id": id, "score": 0, "life": 3, "color": 0})
+                                    not_include.append(id)
+                                    await ctx.send(
+                                        f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
+                        except (UserResolutionError, ValueError):
                             await ctx.send(
                                 '`(⩌ʌ ⩌;)` 유효하지 않은 참가자 입니다... 다시 시도해 보세요...')
 
@@ -1972,11 +2326,10 @@ class TestCommands(commands.Cog):
 
                 not_include = []
                 player = []
-                team1 = []
-                team2 = []
 
-                player.append({"id": ctx.author.id, "score": 0, "life": 3, "color": 0, "team": 0})
-                not_include.append(ctx.author.id)
+                owner, _ = await _prepare_wordchain_participant(ctx)
+                player.append({"id": owner.id, "score": 0, "life": 3, "color": 0, "team": None})
+                not_include.append(owner.id)
 
                 while True:
                     embed = discord.Embed(title='참가자 목록',
@@ -1988,72 +2341,109 @@ class TestCommands(commands.Cog):
                         print(sts)
                         embed.add_field(
                             name=
-                            f"`Team {player[i]['team']}` {etc.lvicon(lv)}{q.readTagById(player[i]['id'])}",
+                            f"`{str(player[i]['team']) + '팀' if player[i]['team'] else '자동 배정'}` {etc.lvicon(lv)}{q.readTagById(player[i]['id'])}",
                             value=f"`전적` {sts[2]}전 {sts[3]}승 | {sts[0]}점 | {sts[1]}체인",
                             inline=False)
                     embed.set_footer(text='Discord Bot by Dizzt')
                     await ctx.reply(
-                        f"## 끝말잇기 ({option}) - 인원 모집\n* `@username`을 이용하여 최대 8명 까지 초대가 가능합니다!\n* 초대가 완료되면 `시작`를 입력해 주세요!\n* 게임 생성을 취소하고 싶다면 `취소`를 입력해 주세요!\n* 게임이 시작되면 자동으로 순서가 바뀝니다!",
+                        f"## 끝말잇기 ({option}) 팀전 - 인원 모집\n"
+                        "* 총 2명, 4명, 6명, 8명으로 시작할 수 있습니다.\n"
+                        "* `@사용자 1팀` 또는 `@사용자 2팀`으로 팀을 지정해 초대할 수 있습니다.\n"
+                        "* 팀을 생략한 참가자는 시작할 때 빈자리에 자동 배정됩니다.\n"
+                        "* 참가자는 `1팀` 또는 `2팀`만 입력해 자신의 팀을 직접 선택할 수 있습니다.\n"
+                        "* 초대가 완료되면 `시작`, 취소하려면 `취소`를 입력해 주세요.",
                         embed=embed)
 
                     def check(m):
-                        return m.author == ctx.author and m.channel == ctx.channel
+                        return (
+                            m.channel == ctx.channel
+                            and (m.author == ctx.author or m.author.id in not_include)
+                        )
 
                     input_word = await self.client.wait_for("message", check=check)
                     check = input_word.content
+                    actor_id = input_word.author.id
 
                     if check == '시작':
-                        if len(player) > 2:
-                            if len(player) % 2 == 0:
-                                if 2*len(team1) <= len(player) and 2*len(team2) <= len(player):
-                                    gamestart = True
-                                    await ctx.send(":green_circle: 게임이 성공적으로 생성 되었습니다!")
-                                    break
-                                else:
-                                    await ctx.send(
-                                    '`(⩌ʌ ⩌;)` 팀 구성원 수가 다릅니다... 각 팀에는 같은 수의 플레이어가 있어야 합니다.')
-                            else:
+                        if actor_id != ctx.author.id:
+                            await ctx.send("`(⩌ʌ ⩌;)` 게임은 방장만 시작할 수 있습니다.")
+                            continue
+                        if len(player) in (2, 4, 6, 8):
+                            try:
+                                _balance_wordchain_teams(player)
+                            except ValueError:
                                 await ctx.send(
-                                '`(⩌ʌ ⩌;)` 팀 구성원 수가 다릅니다... 각 팀에는 같은 수의 플레이어가 있어야 합니다.')
+                                    '`(⩌ʌ ⩌;)` 한 팀에 지정된 인원이 너무 많습니다. 팀 선택을 다시 확인해 주세요.')
+                            else:
+                                gamestart = True
+                                await ctx.send(
+                                    ":green_circle: 두 팀이 같은 인원으로 구성되었습니다. 게임을 시작합니다!"
+                                )
+                                break
                         else:
                             await ctx.send(
-                                '`(⩌ʌ ⩌;)` 인원이 너무 적습니다... 적어도 2명 이상 있어야 합니다!')
+                                '`(⩌ʌ ⩌;)` 팀전은 총 2명, 4명, 6명, 8명일 때만 시작할 수 있습니다.')
 
                     elif check == '취소':
+                        if actor_id != ctx.author.id:
+                            await ctx.send("`(⩌ʌ ⩌;)` 게임은 방장만 취소할 수 있습니다.")
+                            continue
                         await ctx.send(":x: 게임 생성이 취소되었습니다.")
                         break
 
                     else:
                         try:
-                            if len(player) >= 8:
+                            reference, selected_team = _parse_team_selection(check)
+                            if reference is None:
+                                existing = next(
+                                    item for item in player if item["id"] == actor_id
+                                )
+                                existing["team"] = selected_team
                                 await ctx.send(
-                                    '`(⩌ʌ ⩌;)` 인원이 너무 많습니다... 최대 8명 까지 참가가 가능합니다!')                            
-                            else:
-                                if q.tagToUid(check) is not None:
-                                    id = q.tagToUid(check)
-                                    if id in not_include:
-                                        await ctx.send(
-                                        '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
-                                    else:
-                                        name = q.readTagById(id)
-                                        player.append({"id": id, "score": 0, "life": 3, "color": 0})
-                                        not_include.append(id)
-                                        await ctx.send(
-                                            f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
+                                    f":green_circle: `{q.readTagById(actor_id)}` 님이 {selected_team}팀을 선택했습니다."
+                                )
+                                continue
+
+                            if actor_id != ctx.author.id:
+                                await ctx.send(
+                                    "`(⩌ʌ ⩌;)` 다른 참가자의 초대와 팀 변경은 방장만 할 수 있습니다."
+                                )
+                                continue
+
+                            invited, _ = await _prepare_wordchain_participant(ctx, reference)
+                            id = invited.id
+                            if id in not_include:
+                                existing = next(item for item in player if item["id"] == id)
+                                if selected_team is not None:
+                                    existing["team"] = selected_team
+                                    await ctx.send(
+                                        f":green_circle: `{q.readTagById(id)}` 님을 {selected_team}팀으로 변경했습니다."
+                                    )
                                 else:
-                                    id = int(etc.extractUid(check))
-                                    if id in not_include:
-                                        await ctx.send(
-                                        '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
-                                    else:
-                                        name = q.readTagById(id)
-                                        player.append({"id": id, "score": 0, "life": 3, "color": 0})
-                                        not_include.append(id)
-                                        await ctx.send(
-                                            f":green_circle: `{name}`가 참가자 목록에 추가되었습니다! ")
-                        except:
+                                    await ctx.send(
+                                    '`(⩌ʌ ⩌;)` 이미 참가한 사람입니다...')
+                            elif len(player) >= 8:
+                                await ctx.send(
+                                    '`(⩌ʌ ⩌;)` 인원이 너무 많습니다... 최대 8명 까지 참가가 가능합니다!')
+                            else:
+                                name = q.readTagById(id)
+                                player.append({
+                                    "id": id,
+                                    "score": 0,
+                                    "life": 3,
+                                    "color": 0,
+                                    "team": selected_team,
+                                })
+                                not_include.append(id)
+                                team_label = f" ({selected_team}팀)" if selected_team else " (자동 배정)"
+                                await ctx.send(
+                                    f":green_circle: `{name}`가 참가자 목록에 추가되었습니다!{team_label}")
+                        except (UserResolutionError, ValueError):
                             await ctx.send(
                                 '`(⩌ʌ ⩌;)` 유효하지 않은 참가자 입니다... 다시 시도해 보세요...')
+
+                if gamestart:
+                    await _run_team_wordchain(self.client, ctx, player, option)
 
     # Wordchain Test [ID: 48]
     @commands.hybrid_command(name='테스트용',

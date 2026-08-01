@@ -315,6 +315,16 @@ def readAll(user: discord.Member):
     return _fetchall("SELECT * FROM main WHERE id = ?;", (user.id,))
 
 
+def accountExistsById(user: int) -> bool:
+    """Return whether the user has a main profile row."""
+    return _fetchone("SELECT 1 FROM main WHERE id = ?", (user,)) is not None
+
+
+def storageExistsById(user: int) -> bool:
+    """Return whether the user has a skin-storage row."""
+    return _fetchone("SELECT 1 FROM storage WHERE id = ?", (user,)) is not None
+
+
 # 3.3.2. Read Name
 
 # 3.3.2.1. Name only
