@@ -651,7 +651,7 @@
   },
   "skin66": {
     "id": "066",
-    "name": "Arithmatic 02: 삼각함수를 공부 하여보자",
+    "name": "Arithmatic 02: 삼각함수를 공부 하여보자 ✨",
     "desc": "Finally got to the 24th question!",
     "unlock_type": "game",
     "unlock_val": "none",
@@ -1381,17 +1381,17 @@
   },
   "skin139": {
     "id": "139",
-    "name": "Daily 06: Maximum",
+    "name": "Daily 06: Chronicle ✨",
     "desc": "Obtain daily rewards 511 times.",
     "unlock_type": "daily",
     "unlock_val": 511,
     "keyword": "daily",
     "creater": 262517377575550977,
-    "date": "2024-03-15"
+    "date": "2024-08-01"
   },
   "skin140": {
     "id": "140",
-    "name": "Anniversary 03: 403 Forbidden",
+    "name": "Anniversary 03: 403 Forbidden ✨",
     "desc": "2024.04.01.",
     "unlock_type": "code",
     "unlock_val": "403 forbidden",
@@ -2011,7 +2011,7 @@
   },
   "skin202": {
     "id": "202",
-    "name": "Pokementle 01: 百發百中",
+    "name": "Pokementle 01: 百發百中 ✨",
     "desc": "9번 이하로 정답을 맞춥니다.",
     "unlock_type": "game",
     "unlock_val": "none",
@@ -2131,7 +2131,7 @@
   },
   "skin214": {
     "id": "214",
-    "name": "Hidden 21: DVD Screensaver",
+    "name": "Hidden 21: DVD Screensaver ✨",
     "desc": "Spending 12 hours AFK in the voice channel on the test server.",
     "unlock_type": "none",
     "unlock_val": "none",
@@ -2148,5 +2148,25 @@
     "keyword": "pl",
     "creater": 262517377575550977,
     "date": "2026-08-01"
+  },
+  "skin216": {
+    "id": "216",
+    "name": "Hidden 22: CMelon Soda!!",
+    "desc": "(August 1, 2026) 전체공룡 여름 정모회 기념 스킨!",
+    "unlock_type": "code",
+    "unlock_val": "melona84",
+    "keyword": "hidden",
+    "creater": 262517377575550977,
+    "date": "2023-08-01"
+  },
+  "skin217": {
+    "id": "217",
+    "name": "Daily 06: Maximum (Legacy)",
+    "desc": "Obtain daily rewards 511 times.",
+    "unlock_type": "daily",
+    "unlock_val": 511,
+    "keyword": "daily",
+    "creater": 262517377575550977,
+    "date": "2024-03-15"
   }
 }

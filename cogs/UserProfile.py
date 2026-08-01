@@ -11,6 +11,7 @@ import io
 import asyncio
 import json
 import random
+from datetime import datetime, timedelta, timezone
 from project_paths import FONT_DIR, RANKCARD_DIR
 
 
@@ -31,6 +32,9 @@ SKIN_214_COLOR_PRESETS = (
     (0, 128, 128, 0),
     (0, 0, 128, 0),
 )
+
+SKIN_139_CLOCK_CENTER = (315, 53)
+KOREA_TIMEZONE = timezone(timedelta(hours=9))
 
 
 def _tint_preserving_alpha(
@@ -68,6 +72,65 @@ def _apply_skin_214_effects(
     image.alpha_composite(image_a, random_position)
     image.alpha_composite(image_b, (7, 115))
     return image, tinted_bar, visible_color
+
+
+def _composite_clock_hand(
+    image: Image.Image,
+    hand: Image.Image,
+    angle: float,
+) -> None:
+    """Rotate a hand clockwise around its lower-center pivot."""
+    center_x, center_y = SKIN_139_CLOCK_CENTER
+    layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    try:
+        hand_x = center_x - hand.width // 2
+        hand_y = center_y - (hand.height - 1)
+        layer.alpha_composite(hand, (hand_x, hand_y))
+        rotated = layer.rotate(
+            -angle,
+            resample=Image.Resampling.BICUBIC,
+            center=SKIN_139_CLOCK_CENTER,
+        )
+        try:
+            image.alpha_composite(rotated)
+        finally:
+            rotated.close()
+    finally:
+        layer.close()
+
+
+def _apply_skin_139_clock(
+    image: Image.Image,
+    current_time: datetime | None = None,
+) -> Image.Image:
+    """Draw skin 139's hour and minute hands using the current Korean time."""
+    if current_time is None:
+        current_time = datetime.now(KOREA_TIMEZONE)
+    elif current_time.tzinfo is None:
+        current_time = current_time.replace(tzinfo=KOREA_TIMEZONE)
+    else:
+        current_time = current_time.astimezone(KOREA_TIMEZONE)
+
+    seconds = current_time.second + current_time.microsecond / 1_000_000
+    minute_angle = current_time.minute * 6 + seconds * 0.1
+    hour_angle = (current_time.hour % 12) * 30 + current_time.minute * 0.5 + seconds / 120
+    special_directory = RANKCARD_DIR / "special"
+
+    with Image.open(special_directory / "image139a.png") as source:
+        hour_hand = source.convert("RGBA")
+    try:
+        _composite_clock_hand(image, hour_hand, hour_angle)
+    finally:
+        hour_hand.close()
+
+    with Image.open(special_directory / "image139b.png") as source:
+        minute_hand = source.convert("RGBA")
+    try:
+        _composite_clock_hand(image, minute_hand, minute_angle)
+    finally:
+        minute_hand.close()
+
+    return image
 
 
 async def _load_avatar_image(
@@ -610,6 +673,9 @@ class UserProfile(commands.Cog):
             xp_outline_color = skin_214_color
         else:
             image = background_image.copy()
+
+        if normal_skin_id == 139:
+            image = _apply_skin_139_clock(image)
 
         emblem_image = emblem_image.resize((72, 72))
         bar_cover_image = bar_cover_image.crop((0, 0, 368 * xp1 / xp2, 8))
