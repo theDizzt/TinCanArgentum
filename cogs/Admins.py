@@ -6,7 +6,9 @@ import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
 import fcts.leaderboard as l
 import fcts.lklab as lk
+import fcts.plab as plab
 import fcts.skin_catalog as catalog
+from fcts.user_resolver import UserResolutionError, resolve_user_id
 import yaml
 import fcts.etcfunctions as etc
 from project_paths import CONFIG_DIR
@@ -35,6 +37,77 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
         except asyncio.TimeoutError:
             await ctx.reply(i18n.t(ctx.author, "cmd.admin.cancel"))
             return None
+
+    # PLab Edit [ID: 28]
+    @commands.command(name="pledit")
+    async def pledit(
+        self,
+        ctx,
+        user: str = None,
+        option: str = None,
+        value: str = None,
+    ):
+        """Administrative PLab editor: pledit <user> <option> <value>."""
+        if ctx.author.id not in admin_login:
+            await ctx.reply("You must log in with the `login` command first.")
+            return
+
+        option = str(option or "").strip().casefold()
+        if user is None or not option:
+            await ctx.reply(
+                "Usage: `;pledit <user> "
+                "<create|startdate|labpoint|labpointadd> <value>`"
+            )
+            return
+
+        try:
+            target_id = resolve_user_id(user)
+            if option == "create":
+                if plab.registerUser(target_id):
+                    await ctx.reply(
+                        f":green_circle: Created PLab data for user `{target_id}`."
+                    )
+                else:
+                    await ctx.reply(
+                        f"`(⩌ʌ ⩌;)` PLab data for user `{target_id}` already exists."
+                    )
+                return
+
+            if value is None:
+                await ctx.reply(
+                    "Usage: `;pledit <user> "
+                    "<startdate|labpoint|labpointadd> <value>`"
+                )
+                return
+
+            if not plab.userExists(target_id):
+                await ctx.reply(
+                    f"`(⩌ʌ ⩌;)` PLab data for user `{target_id}` does not exist. "
+                    f"Run `;pledit {target_id} create` first."
+                )
+                return
+
+            if option == "startdate":
+                updated = plab.startDateModifyById(target_id, value)
+            elif option == "labpoint":
+                updated = plab.labPointModifyById(target_id, int(value))
+            elif option == "labpointadd":
+                updated = plab.labPointAddById(target_id, int(value))
+            else:
+                await ctx.reply(
+                    "Unknown option. Available options: `create`, `startdate`, "
+                    "`labpoint`, `labpointadd`."
+                )
+                return
+
+            if updated:
+                await ctx.reply(
+                    f":green_circle: Updated PLab data for user `{target_id}`."
+                )
+            else:
+                await ctx.reply("The PLab data could not be updated.")
+        except (UserResolutionError, TypeError, ValueError, OverflowError):
+            await ctx.reply("Invalid user, option value, or date format.")
 
     # LKedit [ID: 86]
     @commands.command()

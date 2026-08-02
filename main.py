@@ -38,6 +38,7 @@ import fcts.etcfunctions as etc
 import fcts.leaderboard as l
 import fcts.lklab as lk
 import fcts.tedne as ted
+import fcts.plab as plab
 from app_info import APP_VERSION, APP_VERSION_DATE
 from project_paths import PROJECT_ROOT, RANKCARD_DIR
 from fcts.language import JsonTranslator
@@ -81,6 +82,7 @@ wd.initSetting()
 l.initSetting()
 lk.initSetting()
 ted.initSetting()
+plab.initSetting()
 
 ####### 3. Discord Bot Client #######
 
