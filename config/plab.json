@@ -2,10 +2,465 @@
     "achievements": {
         "id1": {
             "id": 1,
-            "name": "game name",
-            "description": "description",
-            "tier": 1,
-            "url": "url for the game"
+            "name": "Mouse Maze: Revamped",
+            "description": "",
+            "tier": 4,
+            "url": "https://www.newgrounds.com/portal/view/330773"
+        },
+        "id2": {
+            "id": 2,
+            "name": "Dreader",
+            "description": "",
+            "tier": 4,
+            "url": "https://donitz.itch.io/dreader"
+        },
+        "id3": {
+            "id": 3,
+            "name": "Rescue! アトム",
+            "description": "",
+            "tier": 4,
+            "url": "https://www.4399.com/flash/95160_2.htm"
+        },
+        "id4": {
+            "id": 4,
+            "name": "배고픈 오야소",
+            "description": "",
+            "tier": 4,
+            "url": "https://www.4399.com/flash/4239_3.htm"
+        },
+        "id5": {
+            "id": 5,
+            "name": "Avoid Dragging",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/46408_2.htm"
+        },
+        "id6": {
+            "id": 6,
+            "name": "SHIRK",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/439216"
+        },
+        "id7": {
+            "id": 7,
+            "name": "納涼一発勝负 きもだめし",
+            "description": "",
+            "tier": 4,
+            "url": "https://www.4399.com/flash/39292_2.htm"
+        },
+        "id8": {
+            "id": 8,
+            "name": "Mouse Avoider 2",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/273450"
+        },
+        "id9": {
+            "id": 9,
+            "name": "Sir Chair's Maze",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/156087"
+        },
+        "id10": {
+            "id": 10,
+            "name": "Basic Mouse Puzzle",
+            "description": "",
+            "tier": 4,
+            "url": "https://www.newgrounds.com/portal/view/376264"
+        },
+        "id11": {
+            "id": 11,
+            "name": "Basic Mouse Puzzle 2",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.newgrounds.com/portal/view/376465"
+        },
+        "id12": {
+            "id": 12,
+            "name": "Basic Mouse Puzzle 3",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/449086"
+        },
+        "id13": {
+            "id": 13,
+            "name": "Basic Mouse Puzzle 4",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/449575"
+        },
+        "id14": {
+            "id": 14,
+            "name": "NoName Game #1",
+            "description": "",
+            "tier": 5,
+            "url": "https://jayisgames.com/games/noname-game-1"
+        },
+        "id15": {
+            "id": 15,
+            "name": "NoName Game #2",
+            "description": "",
+            "tier": 5,
+            "url": "https://jayisgames.com/games/noname-game-2"
+        },
+        "id16": {
+            "id": 16,
+            "name": "别碰红线",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/95984_4.htm"
+        },
+        "id17": {
+            "id": 17,
+            "name": "Pointer",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.notdoppler.com/pointer.php"
+        },
+        "id18": {
+            "id": 18,
+            "name": "Invisible Cursor",
+            "description": "",
+            "tier": 6,
+            "url": "https://flashmuseum.net/game/invisible-cursor-xa6/"
+        },
+        "id19": {
+            "id": 19,
+            "name": "Sourisme",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/565389"
+        },
+        "id20": {
+            "id": 20,
+            "name": "Don't Touch",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/70593_3.htm"
+        },
+        "id21": {
+            "id": 21,
+            "name": "Mouse in Trouble 2",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/542467"
+        },
+        "id22": {
+            "id": 22,
+            "name": "The Greatest Orb 4",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/565980"
+        },
+        "id23": {
+            "id": 23,
+            "name": "MAZE",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/97073_1.htm"
+        },
+        "id24": {
+            "id": 24,
+            "name": "The Last Element",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/582954"
+        },
+        "id25": {
+            "id": 25,
+            "name": "Electric Bar",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/362213"
+        },
+        "id26": {
+            "id": 26,
+            "name": "Effective Attack",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/544991"
+        },
+        "id27": {
+            "id": 27,
+            "name": "Sky MazezZ",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/477785"
+        },
+        "id28": {
+            "id": 28,
+            "name": "Maze of AS3",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/53255_1.htm"
+        },
+        "id29": {
+            "id": 29,
+            "name": "PIV",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.4399.com/flash/89845_2.htm"
+        },
+        "id30": {
+            "id": 30,
+            "name": "TAIL",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.kongregate.com/en/games/pegasgames/tail-the-white-square"
+        },
+        "id31": {
+            "id": 31,
+            "name": "Frustration 2",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/455864"
+        },
+        "id32": {
+            "id": 32,
+            "name": "Digital Tunnels",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/330809"
+        },
+        "id33": {
+            "id": 33,
+            "name": "飛べ!柳本ん!!イライラ棒",
+            "description": "",
+            "tier": 6,
+            "url": "https://flasharch.com/en/archive/play/4c62aa20d9d561e26dedbf46db277799"
+        },
+        "id34": {
+            "id": 34,
+            "name": "Maze Evolution",
+            "description": "",
+            "tier": 5,
+            "url": "https://zh.y8.com/games/maze_evolution"
+        },
+        "id35": {
+            "id": 35,
+            "name": "Maze Evolution 2",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.kongregate.com/en/games/mynameisjonny_/maze-evolution-2"
+        },
+        "id36": {
+            "id": 36,
+            "name": "Maze Evolution 3",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/645766"
+        },
+        "id37": {
+            "id": 37,
+            "name": "Lil Arthur",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.4399.com/flash/8352_1.htm"
+        },
+        "id38": {
+            "id": 38,
+            "name": "Lil Arthur 2",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/544991"
+        },
+        "id39": {
+            "id": 39,
+            "name": "Mouse Hero",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/529459"
+        },
+        "id40": {
+            "id": 40,
+            "name": "Rescuer of Souls",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.4399.com/flash/89845_2.htm"
+        },
+        "id41": {
+            "id": 41,
+            "name": "Mouse Evader",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.newgrounds.com/portal/view/378631"
+        },
+        "id42": {
+            "id": 42,
+            "name": "Bomba",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.nitrome.com/html5-games/bomba/"
+        },
+        "id43": {
+            "id": 43,
+            "name": "Mouse 1.0",
+            "description": "",
+            "tier": 5,
+            "url": "https://www.newgrounds.com/portal/view/281187"
+        },
+        "id44": {
+            "id": 44,
+            "name": "KABOOMBOT",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.4399.com/flash/51285_1.htm1"
+        },
+        "id45": {
+            "id": 45,
+            "name": "Mouze Maze",
+            "description": "",
+            "tier": 7,
+            "url": "https://zh.y8.com/games/mouze_maze"
+        },
+        "id46": {
+            "id": 46,
+            "name": "Prism Light",
+            "description": "",
+            "tier": 7,
+            "url": "https://toadietechnika.itch.io/prism-light"
+        },
+        "id47": {
+            "id": 47,
+            "name": "REVERSE",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.4399.com/flash/3332_4.htm"
+        },
+        "id48": {
+            "id": 48,
+            "name": "Mouse Madness",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.4399.com/flash/4114_3.htm"
+        },
+        "id49": {
+            "id": 49,
+            "name": "Super Orb Collector",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.newgrounds.com/portal/view/723256"
+        },
+        "id50": {
+            "id": 50,
+            "name": "Mouse Mission",
+            "description": "",
+            "tier": 6,
+            "url": "https://www.newgrounds.com/portal/view/520711"
+        },
+        "id51": {
+            "id": 51,
+            "name": "イライラマウマ",
+            "description": "",
+            "tier": 7,
+            "url": "https://www.4399.com/flash/93862_1.htm"
+        },
+        "id52": {
+            "id": 52,
+            "name": "Just Why?",
+            "description": "",
+            "tier": 7,
+            "url": "https://donitz.itch.io/just-why"
+        },
+        "id53": {
+            "id": 53,
+            "name": "Overhead: Persistence",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.newgrounds.com/portal/view/366725"
+        },
+        "id54": {
+            "id": 54,
+            "name": "Tracer",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.newgrounds.com/portal/view/329052"
+        },
+        "id55": {
+            "id": 55,
+            "name": "Sparky",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.newgrounds.com/portal/view/604694"
+        },
+        "id56": {
+            "id": 56,
+            "name": "Lumen Maze",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.newgrounds.com/portal/view/518607"
+        },
+        "id57": {
+            "id": 57,
+            "name": "Techno Maze",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.newgrounds.com/portal/view/520711"
+        },
+        "id58": {
+            "id": 58,
+            "name": "Trip Wire",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.4399.com/flash/80104_4.htm"
+        },
+        "id59": {
+            "id": 59,
+            "name": "Red Dot Escape 2",
+            "description": "",
+            "tier": 8,
+            "url": "https://www.kongregate.com/en/games/lukk3/red-dot-escape-2"
+        },
+        "id60": {
+            "id": 60,
+            "name": "DOTTIE",
+            "description": "",
+            "tier": 9,
+            "url": "https://www.newgrounds.com/portal/view/424700"
+        },
+        "id61": {
+            "id": 61,
+            "name": "Droplet",
+            "description": "",
+            "tier": 9,
+            "url": "https://www.4399.com/flash/3737_2.htm"
+        },
+        "id62": {
+            "id": 62,
+            "name": "Missile Maze",
+            "description": "",
+            "tier": 9,
+            "url": "https://www.4399.com/flash/28573_3.htm"
+        },
+        "id63": {
+            "id": 63,
+            "name": "Aireas",
+            "description": "",
+            "tier": 9,
+            "url": "https://www.newgrounds.com/portal/view/488852"
+        },
+        "id64": {
+            "id": 64,
+            "name": "THE Cursor Game",
+            "description": "",
+            "tier": 9,
+            "url": "https://store.steampowered.com/app/2880300/THE_Cursor_Game/"
+        },
+        "id65": {
+            "id": 65,
+            "name": "TRUFFLE",
+            "description": "",
+            "tier": 9,
+            "url": "https://store.steampowered.com/app/2684930/TRUFFLE/"
+        },
+        "id66": {
+            "id": 66,
+            "name": "Re: Labyrinth Patterns",
+            "description": "",
+            "tier": 9,
+            "url": "https://www.newgrounds.com/portal/view/1028127"
         }
     }
 }

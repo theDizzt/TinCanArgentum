@@ -8,10 +8,18 @@ main :
  Miscellaneous : "`dice`, `kodic`, `argbdic`, `rage`, `translate`"
  Coalition : "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`"
  Minigame : "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`"
- Voice : "`join`, `leave`"
+ Voice : "`join`, `leave`, `tts`, `chat`, `chat-reset`, `remember`, `memory-list`, `memory-delete`, `memory-reset`, `affinity`, `affinity-reset`, `eunbi-reset`"
  WagyumonServer : "`타운맵`, `도감`, `기술머신`"
+ PrecisionLAB : "`pledit`, `pl`"
  AdminFeatures : "`login`, `logout`"
  AdminDebugging : "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `kakao`, `sync`"
+
+help :
+ title : "Help"
+ id : "00"
+ ctx : "help <command>"
+ discript : "Show the command list or detailed help for a selected command. Registered commands without a dedicated entry also receive automatically generated help."
+ args : "`command` is a command name or alias (default: main)."
 
 test :
  title : "Test Command"
@@ -202,12 +210,19 @@ anniv_del:
   discript: "Delete a registered birthday or anniversary notification by event ID."
   args: "`event_id` int type, the ID of the birthday or anniversary event to delete. You can check the event ID with the `기념일목록` command."
 
-emergency-call:
-  title: "Emergency Call"
-  id: "49"
-  ctx: "비상소집"
-  discript: "Validate registered users through a modal, then send each user 32 direct messages after a public one-time confirmation."
-  args: "Enter one or more `nickname#0001`, Discord user IDs, or mentions separated by commas or new lines, followed by the message to send. Up to 20 users can be selected. Cooldown: 14,400 seconds."
+pledit:
+  title: "PLab Data Editor"
+  id: "28"
+  ctx: "pledit <user> <create | unlock | lock | first | startdate | labpoint | labpointadd> [value]"
+  discript: "Create or edit PLab data. Game completion awards tier squared LAB, a server first clear awards an additional two times tier squared LAB, and Skill Level equals the highest completed tier. Login is required."
+  args: "Use `pledit <user> unlock <game_id>` or `lock` to change completion, `first` to replace the server first clearer, and `pledit recalc` to rebuild every user's score. `user` accepts an ID, mention, or registered nickname tag."
+
+pl:
+  title: "Precision LAB"
+  id: "29"
+  ctx: "pl [stats | ranking | games] [user | page | keyword]"
+  discript: "View PLab statistics, LAB-point rankings, or the PLab game list. Running `pl` without an option opens your own statistics."
+  args: "Use `pl stats [user]` for statistics, `pl ranking [page]` for the LAB ranking, or `pl games [keyword]` to browse completion status. A user may be an ID, mention, or registered nickname tag."
 
 dice :
  title : "Dice"
@@ -313,6 +328,13 @@ number :
  ctx : "number"
  discript : "Play 'Number Attack' game!"
  args : "Type `;number help` to see how to play."
+
+emergency-call:
+  title: "Emergency Call"
+  id: "49"
+  ctx: "비상소집"
+  discript: "Validate registered users through a modal, then send each user 32 direct messages after a public one-time confirmation."
+  args: "Enter one or more `nickname#0001`, Discord user IDs, or mentions separated by commas or new lines, followed by the message to send. Up to 20 users can be selected. Cooldown: 14,400 seconds."
 
 leaderboard :
  title : "Leaderboard"

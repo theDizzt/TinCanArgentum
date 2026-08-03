@@ -181,28 +181,66 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                             value=helps[command]['AdminDebugging'],
                             inline=True)
 
-        else:
-            try:
-                embed = discord.Embed(
-                    title=
-                    f":notebook_with_decorative_cover: **{helps[command]['title']}** `ID: {helps[command]['id']}`",
-                    description=
-                    f"`{prefix}{helps[command]['ctx']}`",
-                    color=0xF2D7D9)
+            embed.add_field(name=":test_tube: Precision LAB",
+                            value=helps[command]['PrecisionLAB'],
+                            inline=True)
 
-                embed.add_field(name=i18n.t(ctx.author, "cmd.00.feature"),
-                                value=helps[command]['discript'],
-                                inline=False)
-                embed.add_field(name=i18n.t(ctx.author, "cmd.00.arguments"),
-                                value=helps[command]['args'],
-                                inline=False)
-                if command == 'translate':
-                    embed.add_field(
-                        name=i18n.t(ctx.author, "cmd.00.language_code"),
-                        value=i18n.t(ctx.author, "cmd.00.language_list"),
-                        inline=False)
-            except:
-                pass
+        else:
+            requested_name = command.strip()
+            command_object = self.client.get_command(requested_name)
+            canonical_name = (
+                command_object.name if command_object is not None else requested_name
+            )
+            help_data = (
+                helps.get(requested_name)
+                or helps.get(requested_name.casefold())
+                or helps.get(canonical_name)
+            )
+
+            # Commands without a hand-written entry still receive useful help.
+            # Looking up the command object also makes aliases resolve to the
+            # canonical help entry.
+            if help_data is None and command_object is not None:
+                signature = command_object.signature.strip()
+                syntax = canonical_name
+                if signature:
+                    syntax = f"{syntax} {signature}"
+                description = (
+                    getattr(command_object, "description", None)
+                    or command_object.help
+                    or "No detailed description has been provided yet."
+                )
+                help_data = {
+                    "title": canonical_name,
+                    "id": "--",
+                    "ctx": syntax,
+                    "discript": str(description),
+                    "args": "See the command syntax above for available arguments.",
+                }
+
+            if help_data is None:
+                await ctx.reply(f"No command named `{requested_name}` was found.")
+                return
+
+            embed = discord.Embed(
+                title=(
+                    ":notebook_with_decorative_cover: "
+                    f"**{help_data['title']}** `ID: {help_data['id']}`"
+                ),
+                description=f"`{prefix}{help_data['ctx']}`",
+                color=0xF2D7D9,
+            )
+            embed.add_field(name=i18n.t(ctx.author, "cmd.00.feature"),
+                            value=help_data['discript'],
+                            inline=False)
+            embed.add_field(name=i18n.t(ctx.author, "cmd.00.arguments"),
+                            value=help_data['args'],
+                            inline=False)
+            if canonical_name == 'translate':
+                embed.add_field(
+                    name=i18n.t(ctx.author, "cmd.00.language_code"),
+                    value=i18n.t(ctx.author, "cmd.00.language_list"),
+                    inline=False)
 
         #Common Part
         embed.set_footer(text=i18n.t(ctx.author, "cmd.dev.footer"), icon_url="")

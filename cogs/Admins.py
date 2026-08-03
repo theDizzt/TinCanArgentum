@@ -52,11 +52,24 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply("You must log in with the `login` command first.")
             return
 
+        if str(user or "").strip().casefold() == "recalc":
+            try:
+                updated_users = plab.recalculateAll()
+            except (OSError, ValueError) as error:
+                await ctx.reply(f"PLab scores could not be recalculated: `{error}`")
+                return
+            await ctx.reply(
+                f":green_circle: Recalculated LAB points and skill levels for "
+                f"**{updated_users:,}** user(s)."
+            )
+            return
+
         option = str(option or "").strip().casefold()
         if user is None or not option:
             await ctx.reply(
                 "Usage: `;pledit <user> "
-                "<create|startdate|labpoint|labpointadd> <value>`"
+                "<create|unlock|lock|first|startdate|labpoint|labpointadd> "
+                "<value>` or `;pledit recalc`"
             )
             return
 
@@ -76,8 +89,51 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             if value is None:
                 await ctx.reply(
                     "Usage: `;pledit <user> "
-                    "<startdate|labpoint|labpointadd> <value>`"
+                    "<unlock|lock|first|startdate|labpoint|labpointadd> <value>`"
                 )
+                return
+
+            if option in {"unlock", "lock", "first"}:
+                if ctx.guild is None:
+                    await ctx.reply(
+                        "Completion and first-clear records must be edited in a server."
+                    )
+                    return
+
+                game_id = int(value)
+                achievements = {
+                    item["id"]: item
+                    for item in plab.loadAchievements()
+                }
+                achievement = achievements.get(game_id)
+                if achievement is None:
+                    await ctx.reply(f"Game ID `{game_id}` does not exist.")
+                    return
+
+                if option == "first":
+                    plab.setFirstClear(target_id, game_id, ctx.guild.id)
+                    action = "Set as this server's first clearer"
+                    first_user_id = target_id
+                else:
+                    completed = option == "unlock"
+                    first_user_id = plab.setGameCompletion(
+                        target_id,
+                        game_id,
+                        completed,
+                        ctx.guild.id,
+                    )
+                    action = "Unlocked" if completed else "Locked"
+
+                state = plab.getUserState(target_id)
+                message = (
+                    f":green_circle: {action} game `{game_id}` "
+                    f"(**{achievement['name']}**) for user `{target_id}`.\n"
+                    f"LAB Point: **{state['lab_point']:,}** | "
+                    f"Skill Level: **{state['skill_level']:,}**"
+                )
+                if first_user_id is not None:
+                    message += f"\nServer first clearer: `{first_user_id}`"
+                await ctx.reply(message)
                 return
 
             if not plab.userExists(target_id):
@@ -96,7 +152,7 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
             else:
                 await ctx.reply(
                     "Unknown option. Available options: `create`, `startdate`, "
-                    "`labpoint`, `labpointadd`."
+                    "`labpoint`, `labpointadd`, `unlock`, `lock`, `first`."
                 )
                 return
 
