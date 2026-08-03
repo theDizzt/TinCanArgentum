@@ -8,11 +8,13 @@ from fcts.user_resolver import UserResolutionError, resolve_discord_user
 import fcts.drawing as dr
 from project_paths import DATA_DIR, FONT_DIR, RANKCARD_DIR
 import fcts.koreanbreak as kb
+from fcts.line_chat import read_line_export
 import random as r
 from datetime import datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 import io
 import asyncio
+import hashlib
 
 #SERVER id
 server_id = [
@@ -21,6 +23,23 @@ server_id = [
 ]
 
 GOAT_TITLE_MAX_LENGTH = 120
+
+LINE_USERS = {
+    "민규": 262520957233528832,
+    "충환": 262517377575550977,
+    "주원": 262899129276039169,
+    "대헌": 263595595019583489,
+    "동건": 262528817942364160,
+    "태형": 262524430058520577,
+    "민성": 236100097656487946,
+    "태균": 263273764312186881,
+    "성훈": 264763838673453056,
+    "영준": 370800841055272972,
+    "승교": 394075013541789700,
+    "선우": 263640824170938369,
+    "승현": 262551155815481345,
+    "민찬": 512098892674760705,
+}
 
 
 def fit_font(draw, text, font_path, max_size, min_size, max_width):
@@ -306,7 +325,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
     # 카카오 데이터 관리 [ID: 98]
-    @commands.command(name='카톡', description="...")
+    @commands.command(name='카톡', aliases=['라인', 'line'], description="...")
     @commands.check(is_server)
     async def kakao(self,
                     ctx,
@@ -486,7 +505,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply(result)
 
     @kakao.error
-    async def kakao_error(self, error, ctx):
+    async def kakao_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
             await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
@@ -553,9 +572,125 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         
     @kakaodata.error
-    async def kakaodata_error(self, error, ctx):
+    async def kakaodata_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
             await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
+
+    # LINE 데이터 정산 [ID: 98]
+    @commands.command(name="linedata", aliases=["라인데이터"], description="...")
+    @commands.check(is_server)
+    async def linedata(self, ctx):
+        source_dir = DATA_DIR / "line"
+        processed_dir = source_dir / "processed"
+        source_dir.mkdir(parents=True, exist_ok=True)
+
+        source_files = sorted(
+            path for path in source_dir.glob("*.txt") if path.is_file()
+        )
+        if not source_files:
+            await ctx.reply(
+                "No LINE export files were found. Place UTF-8 `.txt` files in "
+                f"`{source_dir}` and try again."
+            )
+            return
+
+        rewards_by_name = {}
+        unknown_names = {}
+        parsed_count = 0
+        try:
+            for source_file in source_files:
+                messages = read_line_export(source_file)
+                parsed_count += len(messages)
+                for message in messages:
+                    user_id = LINE_USERS.get(message.name)
+                    if user_id is None:
+                        unknown_names[message.name] = (
+                            unknown_names.get(message.name, 0) + 1
+                        )
+                        continue
+
+                    count = kb.count_break_korean(message.content)
+                    xp_gain = int((count * 0.3) * 4.6 + 1)
+                    money_gain = r.randint(5, 15)
+                    reward = rewards_by_name.setdefault(
+                        message.name,
+                        {"id": user_id, "xp": 0, "money": 0, "messages": 0},
+                    )
+                    reward["xp"] += xp_gain
+                    reward["money"] += money_gain
+                    reward["messages"] += 1
+        except (OSError, UnicodeError) as error:
+            await ctx.reply(f"The LINE export could not be read: `{error}`")
+            return
+
+        if not rewards_by_name:
+            await ctx.reply(
+                "No rewardable LINE messages were found. "
+                "Expected format: `00:00 이름 내용`."
+            )
+            return
+
+        rewards = {
+            reward["id"]: (reward["xp"], reward["money"])
+            for reward in rewards_by_name.values()
+        }
+        try:
+            import_keys = [
+                "line:" + hashlib.sha256(source_file.read_bytes()).hexdigest()
+                for source_file in source_files
+            ]
+            q.rewardsAddBulk(rewards, import_keys=import_keys)
+        except (ValueError, OSError) as error:
+            await ctx.reply(f"No rewards were paid: `{error}`")
+            return
+
+        processed_dir.mkdir(parents=True, exist_ok=True)
+        archive_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        archived_count = 0
+        for source_file in source_files:
+            destination = processed_dir / source_file.name
+            if destination.exists():
+                destination = processed_dir / (
+                    f"{source_file.stem}-{archive_stamp}{source_file.suffix}"
+                )
+            try:
+                source_file.replace(destination)
+                archived_count += 1
+            except OSError:
+                pass
+
+        result_lines = [
+            "**LINE data settlement complete**",
+            (
+                f"Parsed **{parsed_count:,}** messages from "
+                f"**{len(source_files):,}** file(s)."
+            ),
+        ]
+        for name, reward in rewards_by_name.items():
+            result_lines.append(
+                f"**`{q.readTagById(reward['id'])}`** | "
+                f"{reward['messages']:,} messages | "
+                f"+{reward['xp']:,}xp +${reward['money']:,}"
+            )
+        if unknown_names:
+            unknown_total = sum(unknown_names.values())
+            result_lines.append(
+                f"Skipped **{unknown_total:,}** message(s) from unmapped names: "
+                + ", ".join(sorted(unknown_names))
+            )
+        result_lines.append(
+            f"Archived **{archived_count}/{len(source_files)}** processed file(s)."
+        )
+        await ctx.reply("\n".join(result_lines))
+
+    @linedata.error
+    async def linedata_error(self, ctx, error):
+        if isinstance(error, commands.CheckFailure):
+            await ctx.reply(
+                i18n.t(ctx.author, "common.server_only", server="전체공룡")
+            )
+        else:
+            raise error
 
 
 async def setup(client):

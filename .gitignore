@@ -42,6 +42,7 @@ dist/
 logs/
 tts.mp3
 data/voice/*.txt
+data/line/**/*.txt
 config/rankcard/upload/**
 !config/rankcard/upload/.gitkeep
 data/word_enlist/**

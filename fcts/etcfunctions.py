@@ -399,7 +399,14 @@ def checkBox(s):
         return ":question:"
 
 def ticon(tier, withtext: bool = True):
-    t = int(tier)
+    try:
+        t = int(tier)
+    except (TypeError, ValueError):
+        return "-"
+
+    if not 1 <= t <= 10:
+        return "-"
+
     icon = [
         "<:t1:1533491869621813268>",
         "<:t2:1533491871291281449>",

@@ -393,46 +393,6 @@ def recalculateAll() -> int:
         item["id"]: max(0, int(item["tier"]))
         for item in loadAchievements()
     }
-
-
-def getRanking() -> list[dict]:
-    """Return all PLab users ranked by LAB points, highest first."""
-    with closing(sqlite3.connect(DB_PATH)) as connection:
-        rows = connection.execute(
-            f"""
-            SELECT id, lab_point, skill_level,
-                   RANK() OVER (ORDER BY lab_point DESC) AS ranking
-            FROM {TABLE_NAME}
-            ORDER BY lab_point DESC, id ASC
-            """
-        ).fetchall()
-    return [
-        {
-            "id": int(row[0]),
-            "lab_point": int(row[1]),
-            "skill_level": int(row[2]),
-            "ranking": int(row[3]),
-        }
-        for row in rows
-    ]
-
-
-def getUserRanking(user_id: int) -> int | None:
-    """Return a user's LAB ranking, or None when no PLab row exists."""
-    with closing(sqlite3.connect(DB_PATH)) as connection:
-        row = connection.execute(
-            f"""
-            SELECT ranking FROM (
-                SELECT id,
-                       RANK() OVER (ORDER BY lab_point DESC) AS ranking
-                FROM {TABLE_NAME}
-            )
-            WHERE id = ?
-            """,
-            (int(user_id),),
-        ).fetchone()
-    return int(row[0]) if row is not None else None
-
     with closing(sqlite3.connect(DB_PATH)) as connection:
         connection.execute(
             """
@@ -493,3 +453,42 @@ def getUserRanking(user_id: int) -> int | None:
         )
         connection.commit()
         return len(calculated)
+
+
+def getRanking() -> list[dict]:
+    """Return all PLab users ranked by LAB points, highest first."""
+    with closing(sqlite3.connect(DB_PATH)) as connection:
+        rows = connection.execute(
+            f"""
+            SELECT id, lab_point, skill_level,
+                   RANK() OVER (ORDER BY lab_point DESC) AS ranking
+            FROM {TABLE_NAME}
+            ORDER BY lab_point DESC, id ASC
+            """
+        ).fetchall()
+    return [
+        {
+            "id": int(row[0]),
+            "lab_point": int(row[1]),
+            "skill_level": int(row[2]),
+            "ranking": int(row[3]),
+        }
+        for row in rows
+    ]
+
+
+def getUserRanking(user_id: int) -> int | None:
+    """Return a user's LAB ranking, or None when no PLab row exists."""
+    with closing(sqlite3.connect(DB_PATH)) as connection:
+        row = connection.execute(
+            f"""
+            SELECT ranking FROM (
+                SELECT id,
+                       RANK() OVER (ORDER BY lab_point DESC) AS ranking
+                FROM {TABLE_NAME}
+            )
+            WHERE id = ?
+            """,
+            (int(user_id),),
+        ).fetchone()
+    return int(row[0]) if row is not None else None

@@ -12,7 +12,7 @@ main :
  WagyumonServer : "`타운맵`, `도감`, `기술머신`"
  PrecisionLAB : "`pledit`, `pl`"
  AdminFeatures : "`login`, `logout`"
- AdminDebugging : "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `kakao`, `sync`"
+ AdminDebugging : "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `kakao`, `라인`, `linedata`, `sync`"
 
 help :
  title : "Help"
@@ -475,6 +475,20 @@ kakao :
  ctx : "kakao <user: user> <option> <value>"
  discript : "✧٩(ˊωˋ*)و✧ By magic powers...\nTransform data with magical powers..."
  args : "(￣▽￣)ノ"
+
+라인 :
+ title : "LINE Data Manager"
+ id : "98"
+ ctx : "라인 <option> <user> <value>"
+ discript : "Manage XP and money using the same options and user mapping as the 카톡 command."
+ args : "This is also available as `line`."
+
+linedata :
+ title : "LINE Export Settlement"
+ id : "98"
+ ctx : "linedata"
+ discript : "Read UTF-8 LINE text exports from data/line, calculate message XP and money, pay mapped users atomically, and archive processed files."
+ args : "Message rows use `00:00 이름 내용`. Date rows are ignored and continuation lines are joined to the preceding message."
 
 kakao :
  title : "Sync"
