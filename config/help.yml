@@ -487,7 +487,7 @@ linedata :
  title : "LINE Export Settlement"
  id : "98"
  ctx : "linedata"
- discript : "Read UTF-8 LINE text exports from data/line, calculate message XP and money, pay mapped users atomically, and archive processed files."
+ discript : "Read UTF-8 LINE text exports from data/line, calculate message XP and money, pay mapped users atomically, and delete successfully processed files."
  args : "Message rows use `00:00 이름 내용`. Date rows are ignored and continuation lines are joined to the preceding message."
 
 kakao :

@@ -241,31 +241,11 @@ def moneyAddById(user: int = None, amount: int = None):
     _execute("UPDATE main SET money = money + ? WHERE id = ?", (amount, user))
 
 
-def rewardsAddBulk(
-    rewards: dict[int, tuple[int, int]],
-    import_keys=(),
-) -> None:
-    """Atomically add rewards and record keys that prevent duplicate imports."""
+def rewardsAddBulk(rewards: dict[int, tuple[int, int]]) -> None:
+    """Atomically add XP and money rewards to multiple existing users."""
     with closing(sqlite3.connect(DB_PATH)) as conn:
         cursor = conn.cursor()
         try:
-            cursor.execute(
-                """
-                CREATE TABLE IF NOT EXISTS reward_imports (
-                    import_key TEXT PRIMARY KEY,
-                    imported_at TEXT NOT NULL DEFAULT
-                        (datetime('now', '+9 hours'))
-                )
-                """
-            )
-            normalized_keys = tuple(str(key) for key in import_keys)
-            for import_key in normalized_keys:
-                if cursor.execute(
-                    "SELECT 1 FROM reward_imports WHERE import_key = ?",
-                    (import_key,),
-                ).fetchone() is not None:
-                    raise ValueError("This data file has already been processed.")
-
             for user_id, (xp_amount, money_amount) in rewards.items():
                 cursor.execute(
                     """
@@ -279,10 +259,6 @@ def rewardsAddBulk(
                     raise ValueError(
                         f"User {int(user_id)} does not have a bot account."
                     )
-            cursor.executemany(
-                "INSERT INTO reward_imports (import_key) VALUES (?)",
-                ((key,) for key in normalized_keys),
-            )
             conn.commit()
         except Exception:
             conn.rollback()

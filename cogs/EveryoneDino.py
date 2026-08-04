@@ -14,7 +14,6 @@ from datetime import datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 import io
 import asyncio
-import hashlib
 
 #SERVER id
 server_id = [
@@ -39,6 +38,7 @@ LINE_USERS = {
     "선우": 263640824170938369,
     "승현": 262551155815481345,
     "민찬": 512098892674760705,
+    "창훈": 316933512852930562,
 }
 
 
@@ -352,7 +352,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             동현=178695589788123136,
             창훈=316933512852930562,
             현수=333236160853704714,
-            ㅅㅁ=320827061952315392,
+            성민=320827061952315392,
             은비=279909142955687936,
             한비=280900407021010944,
             쿠키=791364491325210625,
@@ -509,7 +509,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
         if isinstance(error, commands.CheckFailure):
             await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
-    # 카카오데이터 [id: 10]
+    # 카카오데이터 [id: 98]
     @commands.command(name='kakaodata', description="...")
     @commands.check(is_server)
     async def kakaodata(self, ctx):
@@ -528,7 +528,8 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             승교=394075013541789700,
             선우=263640824170938369,
             승현=262551155815481345,
-            민찬=512098892674760705
+            민찬=512098892674760705,
+            창훈=316933512852930562
             )
         
         path = DATA_DIR / "kakao"
@@ -581,7 +582,6 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
     @commands.check(is_server)
     async def linedata(self, ctx):
         source_dir = DATA_DIR / "line"
-        processed_dir = source_dir / "processed"
         source_dir.mkdir(parents=True, exist_ok=True)
 
         source_files = sorted(
@@ -635,27 +635,16 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             for reward in rewards_by_name.values()
         }
         try:
-            import_keys = [
-                "line:" + hashlib.sha256(source_file.read_bytes()).hexdigest()
-                for source_file in source_files
-            ]
-            q.rewardsAddBulk(rewards, import_keys=import_keys)
+            q.rewardsAddBulk(rewards)
         except (ValueError, OSError) as error:
             await ctx.reply(f"No rewards were paid: `{error}`")
             return
 
-        processed_dir.mkdir(parents=True, exist_ok=True)
-        archive_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        archived_count = 0
+        deleted_count = 0
         for source_file in source_files:
-            destination = processed_dir / source_file.name
-            if destination.exists():
-                destination = processed_dir / (
-                    f"{source_file.stem}-{archive_stamp}{source_file.suffix}"
-                )
             try:
-                source_file.replace(destination)
-                archived_count += 1
+                source_file.unlink()
+                deleted_count += 1
             except OSError:
                 pass
 
@@ -679,7 +668,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 + ", ".join(sorted(unknown_names))
             )
         result_lines.append(
-            f"Archived **{archived_count}/{len(source_files)}** processed file(s)."
+            f"Deleted **{deleted_count}/{len(source_files)}** processed file(s)."
         )
         await ctx.reply("\n".join(result_lines))
 

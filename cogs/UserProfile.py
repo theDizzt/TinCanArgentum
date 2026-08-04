@@ -819,10 +819,28 @@ class UserProfile(commands.Cog):
         image.paste(bar, (8, 116), mask=bar)
 
         if preview:
-            wm = Image.open(
-                RANKCARD_DIR / "watermark.png"
-            ).convert('RGBA')
-            image.paste(wm, (0, 0), mask=wm)
+            with Image.open(RANKCARD_DIR / "watermark.png") as watermark_source:
+                original_watermark = watermark_source.convert("RGBA")
+            try:
+                # Preview cards use a centered watermark at half of the
+                # original size so the skin details remain easy to inspect.
+                watermark = original_watermark.resize(
+                    (
+                        max(1, original_watermark.width // 2),
+                        max(1, original_watermark.height // 2),
+                    ),
+                    Image.Resampling.LANCZOS,
+                )
+                try:
+                    watermark_position = (
+                        (image.width - watermark.width) // 2,
+                        (image.height - watermark.height) // 2,
+                    )
+                    image.alpha_composite(watermark, watermark_position)
+                finally:
+                    watermark.close()
+            finally:
+                original_watermark.close()
 
         buffer_output = io.BytesIO()
         image.save(buffer_output, format='PNG')
