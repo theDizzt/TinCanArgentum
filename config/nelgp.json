@@ -1,0 +1,480 @@
+{
+  "_guide": {
+    "structure": "Add achievements below using their numeric ID as the key.",
+    "required": ["code", "title", "description"],
+    "optional": {
+      "hidden": false,
+      "xp": 0,
+      "money": 0,
+      "skin": null
+    },
+    "example": {
+      "1": {
+        "code": "replace-with-game-code",
+        "title": "First Achievement",
+        "description": "Describe the unlock condition.",
+        "hidden": false,
+        "xp": 100,
+        "money": 100,
+        "skin": null
+      }
+    }
+  },
+  "meta": {
+    "title": "NELG Plus",
+    "release": "In development",
+    "color": "#A8E6CF"
+  },
+  "achievements": [
+    {
+      "id": 1,
+      "secret": false,
+      "name": "Hello, World!",
+      "condition": "Complete all tutorial levels (beat Level 4).",
+      "inputCodes": "5968-7619-0681",
+      "xp": 500,
+      "money":100,
+      "skin": null
+    },
+    {
+      "id": 2,
+      "secret": false,
+      "name": "Who Made This?",
+      "condition": "Visit the Credits page.",
+      "inputCodes": "1524-8144-9944",
+      "xp": 500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 3,
+      "secret": false,
+      "name": "Customization",
+      "condition": "Visit the Options page.",
+      "inputCodes": "8666-3854-2266",
+      "xp": 500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 4,
+      "secret": false,
+      "name": "SOS Request",
+      "condition": "Attempt to join the Discord server.",
+      "inputCodes": "6852-3751-5350",
+      "xp":500,
+      "money": 100,
+      "skin": 218
+    },
+    {
+      "id": 5,
+      "secret": false,
+      "name": "Pilgrimage",
+      "condition": "Visit the Hall of Fame page.",
+      "inputCodes": "9389-6498-4137",
+      "xp": 500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 6,
+      "secret": true,
+      "name": "まさか?",
+      "condition": "Enter 'hidden' in Level 4. (Enter the most commonly used password into the first password field.)",
+      "inputCodes": "3200-3681-3952",
+      "xp": 1050,
+      "money": 1050,
+      "skin": 219
+    },
+    {
+      "id": 7,
+      "secret": true,
+      "name": "Procrastination",
+      "condition": "Click the button in Level 7 before clearing away every object.",
+      "inputCodes": "4379-0196-0489",
+      "xp": 500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 8,
+      "secret": false,
+      "name": "Totally Newbie",
+      "condition": "Reach the first Warp Zone (beat Level 8).",
+      "inputCodes": "5740-2210-8649",
+      "xp": 1600,
+      "money": 400,
+      "skin": null
+    },
+    {
+      "id": 9,
+      "secret": false,
+      "name": "First Flight",
+      "condition": "Use the Warp Zone for the first time.",
+      "inputCodes": "3249-6911-0000",
+      "xp": 800,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 10,
+      "secret": true,
+      "name": "The Great Progress Reset",
+      "condition": "Click 'back' or 'rewind' in the Level 9 menu.",
+      "inputCodes": "3553-2954-7496",
+      "xp": 900,
+      "money": 200,
+      "skin": null
+    },
+    {
+      "id": 11,
+      "secret": true,
+      "name": "OEM is Best",
+      "condition": "Enter 'dark purple' in Level 12.",
+      "inputCodes": "3986-0039-3230",
+      "xp": 1200,
+      "money": 200,
+      "skin": null
+    },
+    {
+      "id": 12,
+      "secret": false,
+      "name": "Almost Not a Newbie",
+      "condition": "Reach the second Warp Zone (beat Level 14).",
+      "inputCodes": "0533-0873-2429",
+      "xp": 2800,
+      "money": 700,
+      "skin": null
+    },
+    {
+      "id": 13,
+      "secret": true,
+      "name": "Same Meaning, Right?",
+      "condition": "Enter 'hide', 'hidden', or '?????' in Level 15.",
+      "inputCodes": "5283-0270-5225",
+      "xp": 1500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 14,
+      "secret": true,
+      "name": "Tunnel Vision",
+      "condition": "Enter '22' or '4.58203125' in Level 16. (Interpret 16 or coffee as hexadecimal.)",
+      "inputCodes": "8990-5269-7519",
+      "xp": 1616,
+      "money": 216,
+      "skin": null
+    },
+    {
+      "id": 15,
+      "secret": true,
+      "name": "SKIP +1",
+      "condition": "Attempt to move to another level from Level 17. (Try to visit a strange level instead of the next one.)",
+      "inputCodes": "3053-4598-0543",
+      "xp": 1700,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 16,
+      "secret": true,
+      "name": "Haven't I Seen This Level Before?",
+      "condition": "Click the button at (242, 242) in Level 19 without clicking the button at (19, 19) first.",
+      "inputCodes": "1616-7777-5559",
+      "xp": 1900,
+      "money": 242,
+      "skin": null
+    },
+    {
+      "id": 17,
+      "secret": false,
+      "name": "Hard, but Manageable",
+      "condition": "Reach the third Warp Zone (beat Level 19).",
+      "inputCodes": "9872-7988-8762",
+      "xp": 3800,
+      "money": 950,
+      "skin": null
+    },
+    {
+      "id": 18,
+      "secret": true,
+      "name": "A New Idea",
+      "condition": "Enter 'neddih' in Level 20, Scene 2.",
+      "inputCodes": "6209-7023-1048",
+      "xp": 2000,
+      "money": 501,
+      "skin": null
+    },
+    {
+      "id": 19,
+      "secret": true,
+      "name": "The One That Took Over Computers Worldwide (Except Linux)",
+      "condition": "Enter 'arial' in Level 20, Scene 3.",
+      "inputCodes": "0321-9591-9639",
+      "xp": 2000,
+      "money": 450,
+      "skin": null
+    },
+    {
+      "id": 20,
+      "secret": true,
+      "name": "Cassiopeia",
+      "condition": "Press 'w' on the keyboard in Level 20, Scene 5.",
+      "inputCodes": "6368-3213-5687",
+      "xp": 2000,
+      "money": 333,
+      "skin": null
+    },
+    {
+      "id": 21,
+      "secret": true,
+      "name": "( ͡° ͜ʖ ͡°)",
+      "condition": "Enter 'awesome face' or 'epic smiley' in Level 20, Scene 6.",
+      "inputCodes": "8763-4777-5777",
+      "xp": 2000,
+      "money": 123,
+      "skin": null
+    },
+    {
+      "id": 22,
+      "secret": true,
+      "name": "NELG LOVER",
+      "condition": "Click the button at (20, 20) or (242, 242) in Level 20, Scene 7.",
+      "inputCodes": "3813-1696-8277",
+      "xp": 2000,
+      "money": 242,
+      "skin": null
+    },
+    {
+      "id": 23,
+      "secret": true,
+      "name": "リセマラ",
+      "condition": "Click 'back' or 'rewind' in the Level 20, Scene 9 menu.",
+      "inputCodes": "6425-8680-7986",
+      "xp": 2000,
+      "money": 500,
+      "skin": null
+    },
+    {
+      "id": 24,
+      "secret": true,
+      "name": "I Told You It Wouldn't Work!!!",
+      "condition": "Attempt to move to another level from Level 20, Scene 10. (Try to visit a strange level instead of the next one.)",
+      "inputCodes": "1729-8980-4163",
+      "xp": 2000,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 25,
+      "secret": true,
+      "name": "Finger Princess",
+      "condition": "Use copy and paste to enter '3' in Level 21 before pressing '3' on the keyboard.",
+      "inputCodes": "9223-0460-6095",
+      "xp": 2100,
+      "money": 333,
+      "skin": null
+    },
+    {
+      "id": 26,
+      "secret": true,
+      "name": "Still a Great Answer, but Not What I Wanted",
+      "condition": "Enter 'EBOI' in Level 22.",
+      "inputCodes": "9809-4019-3044",
+      "xp": 2200,
+      "money": 950,
+      "skin": null
+    },
+    {
+      "id": 27,
+      "secret": false,
+      "name": "The First Trial",
+      "condition": "Reach the fourth Warp Zone (beat Level 22).",
+      "inputCodes": "4213-3706-2504",
+      "xp": 4400,
+      "money": 1100,
+      "skin": null
+    },
+    {
+      "id": 28,
+      "secret": true,
+      "name": "Why?",
+      "condition": "Enter '?' in Level 23.",
+      "inputCodes": "8426-5576-1153",
+      "xp": 2300,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 29,
+      "secret": true,
+      "name": "You Just Activated My Trap Card",
+      "condition": "Enter 'hidden' in the password field in Level 24.",
+      "inputCodes": "5893-1601-5530",
+      "xp": 2400,
+      "money": 105,
+      "skin": null
+    },
+    {
+      "id": 30,
+      "secret": true,
+      "name": "Maze Anorexia",
+      "condition": "Enter 'hidden' on the keyboard in Level 25 without pressing every button in the maze.",
+      "inputCodes": "3435-2521-0611",
+      "xp": 2500,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 31,
+      "secret": false,
+      "name": "Patience Reinforcement Learning",
+      "condition": "Reach the fifth Warp Zone (beat Level 25).",
+      "inputCodes": "9687-4931-1894",
+      "xp": 5000,
+      "money": 1250,
+      "skin": null
+    },
+    {
+      "id": 32,
+      "secret": true,
+      "name": "Are You Included Too?",
+      "condition": "Enter 'hidden.' or '*******' in Level 26.",
+      "inputCodes": "2109-9496-7284",
+      "xp": 2600,
+      "money": 250,
+      "skin": null
+    },
+    {
+      "id": 33,
+      "secret": true,
+      "name": "Deal with the Devil",
+      "condition": "Make '666' in Level 27.",
+      "inputCodes": "6306-6668-0842",
+      "xp": 666,
+      "money": 666,
+      "skin": null
+    },
+    {
+      "id": 34,
+      "secret": false,
+      "name": "Roll Safe",
+      "condition": "Reach the sixth Warp Zone (beat Level 29).",
+      "inputCodes": "8081-7057-9270",
+      "xp": 5800,
+      "money": 1450,
+      "skin": null
+    },
+    {
+      "id": 35,
+      "secret": true,
+      "name": "No thoughts, head empty",
+      "condition": "Enter 'THIRTY' in Level 30.",
+      "inputCodes": "3579-0801-1499",
+      "xp": 3000,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 36,
+      "secret": true,
+      "name": "Doppelgänger",
+      "condition": "Enter 'WEIB' in Level 31.",
+      "inputCodes": "8277-9688-6149",
+      "xp": 3100,
+      "money": 255,
+      "skin": null
+    },
+    {
+      "id": 37,
+      "secret": true,
+      "name": "Heart of the Beast",
+      "condition": "Reach Scene 9 in Level 32 without dying once.",
+      "inputCodes": "2891-2951-8298",
+      "xp": 3200,
+      "money": 1600,
+      "skin": 220
+    },
+    {
+      "id": 38,
+      "secret": false,
+      "name": "Nexus",
+      "condition": "Reach the seventh Warp Zone (beat Level 32).",
+      "inputCodes": "4458-5073-5820",
+      "xp": 6400,
+      "money": 1600,
+      "skin": null
+    },
+    {
+      "id": 39,
+      "secret": true,
+      "name": "RGB",
+      "condition": "Click Stop, Pause, and Play in that order in Level 34. (Press the buttons in the same order as the door colors in Level 20.)",
+      "inputCodes": "0339-3942-1894",
+      "xp": 3400,
+      "money": 350,
+      "skin": 221
+    },
+    {
+      "id": 40,
+      "secret": true,
+      "name": "Sneak 100",
+      "condition": "Enter '*********' in Level 35, Scene 2.",
+      "inputCodes": "2100-5312-8663",
+      "xp": 3500,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 41,
+      "secret": true,
+      "name": "Press X to Doubt",
+      "condition": "Enter 'pedestrian' in Level 35, Scene 4. (Even though you were told that the hint was not meant for this scene...)",
+      "inputCodes": "9834-2757-1393",
+      "xp": 3500,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 42,
+      "secret": true,
+      "name": "64 bits... 32 bits... 16 bits...",
+      "condition": "Make 16 in Level 35, Scene 5. (You remembered the exact line from Level 16!)",
+      "inputCodes": "1642-6242-7739",
+      "xp": 3500,
+      "money": 256,
+      "skin": 222
+    },
+    {
+      "id": 43,
+      "secret": true,
+      "name": "IDGAF",
+      "condition": "Enter 'DO YOU STILL REMEMBER?' in Level 35, Scene 7.",
+      "inputCodes": "5608-6870-5785",
+      "xp": 3500,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 44,
+      "secret": true,
+      "name": "Silent Hill",
+      "condition": "Press the Play button in Level 35, Scene 9 while the volume is set to 0.",
+      "inputCodes": "2871-7920-4029",
+      "xp": 3500,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 45,
+      "secret": false,
+      "name": "hakótel hama'araví",
+      "condition": "Reach the eighth Warp Zone (beat Level 35).",
+      "inputCodes": "6430-9332-5671",
+      "xp": 7000,
+      "money": 1750,
+      "skin": 223
+    }
+  ]
+}
