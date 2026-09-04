@@ -23,6 +23,38 @@ from fcts.user_resolver import resolve_discord_user
 DB_PATH = DATA_DIR / "anniversary.db"
 KST = ZoneInfo("Asia/Seoul")
 MIDNIGHT_KST = time(hour=0, minute=0, second=0, tzinfo=KST)
+DISCORD_CONTENT_LIMIT = 2000
+ANNIV_LIST_MESSAGE_LIMIT = DISCORD_CONTENT_LIMIT - 100
+ANNIV_LIST_LINE_LIMIT = 1000
+
+
+def truncate_text(value: str, limit: int) -> str:
+    if len(value) <= limit:
+        return value
+    return value[: max(0, limit - 1)] + "…"
+
+
+def chunk_lines(lines: list[str], limit: int = ANNIV_LIST_MESSAGE_LIMIT) -> list[str]:
+    chunks: list[str] = []
+    current: list[str] = []
+    current_len = 0
+
+    for line in lines:
+        line = truncate_text(line, limit)
+        extra_len = len(line) + (1 if current else 0)
+
+        if current and current_len + extra_len > limit:
+            chunks.append("\n".join(current))
+            current = [line]
+            current_len = len(line)
+        else:
+            current.append(line)
+            current_len += extra_len
+
+    if current:
+        chunks.append("\n".join(current))
+
+    return chunks
 
 
 def get_conn():
@@ -602,20 +634,24 @@ class Anniversary(commands.Cog):
                     f"{row['month']}월 {row['day']}일 | <@{row['user_id']}> | {channel_text}"
                 )
             else:
+                title = truncate_text(str(row["title"]), ANNIV_LIST_LINE_LIMIT)
                 lines.append(
                     f"`{row['id']}` 📌 {calendar_name}{leap_text} "
                     f"{row['year']}년 {row['month']}월 {row['day']}일 | "
-                    f"{row['title']} | {channel_text}"
+                    f"{title} | {channel_text}"
                 )
 
         if len(rows) > 30:
             lines.append(i18n.t(ctx.author, "cmd.26.more", count=len(rows) - 30))
 
-        await self.send_reply(
-            ctx,
-            "\n".join(lines),
-            ephemeral=True,
-        )
+        chunks = chunk_lines(lines)
+        await self.send_reply(ctx, chunks[0], ephemeral=True)
+
+        for chunk in chunks[1:]:
+            try:
+                await ctx.send(chunk, ephemeral=True)
+            except TypeError:
+                await ctx.send(chunk)
 
     # 생일 및 기념일 삭제 [id: 27]
     @commands.hybrid_command(
