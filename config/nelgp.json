@@ -1178,7 +1178,7 @@
     },
     {
       "id": 114,
-      "secret": false,
+      "secret": true,
       "name": "Plan B",
       "condition": "Move to Level 2 by clicking Forward in the right-click menu in Level 1.",
       "inputCodes": "2355-7791-6884",
