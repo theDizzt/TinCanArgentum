@@ -25,6 +25,26 @@
     "release": "In development",
     "color": "#A8E6CF"
   },
+  "hints": {
+    "1": {
+      "title": "Getting started",
+      "hints": [
+        {"title": "Hint Name", "text": "Sample hint."}
+      ]
+    },
+    "2": {
+      "title": "A new challenge",
+      "hints": [
+        {"title": "Take your time", "text": "Sample hint: Read the level title carefully."}
+      ]
+    },
+    "3": {
+      "title": "The next step",
+      "hints": [
+        {"title": "Use what you learned", "text": "Sample hint: Think back to the previous levels."}
+      ]
+    }
+  },
   "achievements": [
     {
       "id": 1,
@@ -475,6 +495,786 @@
       "xp": 7000,
       "money": 1750,
       "skin": 223
+    },
+    {
+      "id": 46,
+      "secret": true,
+      "name": "Title",
+      "condition": "Click only Pepsi Zero Lime, Mountain Dew, and Monster in Level 36.",
+      "inputCodes": "4652-4251-3921",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 47,
+      "secret": true,
+      "name": "Super MAX!",
+      "condition": "Choose Red Bull 33 times in a row in Level 36.",
+      "inputCodes": "8631-5539-7969",
+      "xp": 3300,
+      "money": 333,
+      "skin": null
+    },
+    {
+      "id": 48,
+      "secret": true,
+      "name": "False ban ;(",
+      "condition": "Enter 'argentumb must cheat' in Level 37.",
+      "inputCodes": "1652-2819-0366",
+      "xp": 3684,
+      "money": 384,
+      "skin": null
+    },
+    {
+      "id": 49,
+      "secret": true,
+      "name": "I'm gonna do it anyway",
+      "condition": "Enter '4761' in Level 38.",
+      "inputCodes": "3342-0808-1476",
+      "xp": 4761,
+      "money": 69,
+      "skin": null
+    },
+    {
+      "id": 50,
+      "secret": true,
+      "name": "Legacy LK 39",
+      "condition": "Enter '607' as the first password in Level 39.",
+      "inputCodes": "3994-2260-9247",
+      "xp": 3942,
+      "money": 339,
+      "skin": 224
+    },
+    {
+      "id": 51,
+      "secret": true,
+      "name": "IDK",
+      "condition": "Enter '???' in Fake Level 42 of Level 39.",
+      "inputCodes": "3758-0681-7086",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 52,
+      "secret": true,
+      "name": "Galaxy Brain",
+      "condition": "Enter '?' in Fake Level 43 of Level 39.",
+      "inputCodes": "5998-3100-1367",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 53,
+      "secret": true,
+      "name": "Critical Error",
+      "condition": "Click yellow-green-yellow-green-yellow-green or green-yellow-green-yellow-green-yellow in Fake Level 44 of Level 39.",
+      "inputCodes": "6944-0405-2803",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 54,
+      "secret": true,
+      "name": "Σ",
+      "condition": "Enter 'Σ' in Fake Level 45 of Level 39.",
+      "inputCodes": "5978-5297-4198",
+      "xp": 3942,
+      "money": 385,
+      "skin": null
+    },
+    {
+      "id": 55,
+      "secret": true,
+      "name": "Monkey Neuron Activation",
+      "condition": "Enter 'hidden' in every input field in Fake Level 47 of Level 39.",
+      "inputCodes": "4639-6039-7839",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 56,
+      "secret": true,
+      "name": "Nice try, Dizzt",
+      "condition": "Enter 'fake' directly in Fake Level 49 of Level 39 without entering 'hidden' first.",
+      "inputCodes": "7797-6610-8374",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 57,
+      "secret": true,
+      "name": "High Strike Number",
+      "condition": "Enter '135' in Fake Level 52 of Level 39.",
+      "inputCodes": "9339-6622-5711",
+      "xp": 3942,
+      "money": 135,
+      "skin": null
+    },
+    {
+      "id": 58,
+      "secret": true,
+      "name": "넌 못 지나간다!",
+      "condition": "Click Forward in the right-click menu in Fake Level 55 of Level 39.",
+      "inputCodes": "1734-4662-2211",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 59,
+      "secret": true,
+      "name": "NELG 59",
+      "condition": "Enter 'leaf' in Fake Level 59 of Level 39.",
+      "inputCodes": "7883-6955-1067",
+      "xp": 3942,
+      "money": 59,
+      "skin": null
+    },
+    {
+      "id": 60,
+      "secret": true,
+      "name": "Prime number",
+      "condition": "Enter '61' in Fake Level 60 of Level 39.",
+      "inputCodes": "3508-7796-2075",
+      "xp": 3942,
+      "money": 361,
+      "skin": null
+    },
+    {
+      "id": 61,
+      "secret": true,
+      "name": "Mutant",
+      "condition": "Enter 'hiding' in Fake Level 61 of Level 39.",
+      "inputCodes": "9821-1987-3694",
+      "xp": 3942,
+      "money": 242,
+      "skin": null
+    },
+    {
+      "id": 62,
+      "secret": true,
+      "name": "Delirium",
+      "condition": "Enter 'hidden' in Fake Level 68 of Level 39.",
+      "inputCodes": "1172-8792-6609",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 63,
+      "secret": true,
+      "name": "Stacker 3",
+      "condition": "Enter '117' or '207' in Fake Level 69 of Level 39.",
+      "inputCodes": "6653-6814-5331",
+      "xp": 3942,
+      "money": 369,
+      "skin": null
+    },
+    {
+      "id": 64,
+      "secret": true,
+      "name": "Ancient Roman",
+      "condition": "Enter '1009' in Fake Level 79 of Level 39.",
+      "inputCodes": "1682-1740-1253",
+      "xp": 3942,
+      "money": 1009,
+      "skin": null
+    },
+    {
+      "id": 65,
+      "secret": true,
+      "name": "Area 52",
+      "condition": "Enter '135' in Fake Level 80 of Level 39.",
+      "inputCodes": "6395-3129-5047",
+      "xp": 3942,
+      "money": 135,
+      "skin": null
+    },
+    {
+      "id": 66,
+      "secret": true,
+      "name": "The Bite of '83",
+      "condition": "Enter '83' in Fake Level 83 of Level 39.",
+      "inputCodes": "1761-1036-1470",
+      "xp": 3942,
+      "money": 383,
+      "skin": null
+    },
+    {
+      "id": 67,
+      "secret": true,
+      "name": "Ight, Imma Head Out",
+      "condition": "Enter 'time' in Fake Level 84 of Level 39 without playing the route game.",
+      "inputCodes": "1919-5859-9474",
+      "xp": 3942,
+      "money": 384,
+      "skin": null
+    },
+    {
+      "id": 68,
+      "secret": true,
+      "name": "Eighty-sixed",
+      "condition": "Remove everything that can be removed in Fake Level 86 of Level 39.",
+      "inputCodes": "1845-4169-3686",
+      "xp": 3942,
+      "money": 86,
+      "skin": 225
+    },
+    {
+      "id": 69,
+      "secret": true,
+      "name": "Brainrot",
+      "condition": "Enter 'Q8A3' in Fake Level 87 of Level 39.",
+      "inputCodes": "4884-3559-0746",
+      "xp": 3942,
+      "money": 339,
+      "skin": null
+    },
+    {
+      "id": 70,
+      "secret": true,
+      "name": "Chatterbox",
+      "condition": "Enter 'space' in Fake Level 91 of Level 39.",
+      "inputCodes": "7499-8468-5564",
+      "xp": 3942,
+      "money": 339,
+      "skin": 226
+    },
+    {
+      "id": 71,
+      "secret": true,
+      "name": "GG",
+      "condition": "Enter 'ok' or 'okay' in Fake Level 95 of Level 39.",
+      "inputCodes": "4237-6657-9711",
+      "xp": 3942,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 72,
+      "secret": true,
+      "name": "Blue-haired Girl",
+      "condition": "Enter 'ivory' in Fake Level 96 of Level 39.",
+      "inputCodes": "2920-0144-6942",
+      "xp": 3942,
+      "money": 509,
+      "skin": 227
+    },
+    {
+      "id": 73,
+      "secret": true,
+      "name": "Hide the Pain Harold",
+      "condition": "Enter ':)' in Fake Level 666 of Level 39.",
+      "inputCodes": "5615-6849-5351",
+      "xp": 3942,
+      "money": 347,
+      "skin": null
+    },
+    {
+      "id": 74,
+      "secret": false,
+      "name": "EPIC Journey",
+      "condition": "Reach the ninth Warp Zone (beat Level 39).",
+      "inputCodes": "2978-3594-6778",
+      "xp": 7800,
+      "money": 1950,
+      "skin": null
+    },
+    {
+      "id": 75,
+      "secret": true,
+      "name": "Extreme Speed",
+      "condition": "Record a maximum speed of 39.9 in Level 40.",
+      "inputCodes": "0149-4081-2951",
+      "xp": 3999,
+      "money": 399,
+      "skin": null
+    },
+    {
+      "id": 76,
+      "secret": true,
+      "name": "EJECT BUTTON",
+      "condition": "Click the yellow button in Level 41 to return to Level 40.",
+      "inputCodes": "1384-5269-9408",
+      "xp": 86,
+      "money": 86,
+      "skin": null
+    },
+    {
+      "id": 77,
+      "secret": true,
+      "name": "Shitbox",
+      "condition": "Overheat in Level 42 by not using the booster.",
+      "inputCodes": "2077-7131-4314",
+      "xp": 1400,
+      "money": 300,
+      "skin": 228
+    },
+    {
+      "id": 78,
+      "secret": true,
+      "name": "420 Drop It Like It's Hot",
+      "condition": "Die in Level 42 while affected by a green magic circle.",
+      "inputCodes": "0349-7731-1036",
+      "xp": 420,
+      "money": 69,
+      "skin": null
+    },
+    {
+      "id": 79,
+      "secret": true,
+      "name": "Fallen Sky",
+      "condition": "Fail to escape Level 42 after 20 seconds have passed.",
+      "inputCodes": "1620-0057-3242",
+      "xp": 4200,
+      "money": 420,
+      "skin": null
+    },
+    {
+      "id": 80,
+      "secret": false,
+      "name": "Gladiator",
+      "condition": "Reach the tenth Warp Zone (beat Level 42).",
+      "inputCodes": "3547-2532-3914",
+      "xp": 8400,
+      "money": 2100,
+      "skin": null
+    },
+    {
+      "id": 81,
+      "secret": true,
+      "name": "Destr0yer",
+      "condition": "Break all 44 mirrors in Level 44.",
+      "inputCodes": "9458-2508-9700",
+      "xp": 2018,
+      "money": 1003,
+      "skin": 229
+    },
+    {
+      "id": 82,
+      "secret": true,
+      "name": "Oh boy 3 AM!",
+      "condition": "Have the computer clock reach 3 AM in Level 45. It's burger time!",
+      "inputCodes": "4279-5770-4523",
+      "xp": 3000,
+      "money": 300,
+      "skin": null
+    },
+    {
+      "id": 83,
+      "secret": true,
+      "name": "DDOS",
+      "condition": "Press the red button in Level 46 and open unlimited localhost windows.",
+      "inputCodes": "7983-5976-8464",
+      "xp": 429,
+      "money": 46,
+      "skin": null
+    },
+    {
+      "id": 84,
+      "secret": true,
+      "name": "400 Bad Request",
+      "condition": "Enter the ERROR screen in Level 46.",
+      "inputCodes": "0721-4242-4296",
+      "xp": 400,
+      "money": 46,
+      "skin": null
+    },
+    {
+      "id": 85,
+      "secret": false,
+      "name": "Have you tried turning it off and on again?",
+      "condition": "Reach the eleventh Warp Zone (beat Level 46).",
+      "inputCodes": "4952-0536-3724",
+      "xp": 9200,
+      "money": 2300,
+      "skin": null
+    },
+    {
+      "id": 86,
+      "secret": true,
+      "name": "Medium well",
+      "condition": "Overheat by staying near a campfire too long in Level 47.",
+      "inputCodes": "3760-8135-7011",
+      "xp": 940,
+      "money": 470,
+      "skin": null
+    },
+    {
+      "id": 87,
+      "secret": true,
+      "name": "Perfect Rush",
+      "condition": "Find the password in Level 47 without retrying.",
+      "inputCodes": "4631-0578-2168",
+      "xp": 9400,
+      "money": 2450,
+      "skin": 230
+    },
+    {
+      "id": 88,
+      "secret": true,
+      "name": "It's Over Nine Thousand!",
+      "condition": "Reach 9,000.01 m in Level 48.",
+      "inputCodes": "9000-9001-4888",
+      "xp": 9001,
+      "money": 480,
+      "skin": null
+    },
+    {
+      "id": 89,
+      "secret": true,
+      "name": "The King of Rubato",
+      "condition": "Enter 'Etude Op. 25 No. 9' in Level 49. Case insensitive.",
+      "inputCodes": "1596-4738-2097",
+      "xp": 25,
+      "money": 9,
+      "skin": 231
+    },
+    {
+      "id": 90,
+      "secret": true,
+      "name": "I nearly shit my pants!",
+      "condition": "Click Back in the right-click menu on the first screen of Level 50.",
+      "inputCodes": "7875-7192-6600",
+      "xp": 500,
+      "money": 500,
+      "skin": null
+    },
+    {
+      "id": 91,
+      "secret": true,
+      "name": "Keep Out",
+      "condition": "Click every button other than Start Game on Level 50's main screen.",
+      "inputCodes": "8469-3716-1869",
+      "xp": 666,
+      "money": 666,
+      "skin": null
+    },
+    {
+      "id": 92,
+      "secret": true,
+      "name": "Confidently Wrong",
+      "condition": "Return to the previous level from an enhanced Level 50 level by using the wrong solution.",
+      "inputCodes": "8379-4496-7671",
+      "xp": 500,
+      "money": 50,
+      "skin": null
+    },
+    {
+      "id": 93,
+      "secret": true,
+      "name": "You bought? Dump it.",
+      "condition": "Return to the previous level 5 times in a row in Level 50's enhanced levels.",
+      "inputCodes": "8360-1690-9917",
+      "xp": 5000,
+      "money": 1000,
+      "skin": null
+    },
+    {
+      "id": 94,
+      "secret": true,
+      "name": "本当?",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 4.",
+      "inputCodes": "5946-9716-0414",
+      "xp": 5000,
+      "money": 1000,
+      "skin": 232
+    },
+    {
+      "id": 95,
+      "secret": true,
+      "name": "Is hidden a color?",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 5.",
+      "inputCodes": "8534-0467-9102",
+      "xp": 550,
+      "money": 105,
+      "skin": null
+    },
+    {
+      "id": 96,
+      "secret": true,
+      "name": "Sixth Sense",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 8.",
+      "inputCodes": "6719-8561-8674",
+      "xp": 550,
+      "money": 105,
+      "skin": null
+    },
+    {
+      "id": 97,
+      "secret": true,
+      "name": "Color Blind",
+      "condition": "Enter 'Dark Purple' in Level 50's enhanced Level 12.",
+      "inputCodes": "4716-8180-4163",
+      "xp": 1600,
+      "money": 160,
+      "skin": null
+    },
+    {
+      "id": 98,
+      "secret": true,
+      "name": "Hidden is hidden",
+      "condition": "Enter 'hidden' in Level 50's enhanced Level 14.",
+      "inputCodes": "0372-9565-7443",
+      "xp": 555,
+      "money": 105,
+      "skin": null
+    },
+    {
+      "id": 99,
+      "secret": true,
+      "name": "Immutability",
+      "condition": "Enter 'hide?' in Level 50's enhanced Level 15.",
+      "inputCodes": "3047-5094-2359",
+      "xp": 556,
+      "money": 106,
+      "skin": null
+    },
+    {
+      "id": 100,
+      "secret": true,
+      "name": "Not Level 16",
+      "condition": "Enter '22' in Level 50's enhanced Level 16.",
+      "inputCodes": "9580-8137-1383",
+      "xp": 222,
+      "money": 22,
+      "skin": null
+    },
+    {
+      "id": 101,
+      "secret": true,
+      "name": "Do Not Exploit This",
+      "condition": "Try to move to any level other than the next level, Level 51, in Level 50's enhanced Level 17.",
+      "inputCodes": "6515-5052-6032",
+      "xp": 510,
+      "money": 18,
+      "skin": null
+    },
+    {
+      "id": 102,
+      "secret": true,
+      "name": "242 AGAIN",
+      "condition": "Click the point r=242, θ=242 in Level 50's enhanced Level 19.",
+      "inputCodes": "5917-0749-6438",
+      "xp": 484,
+      "money": 242,
+      "skin": null
+    },
+    {
+      "id": 103,
+      "secret": true,
+      "name": "It's a frappe!",
+      "condition": "Enter 'twice' in Level 50's enhanced Level 20, Scene 3.",
+      "inputCodes": "0492-2829-4054",
+      "xp": 1110,
+      "money": 210,
+      "skin": null
+    },
+    {
+      "id": 104,
+      "secret": true,
+      "name": "Emotional Punching Bag",
+      "condition": "Enter 'ok' or 'okay' in Level 50's enhanced Level 20, Scene 6.",
+      "inputCodes": "1348-6397-7088",
+      "xp": 500,
+      "money": 100,
+      "skin": 233
+    },
+    {
+      "id": 105,
+      "secret": true,
+      "name": "Angry Upvote",
+      "condition": "Enter 'black' in Level 50's enhanced Level 20, Scene 10.",
+      "inputCodes": "7830-7715-7800",
+      "xp": 1000,
+      "money": 500,
+      "skin": null
+    },
+    {
+      "id": 106,
+      "secret": true,
+      "name": "Math is not mathing",
+      "condition": "Enter 'no' in Level 50's enhanced Level 21.",
+      "inputCodes": "2768-0521-2255",
+      "xp": 500,
+      "money": 294,
+      "skin": null
+    },
+    {
+      "id": 107,
+      "secret": true,
+      "name": "Diggy Diggy Hole",
+      "condition": "Enter 'hiddenhidden' in the password field in Level 50's enhanced Level 24.",
+      "inputCodes": "2289-1685-9487",
+      "xp": 500,
+      "money": 240,
+      "skin": null
+    },
+    {
+      "id": 108,
+      "secret": true,
+      "name": "Factory Reset",
+      "condition": "Enter the wrong password in Level 50's enhanced Level 25 and return to the beginning.",
+      "inputCodes": "5964-7430-8753",
+      "xp": 4321,
+      "money": 1234,
+      "skin": null
+    },
+    {
+      "id": 109,
+      "secret": false,
+      "name": "Parousia",
+      "condition": "Reach the twelfth Warp Zone (beat Level 50).",
+      "inputCodes": "5078-8521-1147",
+      "xp": 10000,
+      "money": 2500,
+      "skin": 234
+    },
+    {
+      "id": 110,
+      "secret": true,
+      "name": "A silent Outcry",
+      "condition": "Enter the nickname of someone listed in the Credits as the password in Level 51.",
+      "inputCodes": "7762-5329-8157",
+      "xp": 2026,
+      "money": 819,
+      "skin": null
+    },
+    {
+      "id": 111,
+      "secret": true,
+      "name": "2952~",
+      "condition": "Enter '52' as the first password in Level 52.",
+      "inputCodes": "3525-5670-7337",
+      "xp": 2952,
+      "money": 141,
+      "skin": null
+    },
+    {
+      "id": 112,
+      "secret": true,
+      "name": "Dalgona Candy Challenge",
+      "condition": "Clear one board in Level 53 after retrying 5 times or fewer.",
+      "inputCodes": "5766-4668-9558",
+      "xp": 2021,
+      "money": 917,
+      "skin": null
+    },
+    {
+      "id": 113,
+      "secret": true,
+      "name": "Extension of Integers",
+      "condition": "Enter Level 0.",
+      "inputCodes": "0845-4717-8354",
+      "xp": 1000,
+      "money": 100,
+      "skin": null
+    },
+    {
+      "id": 114,
+      "secret": false,
+      "name": "Plan B",
+      "condition": "Move to Level 2 by clicking Forward in the right-click menu in Level 1.",
+      "inputCodes": "2355-7791-6884",
+      "xp": 1000,
+      "money": 250,
+      "skin": null
+    },
+    {
+      "id": 115,
+      "secret": true,
+      "name": "-∞",
+      "condition": "Enter Level -0.",
+      "inputCodes": "5563-7042-3408",
+      "xp": 3000,
+      "money": 900,
+      "skin": null
+    },
+    {
+      "id": 116,
+      "secret": true,
+      "name": "I Am Under The Water",
+      "condition": "Reduce the number to -4096 in Level -1.",
+      "inputCodes": "3939-3242-6247",
+      "xp": 4096,
+      "money": 1024,
+      "skin": null
+    },
+    {
+      "id": 117,
+      "secret": true,
+      "name": "Brute Force",
+      "condition": "Enter 'glylqj' in Level -4.",
+      "inputCodes": "3093-5465-2650",
+      "xp": 1696,
+      "money": 712,
+      "skin": null
+    },
+    {
+      "id": 118,
+      "secret": true,
+      "name": "Tactical Retreat",
+      "condition": "Enter 'recreative' in Level -4.",
+      "inputCodes": "6086-1071-9675",
+      "xp": 800,
+      "money": 800,
+      "skin": null
+    },
+    {
+      "id": 119,
+      "secret": true,
+      "name": "BLACKLAND 66.6",
+      "condition": "Reach a score of 66.6% in Level -6.",
+      "inputCodes": "6891-2196-6179",
+      "xp": 666,
+      "money": 666,
+      "skin": null
+    },
+    {
+      "id": 120,
+      "secret": true,
+      "name": "Memento",
+      "condition": "Enter 'ivory' in Level -7.",
+      "inputCodes": "0642-3455-0509",
+      "xp": 2023,
+      "money": 509,
+      "skin": 235
+    },
+    {
+      "id": 121,
+      "secret": true,
+      "name": "Challenger Deep",
+      "condition": "Reach the minus ending (beat Level -9).",
+      "inputCodes": "1491-8932-0160",
+      "xp": 5500,
+      "money": 1275,
+      "skin": 236
+    },
+    {
+      "id": 122,
+      "secret": true,
+      "name": "Happy Birthday!!",
+      "condition": "Complete Level 55 while the computer clock is August 1. It's Matchoi's birthday!",
+      "inputCodes": "3684-1114-0801",
+      "xp": 2002,
+      "money": 801,
+      "skin": null
+    },
+    {
+      "id": 123,
+      "secret": false,
+      "name": "Mariana Trench",
+      "condition": "Reach the thirteenth Warp Zone (beat Level 55).",
+      "inputCodes": "6897-5610-9844",
+      "xp": 11000,
+      "money": 2750,
+      "skin": 237
     }
   ]
 }

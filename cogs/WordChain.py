@@ -16,6 +16,9 @@ from project_paths import DATA_DIR
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
 
 
+WORDCHAIN_BOT_ID = 691455977270149171
+
+
 def _read_workbook_rows(path):
     from openpyxl import load_workbook
 
@@ -30,7 +33,7 @@ def _read_workbook_rows(path):
 async def _prepare_wordchain_participant(ctx, reference=None):
     """Resolve a participant and create missing game dependencies safely."""
     user = await resolve_discord_user(ctx, reference)
-    if getattr(user, "bot", False):
+    if getattr(user, "bot", False) and int(user.id) != WORDCHAIN_BOT_ID:
         raise UserResolutionError("Bots cannot participate in word chain games.")
 
     user_id = int(user.id)
@@ -542,7 +545,7 @@ async def _run_team_wordchain(client, ctx, players, option):
                     "(으)로 시작하는 단어를 입력하세요! ('q' 입력시 포기)"
                 )
 
-                if uid == 691455977270149171:
+                if uid == WORDCHAIN_BOT_ID:
                     if sample == "●▅▇█▇▆▅▄▇":
                         start = random.choice("가나다라마바사아자차카타파하")
                         start_alter = replace_sound_char(start) or ""
@@ -1735,7 +1738,7 @@ class TestCommands(commands.Cog):
                                         f":chains:{scoreFont(chain, 3, 0)} | {player_badge[player[i]['color']]}{etc.lvicon(ulv)}{q.readTagById(uid)} | {scoreFont(player[i]['score'], 4, player[i]['color'])} | {lifeUI(player[i]['life'],3)} <@{uid}>\n## {start}\n`보너스 글자` {bonus}\n(으)로 시작하는 단어를 입력하세요! ('q' 입력시 포기)"
                                     )
 
-                                if player[i]['id'] == 691455977270149171:
+                                if player[i]['id'] == WORDCHAIN_BOT_ID:
                                     if sample == '●▅▇█▇▆▅▄▇':
                                         alterlist = "가나다라마사바아자파카타파하"
                                         pick = random.randint(1, len(alterlist))
@@ -2061,7 +2064,7 @@ class TestCommands(commands.Cog):
                                         f":chains:{scoreFont(chain, 3, 0)} | {player_badge[player[i]['color']]}{etc.lvicon(ulv)}{q.readTagById(uid)} | {scoreFont(player[i]['score'], 4, player[i]['color'])} | {lifeUI(player[i]['life'],3)} <@{uid}>\n## {start}\n`제한 길이` {length}글자\n(으)로 시작하는 단어를 입력하세요! ('q' 입력시 포기)"
                                     )
 
-                                if player[i]['id'] == 691455977270149171:
+                                if player[i]['id'] == WORDCHAIN_BOT_ID:
                                     if sample == '●▅▇█▇▆▅▄▇':
                                         alterlist = "가나다라마사바아자파카타파하"
                                         pick = random.randint(1, len(alterlist))

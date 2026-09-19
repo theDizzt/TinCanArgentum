@@ -125,7 +125,7 @@ def _read_codes(raw_item) -> list[str]:
 
 
 def loadCatalog() -> dict:
-    """Load and validate the NELG+ achievement catalog."""
+    """Load and validate the NELG+ achievement and hint catalog."""
     with CATALOG_PATH.open(encoding="utf-8") as catalog_file:
         document = json.load(catalog_file)
 
@@ -133,8 +133,43 @@ def loadCatalog() -> dict:
         raise ValueError("NELG+ catalog root must be an object.")
     meta_source = document.get("meta", {})
     source = document.get("achievements", {})
+    hint_source = document.get("hints", {})
     if not isinstance(meta_source, dict):
         raise ValueError("NELG+ meta must be an object.")
+    if not isinstance(hint_source, dict):
+        raise ValueError("NELG+ hints must be an object.")
+
+    hints = {}
+    for level_key, raw_level in hint_source.items():
+        try:
+            level = int(level_key)
+        except (TypeError, ValueError) as error:
+            raise ValueError(f"Hint level '{level_key}' is invalid.") from error
+        if level <= 0 or level in hints:
+            raise ValueError(f"Hint level {level} is invalid or duplicated.")
+        if not isinstance(raw_level, dict):
+            raise ValueError(f"Hint level {level} must be an object.")
+        level_title = raw_level.get("title", f"Level {level}")
+        if not isinstance(level_title, str) or not level_title.strip() or len(level_title) > 200:
+            raise ValueError(f"Hint level {level} has an invalid title.")
+        raw_hints = raw_level.get("hints")
+        if not isinstance(raw_hints, list) or not 1 <= len(raw_hints) <= 25:
+            raise ValueError(f"Hint level {level} needs 1 to 25 hints.")
+        entries = []
+        for number, raw_hint in enumerate(raw_hints, start=1):
+            if not isinstance(raw_hint, dict):
+                raise ValueError(f"Level {level} hint {number} must be an object.")
+            title = raw_hint.get("title")
+            body = raw_hint.get("text")
+            if not isinstance(title, str) or not title.strip() or len(title) > 100:
+                raise ValueError(f"Level {level} hint {number} has an invalid title.")
+            if not isinstance(body, str) or not body.strip() or len(body) > 1024:
+                raise ValueError(f"Level {level} hint {number} has invalid text.")
+            entries.append({"title": title.strip(), "text": body.strip()})
+        hints[level] = {
+            "title": level_title.strip(),
+            "hints": entries,
+        }
 
     achievements = []
     used_ids = set()
@@ -193,4 +228,5 @@ def loadCatalog() -> dict:
         "meta": meta,
         "achievements": achievements,
         "codes": code_lookup,
+        "hints": dict(sorted(hints.items())),
     }
