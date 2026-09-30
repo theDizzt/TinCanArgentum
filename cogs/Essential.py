@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import fcts.i18n_runtime as i18n
 import fcts.sqlcontrol as q
-import yaml
+import json
 import fcts.etcfunctions as etc
 from fcts.user_resolver import UserResolutionError, resolve_discord_user
 from datetime import datetime
@@ -11,8 +11,8 @@ from app_info import APP_VERSION, APP_VERSION_DATE
 from project_paths import CONFIG_DIR
 from config.settings import get_required_env
 
-with (CONFIG_DIR / "help.yml").open(encoding="UTF-8") as f:
-    helps = yaml.load(f, Loader=yaml.FullLoader)
+with (CONFIG_DIR / "help.json").open(encoding="UTF-8") as f:
+    helps = json.load(f)
 
 prefix = get_required_env('BOT_PREFIX')
 

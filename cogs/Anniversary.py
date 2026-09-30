@@ -307,6 +307,78 @@ def build_message(row: sqlite3.Row, today: date) -> str:
     return i18n.t_by_lang("ko", "cmd.25.notice.solar", date=anniversary_date_text, title=row["title"], years=years)
 
 
+class AnniversaryListView(discord.ui.View):
+    def __init__(self, *, user, lines):
+        super().__init__(timeout=180)
+        self.user = user
+        self.pages = []
+        for start in range(0, len(lines), 10):
+            self.pages.extend(chunk_lines(lines[start:start + 10], limit=3900))
+        self.current_page = 0
+        self.message = None
+        self.update_buttons()
+
+    def create_embed(self):
+        embed = discord.Embed(
+            title=i18n.t(self.user, "cmd.26.name"),
+            description=self.pages[self.current_page],
+            color=0xE2F6CA,
+        )
+        embed.set_footer(text=i18n.t(
+            self.user, "cmd.14.t003",
+            current=self.current_page + 1, total=len(self.pages),
+        ))
+        return embed
+
+    def update_buttons(self):
+        for button, disabled, style in (
+            (self.first_page_button, self.current_page == 0, discord.ButtonStyle.green),
+            (self.prev_button, self.current_page == 0, discord.ButtonStyle.primary),
+            (self.next_button, self.current_page == len(self.pages) - 1, discord.ButtonStyle.primary),
+            (self.last_page_button, self.current_page == len(self.pages) - 1, discord.ButtonStyle.green),
+        ):
+            button.disabled = disabled
+            button.style = discord.ButtonStyle.gray if disabled else style
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.user.id == self.user.id:
+            return True
+        await interaction.response.send_message(
+            i18n.t(interaction.user, "cmd.26.owner_only"), ephemeral=True,
+        )
+        return False
+
+    async def show_page(self, interaction, page):
+        self.current_page = max(0, min(page, len(self.pages) - 1))
+        self.update_buttons()
+        await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+    @discord.ui.button(label="|<", style=discord.ButtonStyle.green)
+    async def first_page_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.show_page(interaction, 0)
+
+    @discord.ui.button(label="<", style=discord.ButtonStyle.primary)
+    async def prev_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.show_page(interaction, self.current_page - 1)
+
+    @discord.ui.button(label=">", style=discord.ButtonStyle.primary)
+    async def next_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.show_page(interaction, self.current_page + 1)
+
+    @discord.ui.button(label=">|", style=discord.ButtonStyle.green)
+    async def last_page_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.show_page(interaction, len(self.pages) - 1)
+
+    async def on_timeout(self):
+        for button in self.children:
+            button.disabled = True
+        if self.message is not None:
+            try:
+                await self.message.edit(view=self)
+            except discord.HTTPException:
+                pass
+
+
 class Anniversary(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -623,7 +695,7 @@ class Anniversary(commands.Cog):
 
         lines = []
 
-        for row in rows[:30]:
+        for row in rows:
             calendar_name = i18n.t(ctx.author, f"cmd.24.calendar.{row['calendar_type']}")
             leap_text = i18n.t(ctx.author, "cmd.24.leap_suffix") if row["is_leap_month"] else ""
             channel_text = f"<#{row['channel_id']}>"
@@ -641,17 +713,9 @@ class Anniversary(commands.Cog):
                     f"{title} | {channel_text}"
                 )
 
-        if len(rows) > 30:
-            lines.append(i18n.t(ctx.author, "cmd.26.more", count=len(rows) - 30))
-
-        chunks = chunk_lines(lines)
-        await self.send_reply(ctx, chunks[0], ephemeral=True)
-
-        for chunk in chunks[1:]:
-            try:
-                await ctx.send(chunk, ephemeral=True)
-            except TypeError:
-                await ctx.send(chunk)
+        view = AnniversaryListView(user=ctx.author, lines=lines)
+        kwargs = {"ephemeral": True} if ctx.interaction else {}
+        view.message = await ctx.reply(embed=view.create_embed(), view=view, **kwargs)
 
     # 생일 및 기념일 삭제 [id: 27]
     @commands.hybrid_command(

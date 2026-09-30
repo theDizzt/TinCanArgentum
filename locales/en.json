@@ -201,6 +201,7 @@
   "cmd.26.name": "anniversary-list",
   "cmd.26.desc": "View registered birthdays and anniversaries",
   "cmd.26.empty": "There are no registered birthdays or anniversaries.",
+  "cmd.26.owner_only": "Only the command user can change pages.",
   "cmd.26.more": "...and {count} more",
   "cmd.27.name": "anniversary-delete",
   "cmd.27.desc": "Delete a registered birthday or anniversary",

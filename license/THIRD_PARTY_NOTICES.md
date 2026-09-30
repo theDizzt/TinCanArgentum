@@ -27,7 +27,6 @@ wheel 또는 source distribution에 포함된 저작권 및 라이선스 파일�
 | pydantic | 2.12.5 | MIT | <https://github.com/pydantic/pydantic> |
 | PyNaCl | 1.5.0 | Apache-2.0 | <https://github.com/pyca/pynacl> |
 | python-dotenv | 1.0.1 | BSD-3-Clause | <https://github.com/theskumar/python-dotenv> |
-| PyYAML | 6.0.1 | MIT | <https://github.com/yaml/pyyaml> |
 | requests | 2.25.1 | Apache-2.0 | <https://github.com/psf/requests> |
 | scikit-learn | 1.7.2 | BSD-3-Clause | <https://github.com/scikit-learn/scikit-learn> |
 | tqdm | 4.66.1 | MPL-2.0 AND MIT | <https://github.com/tqdm/tqdm> |

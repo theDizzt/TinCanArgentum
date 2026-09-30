@@ -1,8 +1,12 @@
-# Secrets and local configuration
+# Ignore rules apply only to untracked files.
+# Previously committed generated files must also be removed from the Git index.
+
+# Secrets and machine-local configuration (keep the shared example)
 .env
 .env.*
 !.env.example
-config/admin.yml
+/config/admin.yml
+/config/admin.json
 
 # Python bytecode and caches
 __pycache__/
@@ -13,6 +17,7 @@ __pycache__/
 .ruff_cache/
 .pyre/
 .pytype/
+.cache/
 
 # Virtual environments
 .venv/
@@ -29,29 +34,47 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+*.egg
+.eggs/
+coverage.xml
 
-# Runtime databases and generated files
+# Runtime databases, SQLite sidecars, and database backups
 *.db
+*.sqlite
+*.sqlite3
 *.db-journal
 *.db-shm
 *.db-wal
-*.sqlite
-*.sqlite3
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
+*.db.bak*
+*.sqlite.bak*
+*.sqlite3.bak*
+
+# Bot output (keep source data and bundled assets under data/ and config/)
 /userdb.xlsx
 *.log
-logs/
-tts.mp3
-data/voice/*.txt
-data/line/**/*.txt
-config/rankcard/upload/**
-!config/rankcard/upload/.gitkeep
-data/word_enlist/**
+*.log.*
+/logs/
+/tts.mp3
+/data/voice/*.txt
+/data/line/**/*.txt
+/data/word_enlist/
+
+# Keep the upload directory placeholder, but ignore uploaded files
+/config/rankcard/upload/*
+!/config/rankcard/upload/.gitkeep
 
 # Temporary files
 *.tmp
 *.temp
 *.bak
 *.swp
+*.swo
 ~$*
 
 # Editor and operating-system files

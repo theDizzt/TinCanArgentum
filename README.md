@@ -9,7 +9,8 @@
 
 1. `.env.example`을 `.env`로 복사합니다.
 2. `.env`의 각 항목에 실제 키와 토큰을 입력합니다.
-3. 운영체제에 맞는 명령으로 의존성을 설치한 뒤 봇을 실행합니다.
+3. `config/admin.example.json`을 `config/admin.json`으로 복사하고 관리자 정보를 입력합니다. 키는 `UID` 뒤에 Discord 사용자 ID를 붙이며, `id`와 `pw`는 앞자리 0이 유지되도록 문자열로 입력합니다. 관리자가 없다면 `{}`로 설정합니다.
+4. 운영체제에 맞는 명령으로 의존성을 설치한 뒤 봇을 실행합니다.
 
 Windows:
 
@@ -29,6 +30,9 @@ python3.10 -m pip install -r requirements-ubuntu.txt
 ```
 
 `.env`는 Git에서 제외되므로 커밋하지 않습니다.
+
+도움말 데이터는 `config/help.json`, 관리자 로그인 정보는 `config/admin.json`에서 읽습니다.
+`config/admin.json`도 Git에서 제외됩니다. 설정 변경은 해당 Cog를 다시 로드하거나 봇을 재시작하면 적용됩니다.
 
 ## 다국어 데이터 검증
 

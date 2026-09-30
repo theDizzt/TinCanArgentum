@@ -9,14 +9,14 @@ import fcts.lklab as lk
 import fcts.plab as plab
 import fcts.skin_catalog as catalog
 from fcts.user_resolver import UserResolutionError, resolve_user_id
-import yaml
+import json
 import fcts.etcfunctions as etc
 from project_paths import CONFIG_DIR
 import random as r
 
 admin_login = []
-with (CONFIG_DIR / "admin.yml").open(encoding="UTF-8") as f:
-    admins = yaml.load(f, Loader=yaml.FullLoader)
+with (CONFIG_DIR / "admin.json").open(encoding="UTF-8") as f:
+    admins = json.load(f)
 
 
 class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
