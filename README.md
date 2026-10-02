@@ -33,6 +33,7 @@ python3.10 -m pip install -r requirements-ubuntu.txt
 
 도움말 데이터는 `config/help.json`, 관리자 로그인 정보는 `config/admin.json`에서 읽습니다.
 `config/admin.json`도 Git에서 제외됩니다. 설정 변경은 해당 Cog를 다시 로드하거나 봇을 재시작하면 적용됩니다.
+파일이 없으면 경고를 기록하고 관리자 로그인이 비활성화된 상태로 봇을 시작합니다. Ubuntu 서버에서도 관리자 기능을 사용하려면 이 파일을 별도로 설정해야 합니다.
 
 ## 다국어 데이터 검증
 
