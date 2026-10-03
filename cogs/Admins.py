@@ -9,24 +9,13 @@ import fcts.lklab as lk
 import fcts.plab as plab
 import fcts.skin_catalog as catalog
 from fcts.user_resolver import UserResolutionError, resolve_user_id
-import json
 import logging
+from fcts.admin_config import ADMIN_CONFIG_PATH, load_admins
 import fcts.etcfunctions as etc
-from project_paths import CONFIG_DIR
 import random as r
 
 admin_login = []
-try:
-    with (CONFIG_DIR / "admin.json").open(encoding="UTF-8") as f:
-        admins = json.load(f)
-except FileNotFoundError:
-    admins = {}
-    logging.getLogger(__name__).warning(
-        "Admin login is disabled: %s is missing. Copy admin.example.json to "
-        "admin.json in the config directory, configure your credentials, "
-        "and restart the bot to enable admin login.",
-        CONFIG_DIR / "admin.json",
-    )
+logger = logging.getLogger(__name__)
 
 
 class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
@@ -212,22 +201,36 @@ class Admins(commands.Cog):  # Cog를 상속하는 클래스를 선언
 
         try:
             await ctx.message.delete()
-        except:
+        except discord.HTTPException:
             pass
 
+        if sid is None or spw is None:
+            await ctx.send(f"사용법: `{ctx.prefix}login <id> <pw>`")
+            return
+
         try:
-            user = "UID" + str(ctx.author.id)
+            admins = load_admins()
+        except (OSError, ValueError) as error:
+            # Do not include exception text: malformed JSON can contain credentials.
+            logger.warning("Cannot load admin configuration at %s (%s)",
+                           ADMIN_CONFIG_PATH, type(error).__name__)
+            await ctx.send(
+                "관리자 설정 파일을 읽을 수 없습니다. 서버의 config/admin.json "
+                "파일과 형식을 확인해 주세요."
+            )
+            return
 
-            if admins[user]['id'] == sid and admins[user]['pw'] == spw:
-                global admin_login
-                admin_login.append(ctx.author.id)
-                await ctx.send(i18n.t(ctx.author, "cmd.89.accept", uid=ctx.author.id))
-                print(admin_login)
-            else:
-                await ctx.send(i18n.t(ctx.author, "cmd.89.error", uid=ctx.author.id))
-
-        except:
+        credentials = admins.get("UID" + str(ctx.author.id))
+        if credentials is None:
             await ctx.send(i18n.t(ctx.author, "cmd.89.reject", uid=ctx.author.id))
+            return
+        if credentials['id'] != sid or credentials['pw'] != spw:
+            await ctx.send(i18n.t(ctx.author, "cmd.89.error", uid=ctx.author.id))
+            return
+
+        if ctx.author.id not in admin_login:
+            admin_login.append(ctx.author.id)
+        await ctx.send(i18n.t(ctx.author, "cmd.89.accept", uid=ctx.author.id))
 
     # Admin Logout [ID: 90]
     @commands.command(aliases=['로그아웃'])
