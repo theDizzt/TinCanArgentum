@@ -133,6 +133,32 @@ def _apply_skin_139_clock(
     return image
 
 
+# Every November 16 (KST) the rankcard shows the "Everyone Dragon" event
+# inscription in place of the emblem name.
+DRAGON_DAY = (11, 16)
+DRAGON_DAY_INSCRIPTIONS = {
+    "ko": "09.11.16. 전체공룡",
+    "ja": "09.11.16. 全體公龍",
+    "zh-CN": "09.11.16. 全體公龍",
+    "zh-TW": "09.11.16. 全體公龍",
+    "en": "11/16/09 EVERY1DRAGON",
+}
+
+
+def _is_dragon_day(current_time: datetime | None = None) -> bool:
+    if current_time is None:
+        current_time = datetime.now(KOREA_TIMEZONE)
+    elif current_time.tzinfo is None:
+        current_time = current_time.replace(tzinfo=KOREA_TIMEZONE)
+    else:
+        current_time = current_time.astimezone(KOREA_TIMEZONE)
+    return (current_time.month, current_time.day) == DRAGON_DAY
+
+
+def _dragon_day_inscription(lang: str | None) -> str:
+    return DRAGON_DAY_INSCRIPTIONS.get(lang or "ko", DRAGON_DAY_INSCRIPTIONS["en"])
+
+
 async def _load_avatar_image(
     user: discord.Member,
     normal_skin_id: int | None,
@@ -601,12 +627,16 @@ class UserProfile(commands.Cog):
         user: discord.Member,
         skin_id: int | str,
         preview: bool,
+        lang: str | None = None,
+        current_time: datetime | None = None,
     ) -> io.BytesIO:
         async with self.render_semaphore:
             return await self._rankcard_image(
                 user=user,
                 skin_id=skin_id,
                 preview=preview,
+                lang=lang,
+                current_time=current_time,
             )
 
     async def _rankcard_image(
@@ -615,7 +645,10 @@ class UserProfile(commands.Cog):
         user: discord.Member,
         skin_id: int | str,
         preview: bool,
+        lang: str | None = None,
+        current_time: datetime | None = None,
     ) -> io.BytesIO:
+        dragon_day = _is_dragon_day(current_time)
         dname = "@" + str(user)
         if dname.endswith("#0"):
             dname = dname[:-2]
@@ -677,6 +710,7 @@ class UserProfile(commands.Cog):
         if normal_skin_id == 139:
             image = _apply_skin_139_clock(image)
 
+
         emblem_image = emblem_image.resize((72, 72))
         bar_cover_image = bar_cover_image.crop((0, 0, 368 * xp1 / xp2, 8))
 
@@ -708,7 +742,12 @@ class UserProfile(commands.Cog):
         draw = ImageDraw.Draw(image)
 
         text_xp = f"{xp1:,d} / {xp2:,d} | {100 * xp1 / xp2:.2f}% | {xp:,d}"
-        emblem = etc.emblemName(lv)
+        if dragon_day:
+            emblem = _dragon_day_inscription(
+                lang if lang is not None else i18n.get_user_lang(user)
+            )
+        else:
+            emblem = etc.emblemName(lv)
 
         font_name = ImageFont.truetype(
             FONT_DIR / font_option["font"] / "name.ttf",
@@ -869,7 +908,12 @@ class UserProfile(commands.Cog):
         except Exception:
             skin_id = 1
 
-        buffer_output = await self.rankcard_image(user=user, skin_id=skin_id, preview=False)
+        buffer_output = await self.rankcard_image(
+            user=user,
+            skin_id=skin_id,
+            preview=False,
+            lang=i18n.get_user_lang(ctx.author),
+        )
 
         try:
             await ctx.reply(
