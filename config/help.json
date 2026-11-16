@@ -210,6 +210,13 @@
     "discript": "Delete a registered birthday or anniversary notification by event ID.",
     "args": "`event_id` int type, the ID of the birthday or anniversary event to delete. You can check the event ID with the `기념일목록` command."
   },
+  "anniv_resend": {
+    "title": "Anniversary Resend Command",
+    "id": "27",
+    "ctx": "기념일 재알림",
+    "discript": "Resend today's birthday and anniversary notifications of the current server. Each notification is sent to its registered channel, no matter which channel the command is used in.",
+    "args": "No arguments are required."
+  },
   "pledit": {
     "title": "PLab Data Editor",
     "id": "28",

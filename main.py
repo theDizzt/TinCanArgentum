@@ -72,7 +72,7 @@ game_mes = (
 )
 
 # 1.4. Event Variables
-xp_multi = 1.5
+xp_multi = 3
 
 ####### 2.Funtions #######
 

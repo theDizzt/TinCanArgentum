@@ -108,6 +108,35 @@ def init_db():
         ON anniversary_events(calendar_type, month, day, is_leap_month, enabled);
         """)
 
+        migrate_legacy_channels(conn)
+
+
+# 서버 이전: 예전 서버/채널에 등록된 기념일을 새 서버의 기념일 채널로 옮긴다.
+LEGACY_GUILD_IDS = (1114816224522678294,)
+LEGACY_CHANNEL_IDS = (1522067515956662332,)
+TARGET_GUILD_ID = 1545374877718937714
+TARGET_CHANNEL_ID = 1545413474329305211
+
+
+def migrate_legacy_channels(conn: sqlite3.Connection):
+    guild_marks = ",".join("?" * len(LEGACY_GUILD_IDS))
+    channel_marks = ",".join("?" * len(LEGACY_CHANNEL_IDS))
+    cur = conn.execute(
+        f"""
+        UPDATE anniversary_events
+        SET guild_id = ?, channel_id = ?
+        WHERE (guild_id IN ({guild_marks}) OR channel_id IN ({channel_marks}))
+          AND NOT (guild_id = ? AND channel_id = ?)
+        """,
+        (
+            TARGET_GUILD_ID, TARGET_CHANNEL_ID,
+            *LEGACY_GUILD_IDS, *LEGACY_CHANNEL_IDS,
+            TARGET_GUILD_ID, TARGET_CHANNEL_ID,
+        ),
+    )
+    if cur.rowcount:
+        print(f"[Anniversary] 기념일 {cur.rowcount}건을 채널 {TARGET_CHANNEL_ID}로 이전했습니다.")
+
 
 def calendar_type_to_db(value: str) -> str:
     return "lunar" if value == "음력" else "solar"
@@ -225,16 +254,21 @@ def get_today_lunar(today: date):
     }
 
 
-def fetch_today_events(today: date):
+def fetch_today_events(today: date, guild_id: int | None = None):
     lunar_today = get_today_lunar(today)
 
     lunar_month = lunar_today["month"] if lunar_today else -1
     lunar_day = lunar_today["day"] if lunar_today else -1
     lunar_leap = lunar_today["is_leap_month"] if lunar_today else -1
 
+    guild_filter = "AND guild_id = ?" if guild_id is not None else ""
+    params = [today.month, today.day, lunar_month, lunar_day, lunar_leap]
+    if guild_id is not None:
+        params.append(guild_id)
+
     with get_conn() as conn:
         return conn.execute(
-            """
+            f"""
             SELECT *
             FROM anniversary_events
             WHERE enabled = 1
@@ -243,15 +277,10 @@ def fetch_today_events(today: date):
                     OR
                     (calendar_type = 'lunar' AND month = ? AND day = ? AND is_leap_month = ?)
                   )
+              {guild_filter}
             ORDER BY kind, id
             """,
-            (
-                today.month,
-                today.day,
-                lunar_month,
-                lunar_day,
-                lunar_leap,
-            ),
+            params,
         ).fetchall()
 
 
@@ -418,34 +447,37 @@ class Anniversary(commands.Cog):
         await ctx.reply(i18n.t(ctx.author, "common.command_error", error=type(error).__name__))
         print(f"[Anniversary ERROR] {type(error).__name__} | {repr(error)}")
 
+    async def send_event(self, event: sqlite3.Row, today: date) -> str | None:
+        """이벤트에 저장된 채널로 알림을 보낸다. 성공하면 None, 실패하면 사유를 돌려준다."""
+        try:
+            channel = self.bot.get_channel(event["channel_id"])
+
+            if channel is None:
+                channel = await self.bot.fetch_channel(event["channel_id"])
+
+            await channel.send(build_message(event, today))
+            mark_sent(event["id"], today.isoformat())
+            return None
+
+        except discord.Forbidden:
+            print(f"[Anniversary] 채널 권한 없음: channel_id={event['channel_id']}")
+            return "forbidden"
+        except discord.NotFound:
+            print(f"[Anniversary] 채널을 찾을 수 없음: channel_id={event['channel_id']}")
+            return "not_found"
+        except Exception as e:
+            print(f"[Anniversary] 알림 전송 실패: {e}")
+            return "error"
+
     @tasks.loop(time=MIDNIGHT_KST)
     async def daily_anniversary_check(self):
         today = datetime.now(KST).date()
         sent_on = today.isoformat()
 
-        events = fetch_today_events(today)
-
-        for event in events:
+        for event in fetch_today_events(today):
             if was_sent_today(event["id"], sent_on):
                 continue
-
-            try:
-                channel = self.bot.get_channel(event["channel_id"])
-
-                if channel is None:
-                    channel = await self.bot.fetch_channel(event["channel_id"])
-
-                message = build_message(event, today)
-                await channel.send(message)
-
-                mark_sent(event["id"], sent_on)
-
-            except discord.Forbidden:
-                print(f"[Anniversary] 채널 권한 없음: channel_id={event['channel_id']}")
-            except discord.NotFound:
-                print(f"[Anniversary] 채널을 찾을 수 없음: channel_id={event['channel_id']}")
-            except Exception as e:
-                print(f"[Anniversary] 알림 전송 실패: {e}")
+            await self.send_event(event, today)
 
     @daily_anniversary_check.before_loop
     async def before_daily_anniversary_check(self):
@@ -716,6 +748,77 @@ class Anniversary(commands.Cog):
         view = AnniversaryListView(user=ctx.author, lines=lines)
         kwargs = {"ephemeral": True} if ctx.interaction else {}
         view.message = await ctx.reply(embed=view.create_embed(), view=view, **kwargs)
+
+    # 기념일 옵션 명령어 그룹: ;기념일 <옵션>
+    @commands.hybrid_group(
+        name="기념일",
+        aliases=["anniv", "anniversary"],
+        invoke_without_command=True,
+        description="생일/기념일 옵션 명령어입니다."
+    )
+    @commands.has_permissions(manage_guild=True)
+    async def anniv(self, ctx: commands.Context):
+        await self.send_reply(ctx, i18n.t(ctx.author, "cmd.27.resend.usage"), ephemeral=True)
+
+    # 오늘 생일/기념일 재알림 [id: 27]
+    @anniv.command(
+        name="재알림",
+        aliases=["resend"],
+        description="오늘의 생일/기념일 알림을 등록된 채널로 다시 보냅니다."
+    )
+    @commands.has_permissions(manage_guild=True)
+    async def anniv_resend(self, ctx: commands.Context):
+        if ctx.guild is None:
+            await self.send_reply(ctx, i18n.t(ctx.author, "cmd.24.server_only"), ephemeral=True)
+            return
+
+        if ctx.interaction:
+            await ctx.defer(ephemeral=True)
+
+        # 서버 이전 전 DB가 남아 있어도 올바른 채널로 보내도록 먼저 이전을 적용한다.
+        with get_conn() as conn:
+            migrate_legacy_channels(conn)
+
+        today = datetime.now(KST).date()
+        events = fetch_today_events(today, guild_id=ctx.guild.id)
+
+        if not events:
+            await self.send_reply(
+                ctx,
+                i18n.t(ctx.author, "cmd.27.resend.empty", month=today.month, day=today.day),
+                ephemeral=True,
+            )
+            return
+
+        sent_channels: list[str] = []
+        failures: list[str] = []
+
+        for event in events:
+            reason = await self.send_event(event, today)
+            channel_text = f"<#{event['channel_id']}>"
+            if reason is None:
+                if channel_text not in sent_channels:
+                    sent_channels.append(channel_text)
+            else:
+                failures.append(
+                    i18n.t(ctx.author, f"cmd.27.resend.fail.{reason}", event_id=event["id"], channel=channel_text)
+                )
+
+        lines = [
+            i18n.t(
+                ctx.author, "cmd.27.resend.done",
+                month=today.month, day=today.day,
+                sent=len(events) - len(failures), total=len(events),
+                channels=", ".join(sent_channels) or "-",
+            )
+        ]
+        lines.extend(failures)
+
+        await self.send_reply(
+            ctx,
+            truncate_text("\n".join(lines), DISCORD_CONTENT_LIMIT),
+            ephemeral=True,
+        )
 
     # 생일 및 기념일 삭제 [id: 27]
     @commands.hybrid_command(
