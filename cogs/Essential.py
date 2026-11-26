@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import fcts.i18n_runtime as i18n
+from fcts.help_localization import localize_entry, localize_listing, resolve_command
 import fcts.sqlcontrol as q
 import json
 import fcts.etcfunctions as etc
@@ -131,46 +132,54 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
     )
     #@discord.app_commands.describe(command='Command to be explained.')
     async def help(self, ctx, command: str = "main"):
+        language = i18n.get_user_lang(ctx.author)
+        help_language = language if language in {"ko", "en"} else "en"
+
+        def help_text(key, **kwargs):
+            return i18n.t_by_lang(help_language, f"cmd.00.help.{key}", **kwargs)
+
         if command == "main":
             embed = discord.Embed(
                 title=i18n.t(ctx.author, "cmd.00.t001"),
                 description=
-                "Type `;help <command>` for more help. eg> `;help emblem`",
+                help_text("intro", prefix=prefix,
+                          help_name=i18n.t_by_lang(help_language, "cmd.00.name"),
+                          example=i18n.t_by_lang(help_language, "cmd.12.name")),
                 color=0x78C1F3)
 
             # Essentials
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t002"),
-                            value=helps[command]['Essentials'],
+                            value=localize_listing(self.client, helps[command]['Essentials'], helps, language),
                             inline=True)
 
             # User Profile
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t003"),
-                            value=helps[command]['UserProfile'],
+                            value=localize_listing(self.client, helps[command]['UserProfile'], helps, language),
                             inline=True)
 
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t004"),
-                            value=helps[command]['Social'],
+                            value=localize_listing(self.client, helps[command]['Social'], helps, language),
                             inline=True)
 
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t005"),
-                            value=helps[command]['Miscellaneous'],
+                            value=localize_listing(self.client, helps[command]['Miscellaneous'], helps, language),
                             inline=True)
 
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t006"),
-                            value=helps[command]['Coalition'],
+                            value=localize_listing(self.client, helps[command]['Coalition'], helps, language),
                             inline=True)
 
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t007"),
-                            value=helps[command]['Minigame'],
+                            value=localize_listing(self.client, helps[command]['Minigame'], helps, language),
                             inline=True)
             
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t008"),
-                            value=helps[command]['Voice'],
+                            value=localize_listing(self.client, helps[command]['Voice'], helps, language),
                             inline=True)
 
             embed.add_field(
                 name=i18n.t(ctx.author, "cmd.00.t009"),
-                value=helps[command]['WagyumonServer'],
+                value=localize_listing(self.client, helps[command]['WagyumonServer'], helps, language),
                 inline=True)
 
             embed.add_field(name=i18n.t(ctx.author, "cmd.00.t010"),
@@ -182,12 +191,12 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                             inline=True)
 
             embed.add_field(name=":test_tube: Precision LAB",
-                            value=helps[command]['PrecisionLAB'],
+                            value=localize_listing(self.client, helps[command]['PrecisionLAB'], helps, language),
                             inline=True)
 
         else:
             requested_name = command.strip()
-            command_object = self.client.get_command(requested_name)
+            command_object = resolve_command(self.client, requested_name, helps, language)
             canonical_name = (
                 command_object.name if command_object is not None else requested_name
             )
@@ -195,6 +204,17 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 helps.get(requested_name)
                 or helps.get(requested_name.casefold())
                 or helps.get(canonical_name)
+            )
+
+            if help_data is None and command_object is not None:
+                help_data = next(
+                    (entry for name, entry in helps.items()
+                     if name != "main" and self.client.get_command(name) is command_object),
+                    None,
+                )
+            entry_name = next(
+                (name for name, entry in helps.items() if entry is help_data),
+                canonical_name,
             )
 
             # Commands without a hand-written entry still receive useful help.
@@ -208,19 +228,21 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
                 description = (
                     getattr(command_object, "description", None)
                     or command_object.help
-                    or "No detailed description has been provided yet."
+                    or help_text("no_description")
                 )
                 help_data = {
                     "title": canonical_name,
                     "id": "--",
                     "ctx": syntax,
                     "discript": str(description),
-                    "args": "See the command syntax above for available arguments.",
+                    "args": help_text("syntax_arguments"),
                 }
 
             if help_data is None:
-                await ctx.reply(f"No command named `{requested_name}` was found.")
+                await ctx.reply(help_text("not_found", command=requested_name))
                 return
+
+            help_data = localize_entry(command_object, help_data, language, entry_name)
 
             embed = discord.Embed(
                 title=(
