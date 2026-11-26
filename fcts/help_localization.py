@@ -5,7 +5,7 @@ import re
 import fcts.i18n_runtime as i18n
 
 
-ADMIN_IDS = {28, 82, 83, 87, 88, *range(89, 100)}
+ADMIN_IDS = {28, 48, 82, 83, 86, 87, 88, *range(89, 100)}
 
 
 def command_id(command, entry=None):
@@ -25,7 +25,11 @@ def resolve_command(bot, requested, helps, language):
     if command is not None or language not in {"ko", "en"}:
         return command
     for candidate in bot.walk_commands():
-        number = command_id(candidate, helps.get(candidate.name))
+        entry = helps.get(candidate.qualified_name) or helps.get(candidate.name)
+        if entry is None:
+            entry = next((data for name, data in helps.items()
+                          if name != "main" and bot.get_command(name) is candidate), None)
+        number = command_id(candidate, entry)
         if number is None or number in ADMIN_IDS:
             continue
         for code in ("ko", "en"):
@@ -42,7 +46,12 @@ def localize_listing(bot, listing, helps, language):
 
     def replace(match):
         name = match[1]
-        number = command_id(bot.get_command(name), helps.get(name))
+        entry = helps.get(name)
+        if entry and entry.get("help_key"):
+            display = table.get(entry["help_key"] + ".name")
+            if display is not None:
+                return f"`{display}`"
+        number = command_id(bot.get_command(name), entry)
         if number is None or number in ADMIN_IDS:
             return match[0]
         return f"`{table.get(f'cmd.{number:02d}.name', name)}`"
@@ -52,15 +61,18 @@ def localize_listing(bot, listing, helps, language):
 
 def localize_entry(command, entry, language, entry_name):
     number = command_id(command, entry)
-    if language not in {"ko", "en"} or number is None or number in ADMIN_IDS:
+    if language not in {"ko", "en"} or number in ADMIN_IDS:
+        return entry
+    if number is None and not entry.get("help_key"):
         return entry
     table = i18n.load_locale(language)
-    base = f"cmd.{number:02d}"
+    base = f"cmd.{number:02d}" if number is not None else "cmd.00"
     result = dict(entry)
-    result["id"] = f"{number:02d}"
+    if number is not None:
+        result["id"] = f"{number:02d}"
     # Keep separate entries for commands sharing an ID (e.g. anniversary resend).
     name = entry_name
-    help_base = f"{base}.help.{name}"
+    help_base = entry.get("help_key", f"{base}.help.{name}")
     result["title"] = table.get(
         f"{help_base}.title", table.get(f"{base}.name", entry["title"])
     )

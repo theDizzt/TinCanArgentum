@@ -131,7 +131,7 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
         aliases=["도움말", "ヘルプ"]
     )
     #@discord.app_commands.describe(command='Command to be explained.')
-    async def help(self, ctx, command: str = "main"):
+    async def help(self, ctx, *, command: str = "main"):
         language = i18n.get_user_lang(ctx.author)
         help_language = language if language in {"ko", "en"} else "en"
 
@@ -198,7 +198,7 @@ class Essential(commands.Cog):  # Cog를 상속하는 클래스를 선언
             requested_name = command.strip()
             command_object = resolve_command(self.client, requested_name, helps, language)
             canonical_name = (
-                command_object.name if command_object is not None else requested_name
+                command_object.qualified_name if command_object is not None else requested_name
             )
             help_data = (
                 helps.get(requested_name)

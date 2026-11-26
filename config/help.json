@@ -2,17 +2,17 @@
   "main": {
     "title": "Helpdesk",
     "id": "00",
-    "Essentials": "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`",
+    "Essentials": "`test`, `myid`, `credits`, `code`, `nickname`, `discrim`, `argentumbot`, `ping`, `help`, `daily`, `language`",
     "UserProfile": "`profile`, `emblem`, `myrank`, `ranking`, `queue`, `workshop`, `equip`, `purchase`, `skin`, `preview`",
-    "Social": "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`, `emergency-call`",
-    "Miscellaneous": "`dice`, `kodic`, `argbdic`, `rage`, `translate`",
-    "Coalition": "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`",
-    "Minigame": "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`",
+    "Social": "`stats`, `balance`, `transfer`, `bday_add`, `anniv_add`, `anniv_list`, `anniv_del`, `emergency-call`, `기념일`, `기념일 재알림`",
+    "Miscellaneous": "`dice`, `사전`, `은비사전`, `rage`, `translate`, `점수`, `dict`",
+    "Coalition": "`lk`, `쿠모티콘`, `똥몬창지수`, `tedne`, `goat`, `nelgp`, `lkaccount`, `tedaccount`",
+    "Minigame": "`leaderboard`, `rps`, `야추다이스`, `끝말잇기`, `slot`, `arithmatic`, `number`, `포케멘틀`",
     "Voice": "`join`, `leave`, `tts`, `chat`, `chat-reset`, `remember`, `memory-list`, `memory-delete`, `memory-reset`, `affinity`, `affinity-reset`, `eunbi-reset`",
     "WagyumonServer": "`타운맵`, `도감`, `기술머신`",
     "PrecisionLAB": "`pledit`, `pl`",
     "AdminFeatures": "`login`, `logout`",
-    "AdminDebugging": "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `kakao`, `라인`, `linedata`, `sync`"
+    "AdminDebugging": "`xp`, `userlist`, `rankinglist`, `lbedit`, `unlock`, `ultimate`, `money`, `카톡`, `라인`, `linedata`, `sync`, `lkedit`, `rankingadd`, `kakaodata`, `tmreload`, `pixelreload`, `wcsupdate`, `일괄수정`, `일괄등록`, `조건등록`, `빠른등록`, `빠른조건등록`, `테스트용`"
   },
   "help": {
     "title": "Help",
@@ -489,5 +489,266 @@
     "ctx": "linedata",
     "discript": "Read UTF-8 LINE text exports from data/line, calculate message XP and money, pay mapped users atomically, and delete successfully processed files.",
     "args": "Message rows use `00:00 이름 내용`. Date rows are ignored and continuation lines are joined to the preceding message."
+  },
+  "lkedit": {
+    "title": "lkedit",
+    "id": "86",
+    "ctx": "lkedit [user] [option] [value] [svalue]",
+    "discript": "Edit Level Killer data as an administrator",
+    "args": "Arguments: user, option, value, svalue"
+  },
+  "logout": {
+    "title": "logout",
+    "id": "90",
+    "ctx": "logout",
+    "discript": "Log out of the administrator account",
+    "args": "No arguments."
+  },
+  "rankingadd": {
+    "title": "rankingadd",
+    "id": "--",
+    "ctx": "rankingadd",
+    "discript": "Administrative command.",
+    "args": "No arguments."
+  },
+  "기념일": {
+    "title": "기념일",
+    "id": "--",
+    "ctx": "기념일",
+    "discript": "Show anniversary options. Requires Manage Server permission.",
+    "args": "Use `anniv resend` to resend today’s notifications.",
+    "help_key": "cmd.00.help.기념일"
+  },
+  "기념일 재알림": {
+    "title": "기념일 재알림",
+    "id": "--",
+    "ctx": "기념일 재알림",
+    "discript": "Resend today’s notifications to their registered channels. Requires Manage Server permission.",
+    "args": "No arguments.",
+    "help_key": "cmd.00.help.기념일 재알림"
+  },
+  "대화": {
+    "title": "대화",
+    "id": "69",
+    "ctx": "대화 [user_message]",
+    "discript": "Chat with Eunbi",
+    "args": "`user_message`: your message to Eunbi.",
+    "help_key": "cmd.69.help.대화"
+  },
+  "chat-reset": {
+    "title": "chat-reset",
+    "id": "70",
+    "ctx": "chat-reset",
+    "discript": "Reset your conversation history with Eunbi",
+    "args": "No arguments.",
+    "help_key": "cmd.70.help.chat-reset"
+  },
+  "remember": {
+    "title": "remember",
+    "id": "71",
+    "ctx": "remember [key] [value]",
+    "discript": "Ask Eunbi to remember new information",
+    "args": "`key`: memory name. `value`: information to remember.",
+    "help_key": "cmd.71.help.remember"
+  },
+  "memory-list": {
+    "title": "memory-list",
+    "id": "72",
+    "ctx": "memory-list",
+    "discript": "View information remembered by Eunbi",
+    "args": "No arguments.",
+    "help_key": "cmd.72.help.memory-list"
+  },
+  "memory-delete": {
+    "title": "memory-delete",
+    "id": "73",
+    "ctx": "memory-delete [key]",
+    "discript": "Delete an item remembered by Eunbi",
+    "args": "`key`: the memory to delete.",
+    "help_key": "cmd.73.help.memory-delete"
+  },
+  "memory-reset": {
+    "title": "memory-reset",
+    "id": "74",
+    "ctx": "memory-reset",
+    "discript": "Reset all long-term memories stored by Eunbi",
+    "args": "No arguments.",
+    "help_key": "cmd.74.help.memory-reset"
+  },
+  "affinity": {
+    "title": "affinity",
+    "id": "75",
+    "ctx": "affinity",
+    "discript": "View your current affinity with Eunbi",
+    "args": "No arguments.",
+    "help_key": "cmd.75.help.affinity"
+  },
+  "affinity-reset": {
+    "title": "affinity-reset",
+    "id": "76",
+    "ctx": "affinity-reset",
+    "discript": "Reset your affinity with Eunbi",
+    "args": "No arguments.",
+    "help_key": "cmd.76.help.affinity-reset"
+  },
+  "eunbi-reset": {
+    "title": "eunbi-reset",
+    "id": "77",
+    "ctx": "eunbi-reset",
+    "discript": "Reset conversation history, memories, and affinity",
+    "args": "No arguments.",
+    "help_key": "cmd.77.help.eunbi-reset"
+  },
+  "language": {
+    "title": "language",
+    "id": "79",
+    "ctx": "language [lang]",
+    "discript": "Change the default language",
+    "args": "`lang`: ko, en, ja, zh-CN, or zh-TW. Omit to open the selector.",
+    "help_key": "cmd.79.help.language"
+  },
+  "goat": {
+    "title": "goat",
+    "id": "30",
+    "ctx": "goat [user] [title]",
+    "discript": "Create a GOAT image with a user and caption.",
+    "args": "`user`: ID, mention, or nickname tag (default: you). `title`: caption.",
+    "help_key": "cmd.30.help.goat"
+  },
+  "kakaodata": {
+    "title": "kakaodata",
+    "id": "98",
+    "ctx": "kakaodata",
+    "discript": "Manage KakaoTalk conversation data",
+    "args": "No arguments."
+  },
+  "lkaccount": {
+    "title": "lkaccount",
+    "id": "--",
+    "ctx": "lkaccount [user]",
+    "discript": "Create Level Killer user data.",
+    "args": "`user`: ID, mention, or nickname tag (default: you).",
+    "help_key": "cmd.00.help.lkaccount"
+  },
+  "nelgp": {
+    "title": "nelgp",
+    "id": "52",
+    "ctx": "nelgp [option] [page]",
+    "discript": "View NELG Plus achievements, your profile, and level hints.",
+    "args": "`option`: help, achievements, user, hint. `page`: achievement page or hint level (default: 1). Requires a bot account and a supported channel.",
+    "help_key": "cmd.52.help.nelgp"
+  },
+  "포케멘틀": {
+    "title": "포케멘틀",
+    "id": "47",
+    "ctx": "포케멘틀",
+    "discript": "Guess a Pokemon using similarity scores",
+    "args": "No arguments.",
+    "help_key": "cmd.47.help.포케멘틀"
+  },
+  "tedaccount": {
+    "title": "tedaccount",
+    "id": "--",
+    "ctx": "tedaccount [user]",
+    "discript": "Create TEDNE user data.",
+    "args": "`user`: ID, mention, or nickname tag (default: you).",
+    "help_key": "cmd.00.help.tedaccount"
+  },
+  "tts": {
+    "title": "tts",
+    "id": "63",
+    "ctx": "tts [text]",
+    "discript": "Play the provided text as speech",
+    "args": "`text`: the message to read aloud.",
+    "help_key": "cmd.63.help.tts"
+  },
+  "점수": {
+    "title": "점수",
+    "id": "45",
+    "ctx": "점수 [word]",
+    "discript": "Calculate a word chain score",
+    "args": "`word`: the word to score.",
+    "help_key": "cmd.45.help.점수"
+  },
+  "wcsupdate": {
+    "title": "wcsupdate",
+    "id": "--",
+    "ctx": "wcsupdate [word]",
+    "discript": "단어 점수를 업데이트.",
+    "args": "Arguments: word"
+  },
+  "사전": {
+    "title": "국립국어원 우리말 사전",
+    "id": "33",
+    "ctx": "사전 <str: 단어>",
+    "discript": "국립국어원 제공 공공데이터를 이용한 국어 사전입니다.\n끝말잇기에 사용되는 함수입니다.",
+    "args": "`단어` 문자열 형식, 띄어쓰기 생략 단어를 입력하면 해당 단어의 뜻이 출력됩니다.",
+    "help_key": "cmd.33.help.kodic"
+  },
+  "dict": {
+    "title": "dict",
+    "id": "--",
+    "ctx": "dict [word]",
+    "discript": "Look up an English word.",
+    "args": "`word`: the English word to look up.",
+    "help_key": "cmd.00.help.dict"
+  },
+  "은비사전": {
+    "title": "은비사전",
+    "id": "34",
+    "ctx": "은비사전 <str: 단어>",
+    "discript": "학습된 단어 데이터를 검색합니다.",
+    "args": "`단어` 문자열 형식, 띄어쓰기 생략 단어를 입력하면 해당 단어의 뜻이 출력됩니다.",
+    "help_key": "cmd.34.help.argbdic"
+  },
+  "일괄수정": {
+    "title": "일괄수정",
+    "id": "--",
+    "ctx": "일괄수정 [uid] [file]",
+    "discript": "엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!",
+    "args": "Arguments: uid, file"
+  },
+  "조건등록": {
+    "title": "조건등록",
+    "id": "--",
+    "ctx": "조건등록 [uid] [file]",
+    "discript": "엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!",
+    "args": "Arguments: uid, file"
+  },
+  "빠른등록": {
+    "title": "빠른등록",
+    "id": "--",
+    "ctx": "빠른등록 [uid] [file]",
+    "discript": "엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!",
+    "args": "Arguments: uid, file"
+  },
+  "빠른조건등록": {
+    "title": "빠른조건등록",
+    "id": "--",
+    "ctx": "빠른조건등록 [uid] [file]",
+    "discript": "엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!",
+    "args": "Arguments: uid, file"
+  },
+  "테스트용": {
+    "title": "테스트용",
+    "id": "48",
+    "ctx": "테스트용",
+    "discript": "Test word chain features",
+    "args": "No arguments."
+  },
+  "sync": {
+    "title": "sync",
+    "id": "99",
+    "ctx": "sync",
+    "discript": "Synchronize Discord commands with the server",
+    "args": "No arguments."
+  },
+  "chat": {
+    "title": "대화",
+    "id": "69",
+    "ctx": "대화 [user_message]",
+    "discript": "Chat with Eunbi",
+    "args": "`user_message`: your message to Eunbi.",
+    "help_key": "cmd.69.help.대화"
   }
 }
