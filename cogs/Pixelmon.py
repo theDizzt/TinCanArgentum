@@ -417,7 +417,7 @@ class Pixelmon(commands.Cog):
         self.client = client
 
     # 타운맵 [ID: 81]
-    @commands.hybrid_command(name='타운맵',
+    @commands.hybrid_command(name='타운맵', aliases=['town-map'],
                              description="포켓몬 월드 지도를 불러옵니다.")
     async def townmap(self, ctx):
         await ctx.send("## 타운맵", file=discord.File(DATA_DIR / "pixelmon" / "map.png"))
@@ -507,7 +507,7 @@ class Pixelmon(commands.Cog):
 
     #Pokedex [ID: 84]
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
-    @commands.hybrid_command(name='도감', description="포켓몬 목록과 상세정보 검색.")
+    @commands.hybrid_command(name='도감', aliases=['pokedex'], description="포켓몬 목록과 상세정보 검색.")
     async def pokedex(self,
                     ctx,
                     option: str = "목록",
@@ -638,7 +638,7 @@ class Pixelmon(commands.Cog):
 
     #TMdex [ID: 85]
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
-    @commands.hybrid_command(name='기술머신', description="기술머신 목록과 상세정보 검색.")
+    @commands.hybrid_command(name='기술머신', aliases=['tm-dex'], description="기술머신 목록과 상세정보 검색.")
     async def tmdex(self,
                     ctx,
                     option: str = "목록",

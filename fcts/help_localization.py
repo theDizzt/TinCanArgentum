@@ -5,7 +5,7 @@ import re
 import fcts.i18n_runtime as i18n
 
 
-ADMIN_IDS = {28, 48, 82, 83, 86, 87, 88, *range(89, 100)}
+ADMIN_IDS = {28, 48, 80, 82, 83, 86, 87, 88, *range(89, 100)}
 
 
 def command_id(command, entry=None):
@@ -33,7 +33,11 @@ def resolve_command(bot, requested, helps, language):
         if number is None or number in ADMIN_IDS:
             continue
         for code in ("ko", "en"):
-            name = i18n.load_locale(code).get(f"cmd.{number:02d}.name", "")
+            table = i18n.load_locale(code)
+            help_key = entry.get("help_key") if entry else None
+            name = table.get(
+                f"{help_key}.name", table.get(f"cmd.{number:02d}.name", "")
+            )
             if name.casefold() == requested.casefold():
                 return candidate
     return None

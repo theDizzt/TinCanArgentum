@@ -877,7 +877,7 @@ class TestCommands(commands.Cog):
         self.client = client
 
     # Wordcount Test [ID: 45]
-    @commands.hybrid_command(name='점수', description="단어 점수를 계산합니다.")
+    @commands.hybrid_command(name='점수', aliases=['word-score'], description="단어 점수를 계산합니다.")
     async def word_count_test(self, ctx, word: str = ''):
         if word != '':
             await ctx.reply(f'{word} => {count_break_korean(word)}')
@@ -890,7 +890,7 @@ class TestCommands(commands.Cog):
         await ctx.reply('`(⩌ʌ ⩌;)` 완료')
 
     # Functions [ID: 33]
-    @commands.hybrid_command(name='사전', description="우리말샘(국립국어원)에 실린 단어 뜻을 검색합니다!")
+    @commands.hybrid_command(name='사전', aliases=['dictionary'], description="우리말샘(국립국어원)에 실린 단어 뜻을 검색합니다!")
     async def word_search(self, ctx, *, word: str = ''):
         if word != '':
             result = await asyncio.to_thread(ks.searchWord, word)
@@ -922,7 +922,7 @@ class TestCommands(commands.Cog):
                 await ctx.reply('`(⩌ʌ ⩌;)` 등록되지 않은 단어입니다...')
 
     # Functions [ID: 34]
-    @commands.hybrid_command(name='은비사전', description="학습 된 단어 뜻을 검색합니다!")
+    @commands.hybrid_command(name='은비사전', aliases=['eunbi-dictionary', 'matchoi-dictionary'], description="학습 된 단어 뜻을 검색합니다!")
     async def word_search_db(self,
                              ctx,
                              option: str = "검색",
@@ -1298,7 +1298,7 @@ class TestCommands(commands.Cog):
             
 
     # Functions [ID: 87]
-    @commands.hybrid_command(name='일괄수정',
+    @commands.hybrid_command(name='일괄수정', aliases=['bulk-edit'],
                              description="엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!")
     async def word_edit_db(self, ctx, uid: int = None, file: str = ""):
         total = 0
@@ -1367,7 +1367,7 @@ class TestCommands(commands.Cog):
             )
 
     # Functions [ID: 87]
-    @commands.hybrid_command(name='일괄등록',
+    @commands.hybrid_command(name='일괄등록', aliases=['bulk-register'],
                              description="엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!")
     async def word_enlist_db(self, ctx, uid: int = None, file: str = "", option:int = 0):
         total = 0
@@ -1433,7 +1433,7 @@ class TestCommands(commands.Cog):
                 i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
-    @commands.hybrid_command(name='조건등록',
+    @commands.hybrid_command(name='조건등록', aliases=['conditional-register'],
                              description="엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!")
     async def word_c_enlist_db(self, ctx, uid: int = None, file: str = ""):
         total = 0
@@ -1498,7 +1498,7 @@ class TestCommands(commands.Cog):
                 i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
-    @commands.hybrid_command(name='빠른등록',
+    @commands.hybrid_command(name='빠른등록', aliases=['quick-register'],
                              description="엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!")
     async def word_q_enlist_db(self, ctx, uid: int = None, file: str = ""):
         total = 0
@@ -1549,7 +1549,7 @@ class TestCommands(commands.Cog):
                 i18n.t(ctx.author, "common.batch_complete", total=total, success=suc_count, failure=fail_count)
             )
 
-    @commands.hybrid_command(name='빠른조건등록',
+    @commands.hybrid_command(name='빠른조건등록', aliases=['quick-conditional-register'],
                              description="엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!")
     async def word_qc_enlist_db(self, ctx, uid: int = None, file: str = ""):
         total = 0
@@ -1603,7 +1603,7 @@ class TestCommands(commands.Cog):
 
 
     # Functions [ID: 42]
-    @commands.hybrid_command(name='끝말잇기', description="일반 끝말잇기를 시작합니다!")
+    @commands.hybrid_command(name='끝말잇기', aliases=['wordchain'], description="일반 끝말잇기를 시작합니다!")
     async def word_chain(self, ctx, option: str = '일반', team: str = '개인'):
         if team == '개인':
             if option in ['일반', '쿵쿵따']:
@@ -2449,7 +2449,7 @@ class TestCommands(commands.Cog):
                     await _run_team_wordchain(self.client, ctx, player, option)
 
     # Wordchain Test [ID: 48]
-    @commands.hybrid_command(name='테스트용',
+    @commands.hybrid_command(name='테스트용', aliases=['wordchain-test'],
                              description="테스트")
     async def wordchain_test(self, ctx):
         wd.readPOSCount()

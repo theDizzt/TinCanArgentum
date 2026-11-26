@@ -677,7 +677,7 @@ class Yatchu(commands.Cog):
         self.client = client
 
     #야추 다이스 [ID: 41]
-    @commands.hybrid_command(name='야추다이스', description="야추한판 갈까요?")
+    @commands.hybrid_command(name='야추다이스', aliases=['yahtzee'], description="야추한판 갈까요?")
     async def yatchu(self, ctx):
         gamestart = False
         betting = 100

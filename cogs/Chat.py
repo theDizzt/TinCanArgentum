@@ -577,7 +577,7 @@ Keep responses natural, human-like, and lightly expressive.
         description=app_commands.locale_str(
             "Reset chat history, memories, and affinity", key="cmd.77.desc"
         ),
-        aliases=["은비초기화"]
+        aliases=["은비초기화", "matchoi-reset"]
     )
     async def full_reset(self, ctx):
         user_id = str(ctx.author.id)

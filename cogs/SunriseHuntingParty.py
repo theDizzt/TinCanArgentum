@@ -17,7 +17,7 @@ class SunriseHuntingParty(commands.Cog):  # Cog를 상속하는 클래스를 선
         return ctx.guild.id in server_id
 
     # Monchang [ID: 37]
-    @commands.hybrid_command(name='똥몬창지수',
+    @commands.hybrid_command(name='똥몬창지수', aliases=['activity-index'],
                              description="왠지 구린내가 나는 당신... 똥몬창 인가요?")
     @commands.check(is_server)
     #@discord.app_commands.describe(user="검사 대상자 언급")

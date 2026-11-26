@@ -486,7 +486,7 @@ class Anniversary(commands.Cog):
     # 생일 등록 [id: 24]
     @commands.hybrid_command(
         name="생일추가",
-        aliases=["bday_add", "birthday_add", "생일등록"],
+        aliases=['bday_add', 'birthday_add', '생일등록', 'birthday-add'],
         description="생일 알림을 등록합니다."
     )
     @commands.has_permissions(manage_guild=True)
@@ -590,7 +590,7 @@ class Anniversary(commands.Cog):
     # 기념일 등록 [id: 25]
     @commands.hybrid_command(
         name="기념일추가",
-        aliases=["anniv_add", "anniversary_add", "기념일등록"],
+        aliases=['anniv_add', 'anniversary_add', '기념일등록', 'anniversary-add'],
         description="기념일 알림을 등록합니다."
     )
     @commands.has_permissions(manage_guild=True)
@@ -692,7 +692,7 @@ class Anniversary(commands.Cog):
     # 생일 및 기념일 목록 [id: 26]
     @commands.hybrid_command(
         name="기념일목록",
-        aliases=["anniv_list", "anniversary_list", "생일목록"],
+        aliases=['anniv_list', 'anniversary_list', '생일목록', 'anniversary-list'],
         description="등록된 생일/기념일 목록을 확인합니다."
     )
     @commands.has_permissions(manage_guild=True)
@@ -823,7 +823,7 @@ class Anniversary(commands.Cog):
     # 생일 및 기념일 삭제 [id: 27]
     @commands.hybrid_command(
         name="기념일삭제",
-        aliases=["anniv_del", "anniv_delete", "anniversary_delete", "생일삭제"],
+        aliases=['anniv_del', 'anniv_delete', 'anniversary_delete', '생일삭제', 'anniversary-delete'],
         description="등록된 생일/기념일을 삭제합니다."
     )
     @commands.has_permissions(manage_guild=True)

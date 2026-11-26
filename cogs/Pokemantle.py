@@ -154,7 +154,7 @@ class Pokemantle(commands.Cog):
         )
 
     # [id: 47] 포케멘틀 게임
-    @commands.hybrid_command(name="포케멘틀", description="유사도 수치를 바탕으로 내가 생각하는 포켓몬을 맞출 수 있을까?")
+    @commands.hybrid_command(name="포케멘틀", aliases=['pokemantle'], description="유사도 수치를 바탕으로 내가 생각하는 포켓몬을 맞출 수 있을까?")
     async def pokemantle(self, ctx):
         if ctx.guild is None:
             await ctx.reply(i18n.t(ctx.author, "cmd.47.server_only"))

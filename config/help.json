@@ -243,7 +243,8 @@
     "id": "32",
     "ctx": "쿠모티콘 <opt: option>",
     "discript": "쿠모티콘 기능이 부활했습니다! `;쿠모티콘`을 통해 목록을 살펴 보아요!",
-    "args": "[ctx: rage | 격노] <int: text_size> <object: str> <text: str>"
+    "args": "[ctx: rage | 격노] <int: text_size> <object: str> <text: str>",
+    "help_key": "cmd.32.help.kumoticon"
   },
   "kodic": {
     "title": "국립국어원 우리말 사전",
@@ -278,7 +279,8 @@
     "id": "37",
     "ctx": "똥몬창지수 <user: Discord.user.id>",
     "discript": "자네 몸에서 지독한 냄새가 나는데... 혹시 똥몬창인가?",
-    "args": "`user` discord.user.id type, Select the user to test. If left blank, the command user himself is specified (defualt: none)."
+    "args": "`user` discord.user.id type, Select the user to test. If left blank, the command user himself is specified (defualt: none).",
+    "help_key": "cmd.37.help.activity-index"
   },
   "tedne": {
     "title": "TEDNE Manager (Only in Does the end exist?)",
@@ -306,14 +308,16 @@
     "id": "41",
     "ctx": "야추다이스",
     "discript": "야추 다이스(Yahtzee Dice) 게임을 합니다!",
-    "args": "(￣▽￣)ノ 없습니다!"
+    "args": "(￣▽￣)ノ 없습니다!",
+    "help_key": "cmd.41.help.yahtzee"
   },
   "끝말잇기": {
     "title": "끝말잇기 <옵션>",
     "id": "42",
     "ctx": "끝말잇기",
     "discript": "끝말잇기를 합니다! 인원 모집시 이 봇을 업급하면 봇이 직접 게임을 합니다!",
-    "args": "<옵션> 에는 `일반/쿵쿵따/은비/마라톤` 중 하나를 선택합니다!"
+    "args": "<옵션> 에는 `일반/쿵쿵따/은비/마라톤` 중 하나를 선택합니다!",
+    "help_key": "cmd.42.help.wordchain"
   },
   "slot": {
     "title": ":gem: Slot-Machine :gem:",
@@ -369,7 +373,8 @@
     "id": "81",
     "ctx": "타운맵",
     "discript": "타운맵 그림 파일을 불러옵니다.",
-    "args": "-"
+    "args": "-",
+    "help_key": "cmd.81.help.town-map"
   },
   "tmreload": {
     "title": "기술머신 데이터 리로드",
@@ -390,21 +395,24 @@
     "id": "84",
     "ctx": "도감 도움말",
     "discript": "`;도감 도움말` 을 통해 명령어를 자세히 알아 볼 수 있습니다.",
-    "args": "-"
+    "args": "-",
+    "help_key": "cmd.84.help.pokedex"
   },
   "기술머신": {
     "title": "픽셀몬 기술머신 도감",
     "id": "85",
     "ctx": "기술머신 도움말",
     "discript": ";기술머신 도움말` 을 통해 명령어를 자세히 알아 볼 수 있습니다.",
-    "args": "-"
+    "args": "-",
+    "help_key": "cmd.85.help.tm-dex"
   },
   "일괄등록": {
     "title": "일괄등록",
     "id": "87",
     "ctx": "--",
     "discript": "--",
-    "args": "(￣▽￣)ノ"
+    "args": "(￣▽￣)ノ",
+    "help_key": "cmd.87.help.bulk-register"
   },
   "tmanage": {
     "title": "Admin Login",
@@ -506,26 +514,26 @@
   },
   "rankingadd": {
     "title": "rankingadd",
-    "id": "--",
+    "id": "80",
     "ctx": "rankingadd",
     "discript": "Administrative command.",
     "args": "No arguments."
   },
   "기념일": {
     "title": "기념일",
-    "id": "--",
+    "id": "27",
     "ctx": "기념일",
     "discript": "Show anniversary options. Requires Manage Server permission.",
     "args": "Use `anniv resend` to resend today’s notifications.",
-    "help_key": "cmd.00.help.기념일"
+    "help_key": "cmd.27.help.anniversary"
   },
   "기념일 재알림": {
     "title": "기념일 재알림",
-    "id": "--",
+    "id": "27",
     "ctx": "기념일 재알림",
     "discript": "Resend today’s notifications to their registered channels. Requires Manage Server permission.",
     "args": "No arguments.",
-    "help_key": "cmd.00.help.기념일 재알림"
+    "help_key": "cmd.27.help.anniversary-resend"
   },
   "대화": {
     "title": "대화",
@@ -533,7 +541,7 @@
     "ctx": "대화 [user_message]",
     "discript": "Chat with Eunbi",
     "args": "`user_message`: your message to Eunbi.",
-    "help_key": "cmd.69.help.대화"
+    "help_key": "cmd.69.help.chat"
   },
   "chat-reset": {
     "title": "chat-reset",
@@ -624,11 +632,11 @@
   },
   "lkaccount": {
     "title": "lkaccount",
-    "id": "--",
+    "id": "35",
     "ctx": "lkaccount [user]",
     "discript": "Create Level Killer user data.",
     "args": "`user`: ID, mention, or nickname tag (default: you).",
-    "help_key": "cmd.00.help.lkaccount"
+    "help_key": "cmd.35.help.lkaccount"
   },
   "nelgp": {
     "title": "nelgp",
@@ -644,15 +652,15 @@
     "ctx": "포케멘틀",
     "discript": "Guess a Pokemon using similarity scores",
     "args": "No arguments.",
-    "help_key": "cmd.47.help.포케멘틀"
+    "help_key": "cmd.47.help.pokemantle"
   },
   "tedaccount": {
     "title": "tedaccount",
-    "id": "--",
+    "id": "38",
     "ctx": "tedaccount [user]",
     "discript": "Create TEDNE user data.",
     "args": "`user`: ID, mention, or nickname tag (default: you).",
-    "help_key": "cmd.00.help.tedaccount"
+    "help_key": "cmd.38.help.tedaccount"
   },
   "tts": {
     "title": "tts",
@@ -668,7 +676,7 @@
     "ctx": "점수 [word]",
     "discript": "Calculate a word chain score",
     "args": "`word`: the word to score.",
-    "help_key": "cmd.45.help.점수"
+    "help_key": "cmd.45.help.word-score"
   },
   "wcsupdate": {
     "title": "wcsupdate",
@@ -687,11 +695,11 @@
   },
   "dict": {
     "title": "dict",
-    "id": "--",
+    "id": "33",
     "ctx": "dict [word]",
     "discript": "Look up an English word.",
     "args": "`word`: the English word to look up.",
-    "help_key": "cmd.00.help.dict"
+    "help_key": "cmd.33.help.dict"
   },
   "은비사전": {
     "title": "은비사전",
@@ -703,10 +711,11 @@
   },
   "일괄수정": {
     "title": "일괄수정",
-    "id": "--",
+    "id": "87",
     "ctx": "일괄수정 [uid] [file]",
     "discript": "엑셀에 저장된 파일을 일괄적으로 업데이트 합니다!",
-    "args": "Arguments: uid, file"
+    "args": "Arguments: uid, file",
+    "help_key": "cmd.87.help.bulk-edit"
   },
   "조건등록": {
     "title": "조건등록",
@@ -734,7 +743,8 @@
     "id": "48",
     "ctx": "테스트용",
     "discript": "Test word chain features",
-    "args": "No arguments."
+    "args": "No arguments.",
+    "help_key": "cmd.48.help.wordchain-test"
   },
   "sync": {
     "title": "sync",
@@ -749,6 +759,6 @@
     "ctx": "대화 [user_message]",
     "discript": "Chat with Eunbi",
     "args": "`user_message`: your message to Eunbi.",
-    "help_key": "cmd.69.help.대화"
+    "help_key": "cmd.69.help.chat"
   }
 }

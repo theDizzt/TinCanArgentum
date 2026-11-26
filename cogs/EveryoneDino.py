@@ -235,7 +235,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply(i18n.t(ctx.author, "cmd.30.error"))
 
     # 쿠모티콘! [ID: 32]
-    @commands.hybrid_command(name='쿠모티콘', description="헬창냥이 김종국의 사진 대방출!")
+    @commands.hybrid_command(name='쿠모티콘', aliases=['kumoticon'], description="헬창냥이 김종국의 사진 대방출!")
     #@discord.app_commands.describe(type="옵션을 적어주세요")
     @commands.check(is_server)
     async def coomoji(self, ctx, type="도움"):
@@ -330,7 +330,7 @@ class EveryoneDino(commands.Cog):  # Cog를 상속하는 클래스를 선언
             await ctx.reply(i18n.t(ctx.author, "common.server_only", server="전체공룡"))
 
     # 카카오 데이터 관리 [ID: 98]
-    @commands.command(name='카톡', aliases=['라인', 'line'], description="...")
+    @commands.command(name='카톡', aliases=['라인', 'line', 'kakao'], description="...")
     @commands.check(is_server)
     async def kakao(self,
                     ctx,
